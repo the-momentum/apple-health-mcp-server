@@ -1,0 +1,20 @@
+services:
+  mcp-server:
+    container_name: mcp-server
+    image: mcp-server:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - config/.env
+    volumes:
+      - ./app:/root_project/app
+      - type: bind
+        source: ./config/.env
+        target: /root_project/config/.env
+        bind:
+          create_host_path: false
+    ports:
+      - 8000:8000
+    stdin_open: true
+    restart: on-failure

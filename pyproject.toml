@@ -1,0 +1,56 @@
+[project]
+name = "mcp-template"
+version = "0.1.0"
+description = "MCP server template"
+requires-python = ">=3.13"
+dependencies = [
+    "cryptography>=45.0.4",
+    "fastmcp>=2.9.2",
+    "greenlet>=3.2.3",
+    "httpx>=0.28.1",
+    "passlib>=1.7.4",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
+    "testcontainers>=4.10.0",
+    "testcontainers-postgres>=0.0.1rc1",
+]
+
+[build-system]
+requires = ["uv_build"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = ""
+module-name = "app"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.0.0",
+    "pytest-cov>=6.2.1",
+]
+lint = [
+    "mypy>=1.16.1",
+    "pre-commit>=4.2.0",
+    "ruff>=0.12.1",
+    "ty>=0.0.1a12",
+]
+
+[tool.pytest.ini_options]
+asyncio_default_fixture_loop_scope = "session"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.mypy]
+python_version = "3.13"
+ignore_missing_imports = true
+disallow_untyped_defs = false
+exclude = [
+    "alembic/",
+    "migrations/",
+]
+
+[project.scripts]
+start = "start:main"
