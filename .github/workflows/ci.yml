@@ -33,4 +33,4 @@ jobs:
       - name: Run formatter
         run: uv run ruff format --check
       - name: Run type checker
-        run: uv run mypy .
+        run: uv run ty check
