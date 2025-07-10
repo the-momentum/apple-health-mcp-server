@@ -146,3 +146,6 @@ cython_debug/
 # Docker setup
 docker/volumes/
 volumes
+
+# Data Source
+*.xml

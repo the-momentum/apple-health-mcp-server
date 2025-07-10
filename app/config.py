@@ -1,7 +1,7 @@
 from pathlib import Path
 from functools import lru_cache
 
-from pydantic import AnyHttpUrl, ValidationInfo, field_validator
+from pydantic import AnyHttpUrl, ValidationInfo, field_validator, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.utils.config_utils import EncryptedField, EnvironmentType
@@ -22,7 +22,14 @@ class Settings(BaseSettings):
 
     LOGGING_CONF_FILE: str = "logging.conf"
 
-    DATABASE_URI: str = ""  # TODO add db if required
+    ES_HOST: str = "localhost"
+    ES_PORT: int = 9200
+    ES_USER: str = "elastic"
+    ES_PASSWORD: SecretStr = SecretStr("elastic")
+    ES_INDEX: str = "apple_health_data"
+
+    RAW_XML_PATH: str = "raw.xml"
+    XML_SAMPLE_SIZE: int = 1000
 
     @field_validator("*", mode="after")
     def _decryptor(cls, v, validation_info: ValidationInfo, *args, **kwargs):
