@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
 
+if [ "$(docker ps -q -f name=elasticsearch-dev)" ]; then
+  echo "elasticsearch-dev is already running - skipping"
+  exit 0
+fi
+
 docker run -d \
   --name elasticsearch-dev \
   -e discovery.type=single-node \

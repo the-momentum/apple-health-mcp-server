@@ -2,13 +2,8 @@
 
 ## Prepare your data
 1. Place your XML file exported from Apple Health somewhere in your filesystem. By default, LLM should look for that file in project root directory.
-2. If you don't have local instance of elasticsearch and want to use it, you can obtain it in 2 ways:
-
-    - run MCP server with **docker method**, then elasticsearch container will be created automatically
-
-    - if you choose **local uv run method**, first you have to run from project root directory command: `./scripts/run_elasticsearch.sh`
-
-3. If you want to use elasticsearch, load data from XML into elasticsearch index by running script: `uv run python3 scripts/xml2es.py`.
+2. Prepare elasticsearch instance and populate it from xml file:
+    - run command `make es`
     - run command `uv run python3 scripts/xml2es.py --delete-all` to remove all data from elasticsearch index
 
 
@@ -37,6 +32,8 @@ You can run that MCP Server in your LLM Client in two ways:
                 "type=bind,source=<project-path>/app,target=/root_project/app", # optional
                 "--mount",
                 "type=bind,source=<project-path>/config/.env,target=/root_project/config/.env",
+                "-e",
+                "ES_HOST=host.docker.internal",
                 "mcp-server:latest"
             ]
         }
