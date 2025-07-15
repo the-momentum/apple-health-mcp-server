@@ -25,7 +25,7 @@ down:	## Kills running instance
 
 test:	## Run the tests.
 	export ENV=config/.env.test
-	uv run pytest -v --cov=app
+	$(UV) pytest -v --cov=app
 
 migrate:  ## Apply all migrations
 	$(ALEMBIC_CMD) upgrade head
@@ -37,6 +37,9 @@ create_migration:  ## Create a new migration. Use 'make create_migration m="Desc
 	fi
 	$(ALEMBIC_CMD) revision --autogenerate -m "$(m)"
 
+es:
+	./scripts/run_elasticsearch.sh
+	$(UV) python scripts/xml2es.py
 
 downgrade:  ## Revert the last migration
 	$(ALEMBIC_CMD) downgrade -1

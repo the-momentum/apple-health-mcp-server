@@ -5,6 +5,7 @@ description = "MCP server template"
 requires-python = ">=3.13"
 dependencies = [
     "cryptography>=45.0.4",
+    "elasticsearch>=9.0.2",
     "fastmcp>=2.9.2",
     "greenlet>=3.2.3",
     "httpx>=0.28.1",
