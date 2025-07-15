@@ -1,70 +1,218 @@
-# MCP server
+<a name="readme-top"></a>
 
-## Prepare your data
-1. Place your XML file exported from Apple Health somewhere in your filesystem. By default, LLM should look for that file in project root directory.
-2. Prepare elasticsearch instance and populate it from xml file:
-    - run command `make es`
-    - run command `uv run python3 scripts/xml2es.py --delete-all` to remove all data from elasticsearch index
+<div align="center">
+  <img src="https://cdn.prod.website-files.com/66a1237564b8afdc9767dd3d/66df7b326efdddf8c1af9dbb_Momentum%20Logo.svg" height="80">
+  <h1>Apple Health MCP Server</h1>
+  <p><strong>Apple Health Data Management</strong></p>
+
+  [![Contact us](https://img.shields.io/badge/Contact%20us-AFF476.svg?style=for-the-badge&logo=mail&logoColor=black)](mailto:hello@themomentum.ai?subject=Apple%20Health%20MCP%20Server%20Inquiry)
+  [![Visit Momentum](https://img.shields.io/badge/Visit%20Momentum-1f6ff9.svg?style=for-the-badge&logo=safari&logoColor=white)](https://themomentum.ai)
+  [![MIT License](https://img.shields.io/badge/License-MIT-636f5a.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
+</div>
+
+## 📋 Table of Contents
+
+- [🔍 About](#-about-the-project)
+- [🚀 Getting Started](#-getting-started)
+- [📝 Usage](#-usage)
+- [🔧 Configuration](#-configuration)
+- [🐳 Docker Setup](#-docker-setup)
+- [🛠️ MCP Tools](#️-mcp-tools)
+- [🗺️ Roadmap](#️-roadmap)
+- [👥 Contributors](#-contributors)
+- [📄 License](#-license)
+
+## 🔍 About The Project
+
+**Apple Health MCP Server** implements a Model Context Protocol (MCP) server designed for seamless interaction between LLM-based agents and Apple Health data. It provides a standardized interface for querying, analyzing, and managing Apple Health records—imported from XML exports and indexed in Elasticsearch—through a comprehensive suite of tools. These tools are accessible from MCP-compatible clients (such as Claude Desktop), enabling users to explore, search, and analyze personal health data using natural-language prompts and advanced filtering, all without requiring direct knowledge of the underlying data formats or Elasticsearch queries.
+
+### ✨ Key Features
+
+- **🚀 FastMCP Framework**: Built on FastMCP for high-performance MCP server capabilities
+- **🍏 Apple Health Data Management**: Import, parse, and analyze Apple Health XML exports
+- **🔎 Powerful Search & Filtering**: Query and filter health records using natural language and advanced parameters
+- **📦 Elasticsearch Integration**: Index and search health data efficiently at scale
+- **🛠️ Modular MCP Tools**: Tools for structure analysis, record search, type-based extraction, and more
+- **📈 Data Summaries & Trends**: Generate statistics and trend analyses from your health data
+- **🐳 Container Ready**: Docker support for easy deployment and scaling
+- **🔧 Configurable**: Extensive ```.env```-based configuration options
+
+### 🏗️ Architecture
+
+The Apple Health MCP Server is built with a modular, extensible architecture designed for robust health data management and LLM integration:
+
+- **MCP Tools**: Dedicated tools for Apple Health XML structure analysis, record search, type-based extraction, and statistics/trend generation. Each tool is accessible via the MCP protocol for natural language and programmatic access.
+- **XML Import & Parsing**: Efficient streaming and parsing of large Apple Health XML exports, extracting records, workouts, and metadata for further analysis.
+- **Elasticsearch Backend**: All health records are indexed in Elasticsearch, enabling fast, scalable search, filtering, and aggregation across large datasets.
+- **Service Layer**: Business logic for XML and Elasticsearch operations is encapsulated in dedicated service modules, ensuring separation of concerns and easy extensibility.
+- **FastMCP Framework**: Provides the MCP server interface, routing, and tool registration, making the system compatible with LLM-based agents and MCP clients (e.g., Claude Desktop).
+- **Configuration & Deployment**: Environment-based configuration and Docker support for easy setup and deployment in various environments.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## 🚀 Getting Started
+
+Follow these steps to set up Apple Health MCP Server in your environment.
+
+### 1. Prepare Your Data
+
+1. Export your Apple Health data as an XML file from your iPhone and place it somewhere in your filesystem. By default, the server expects the file in the project root directory.
+2. Prepare an Elasticsearch instance and populate it from the XML file:
+   - Run `make es` to start Elasticsearch and import your XML data.
+   - (Optional) To clear all data from the Elasticsearch index, run:
+     ```sh
+     uv run python scripts/xml2es.py --delete-all
+     ```
+
+### 2. Configuration Files
+
+You can run the MCP Server in your LLM Client in two ways:
+- **Docker** (recommended)
+- **Local (uv run)**
+
+#### Docker MCP Server
+
+1. Build the Docker image:
+   ```sh
+   make build
+   ```
+2. Add the following config to your LLM Client settings (replace `<project-path>` with your local repository path, or remove optional volume binding if not needed):
+   ```json
+   {
+     "mcpServers": {
+       "docker-mcp-server": {
+         "command": "docker",
+         "args": [
+           "run",
+           "-i",
+           "--rm",
+           "--init",
+           "--mount", // optional - volume for reload
+           "type=bind,source=<project-path>/app,target=/root_project/app", // optional
+           "--mount",
+           "type=bind,source=<project-path>/config/.env,target=/root_project/config/.env",
+           "-e",
+           "ES_HOST=host.docker.internal",
+           "mcp-server:latest"
+         ]
+       }
+     }
+   }
+   ```
+
+#### Local uv MCP Server
+
+1. Get the path to your `uv` binary:
+   - On Windows:
+     ```powershell
+     (Get-Command uv).Path
+     ```
+   - On MacOS/Linux:
+     ```sh
+     which uv
+     ```
+2. Add the following config to your LLM Client settings (replace `<project-path>` and `<path-to-bin-folder>` as appropriate):
+   ```json
+   {
+     "mcpServers": {
+       "uv-mcp-server": {
+         "command": "uv",
+         "args": [
+           "run",
+           "--frozen",
+           "--directory",
+           "<project-path>",
+           "start"
+         ],
+         "env": {
+           "PATH": "<path-to-uv-bin-folder>"
+         }
+       }
+     }
+   }
+   ```
+   - `<path-to-uv-bin-folder>` should be the folder containing the `uv` binary (do not include `uv` itself at the end).
+
+### 3. Restart Your MCP Client
+
+After completing the above steps, restart your MCP Client to apply the changes. In some cases, you may need to terminate all related processes using Task Manager or your system's process manager to ensure:
+- The updated configuration is properly loaded
+- Environment variables are correctly applied
+- The Apple Health MCP client initializes with the correct settings
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-## Config files
+## 🔧 Configuration
 
-You can run that MCP Server in your LLM Client in two ways:
-- docker
-- local uv run
+### Environment Variables
 
-### Docker MCP Server
+> **Note:** All variables below are optional unless marked as required. If not set, the server will use the default values shown. Only `RAW_XML_PATH` is required and must point to your Apple Health XML file.
 
-1. Build docker image:
-```make build```.
-2. Put config into LLM Client settings (remember to replace path to your local repository or remove optional binding):
-```
-{
-    "mcpServers": {
-        "docker-mcp-server": {
-            "command": "docker",
-            "args": [
-                "run",
-                "-i",
-                "--rm",
-                "--init",
-                "--mount", # optional - volume for reload
-                "type=bind,source=<project-path>/app,target=/root_project/app", # optional
-                "--mount",
-                "type=bind,source=<project-path>/config/.env,target=/root_project/config/.env",
-                "-e",
-                "ES_HOST=host.docker.internal",
-                "mcp-server:latest"
-            ]
-        }
-    }
-}
-```
+| Variable           | Description                                | Example Value         | Required |
+|--------------------|--------------------------------------------|----------------------|----------|
+| RAW_XML_PATH       | Path to the Apple Health XML file           | `raw.xml`            | ✅       |
+| ES_HOST            | Elasticsearch host                          | `localhost`          | ❌       |
+| ES_PORT            | Elasticsearch port                          | `9200`               | ❌       |
+| ES_USER            | Elasticsearch username                      | `elastic`            | ❌       |
+| ES_PASSWORD        | Elasticsearch password                      | `elastic`            | ❌       |
+| ES_INDEX           | Elasticsearch index name                    | `apple_health_data`  | ❌       |
+| XML_SAMPLE_SIZE    | Number of XML records to sample             | `1000`               | ❌       |
 
-### Local uv MCP Server
-Get uv path and enter it in the config below, then put that config into LLM Client settings:
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-- on Windows:
-```(Get-Command uv).Path```
 
-- on MacOS/Linux:
-```which uv```
-```
-{
-    "mcpServers": {
-        "uv-mcp-server": {
-            "command": "uv",
-            "args": [
-                "run",
-                "--frozen",
-                "--directory",
-                "<project-path>",
-                "start"
-            ],
-            "env": {
-                "PATH": "<path-to-bin-folder(without uv at the end of path)>"
-            }
-        }
-    }
-}
-```
+## 🛠️ MCP Tools
+
+The Apple Health MCP Server provides a suite of tools for exploring, searching, and analyzing your Apple Health data, both at the raw XML level and in Elasticsearch:
+
+### XML Tools (`xml_reader`)
+
+| Tool                | Description                                                                                   |
+|---------------------|-----------------------------------------------------------------------------------------------|
+| `get_xml_structure` | Analyze the structure and metadata of your Apple Health XML export (file size, tags, types).   |
+| `search_xml_content`| Search for specific content in the XML file (by attribute value, device, type, etc.).          |
+| `get_xml_by_type`   | Extract all records of a specific health record type from the XML file.                        |
+
+### Elasticsearch Tools (`es_reader`)
+
+| Tool                        | Description                                                                                         |
+|-----------------------------|-----------------------------------------------------------------------------------------------------|
+| `get_health_summary_es`     | Get a summary of all Apple Health data in Elasticsearch (total count, type breakdown, etc.).         |
+| `search_health_records_es`  | Flexible search for health records in Elasticsearch with advanced filtering and query options.        |
+| `get_statistics_by_type_es` | Get comprehensive statistics (count, min, max, avg, sum) for a specific health record type.          |
+| `get_trend_data_es`         | Analyze trends for a health record type over time (daily, weekly, monthly, yearly aggregations).     |
+
+All tools are accessible via MCP-compatible clients and can be used with natural language or programmatic queries to explore and analyze your Apple Health data.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+## 🗺️ Roadmap
+
+We're continuously enhancing Apple Health MCP Server with new capabilities. Here's what's on the horizon:
+
+- [ ] **Time Series Sampling During Import**: Add advanced analytical tools to sample and generate time series data directly during the XML-to-Elasticsearch loading process.
+- [ ] **Optimized XML Tools**: Improve the performance and efficiency of XML parsing and querying tools.
+- [ ] **Expanded Elasticsearch Analytics**: Add more advanced analytics and aggregation functions to the Elasticsearch toolset.
+- [ ] **Embedded Database Tools**: Integrate tools for working with embedded databases for local/offline analytics and storage.
+
+Have a suggestion? We'd love to hear from you! Contact us or contribute directly.
+
+## 👥 Contributors
+
+<a href="https://github.com/the-momentum/apple-health-mcp-server/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=the-momentum/apple-health-mcp-server" />
+</a>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## 📄 License
+
+Distributed under the MIT License. See [MIT License](LICENSE) for more information.
+
+---
+
+<div align="center">
+  <p><em>Built with ❤️ by <a href="https://themomentum.ai">Momentum</a> • Transforming healthcare data management with AI</em></p>
+</div>

@@ -37,7 +37,7 @@ create_migration:  ## Create a new migration. Use 'make create_migration m="Desc
 	fi
 	$(ALEMBIC_CMD) revision --autogenerate -m "$(m)"
 
-es:
+es:  ## Run Elasticsearch and import Apple Health XML data into ES for Apple Health MCP Server
 	./scripts/run_elasticsearch.sh
 	$(UV) python scripts/xml2es.py
 
