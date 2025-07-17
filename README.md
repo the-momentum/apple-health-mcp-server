@@ -54,7 +54,24 @@ The Apple Health MCP Server is built with a modular, extensible architecture des
 
 Follow these steps to set up Apple Health MCP Server in your environment.
 
-### 1. Prepare Your Data
+### Prerequisites
+
+- **Docker (recommended) or uv + docker**: For dependency management
+
+   👉 [uv Installation Guide](https://docs.astral.sh/uv/getting-started/installation/)
+- **Clone the repository**:
+   ```sh
+   git clone https://github.com/the-momentum/apple-health-mcp-server
+   cd apple-health-mcp-server
+   ```
+
+- **Set up environment variables**:
+   ```sh
+   cp config/.env.example config/.env
+   ```
+   Edit the `config/.env` file with your credentials and configuration. See [Environment Variables](#-Environment-Variables)
+
+### Prepare Your Data
 
 1. Export your Apple Health data as an XML file from your iPhone and place it somewhere in your filesystem. By default, the server expects the file in the project root directory.
 2. Prepare an Elasticsearch instance and populate it from the XML file:
@@ -64,7 +81,7 @@ Follow these steps to set up Apple Health MCP Server in your environment.
      uv run python scripts/xml2es.py --delete-all
      ```
 
-### 2. Configuration Files
+### Configuration Files
 
 You can run the MCP Server in your LLM Client in two ways:
 - **Docker** (recommended)
