@@ -1,18 +1,18 @@
 [project]
-name = "mcp-template"
+name = "apple-health-mcp-server"
 version = "0.1.0"
-description = "MCP server template"
+description = "MCP server for Apple Health data"
 requires-python = ">=3.13"
 dependencies = [
-    "cryptography>=45.0.4",
-    "elasticsearch>=9.0.2",
-    "fastmcp>=2.9.2",
-    "greenlet>=3.2.3",
-    "httpx>=0.28.1",
-    "passlib>=1.7.4",
-    "pydantic>=2.11.7",
-    "pydantic-settings>=2.10.1",
-    "testcontainers>=4.10.0",
+    "cryptography>=45",
+    "elasticsearch>=9.0",
+    "fastmcp>=2.10",
+    "greenlet>=3.2",
+    "httpx>=0.28",
+    "passlib>=1.7",
+    "pydantic>=2.11",
+    "pydantic-settings>=2.10",
+    "testcontainers>=4.10",
     "testcontainers-postgres>=0.0.1rc1",
 ]
 
