@@ -8,6 +8,10 @@
   [![Contact us](https://img.shields.io/badge/Contact%20us-AFF476.svg?style=for-the-badge&logo=mail&logoColor=black)](mailto:hello@themomentum.ai?subject=Apple%20Health%20MCP%20Server%20Inquiry)
   [![Visit Momentum](https://img.shields.io/badge/Visit%20Momentum-1f6ff9.svg?style=for-the-badge&logo=safari&logoColor=white)](https://themomentum.ai)
   [![MIT License](https://img.shields.io/badge/License-MIT-636f5a.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
+
+  <a href="https://glama.ai/mcp/servers/@the-momentum/apple-health-mcp-server">
+    <img width="380" height="200" src="https://glama.ai/mcp/servers/@the-momentum/apple-health-mcp-server/badge" alt="Apple Health Server MCP server" />
+  </a>
 </div>
 
 ## 📋 Table of Contents
@@ -105,7 +109,7 @@ You can run the MCP Server in your LLM Client in two ways:
    ```sh
    make build
    ```
-2. Add the following config to your LLM Client settings (replace `<project-path>` with your local repository path and `<xml-file-name>` with name of your raw data from apple healt file (without `.xml` extension)):
+2. Add the following config to your LLM Client settings (replace `<project-path>` with your local repository path and `<xml-file-name>` with name of your raw data from apple health file (without `.xml` extension)):
    ```json
    {
      "mcpServers": {
