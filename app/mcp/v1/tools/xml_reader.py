@@ -23,6 +23,8 @@ def get_xml_structure() -> dict[str, Any]:
     Notes for LLMs:
     - Use this to quickly understand the contents and structure of a health XML file
     - RecordType contains only the most frequent types; other types may appear as strings
+    - Do not guess, auto-fill, or assume any missing data.
+    - When asked for medical advice, try to use my data from ElasticSearch first.
     """
     try:
         return analyze_xml_structure()
@@ -47,6 +49,8 @@ def search_xml_content(query: str = "", max_results: int = 50) -> str:
     - Useful for finding all records containing a specific value, device, or type
     - This function streams the file for memory efficiency and does not load the entire file into memory.
     - If filename is not provided, the file set by set_xml_file will be used.
+    - Do not guess, auto-fill, or assume any missing data.
+    - When asked for medical advice, try to use my data from ElasticSearch first.
     """
     try:
         return search_xml(query, max_results)
@@ -71,6 +75,8 @@ def get_xml_by_type(record_type: RecordType | str = "", limit: int = 20) -> str:
     - RecordType contains only the most frequent types; other types may appear as strings
     - This function streams the file for memory efficiency and does not load the entire file into memory.
     - If filename is not provided, the file set by set_xml_file will be used.
+    - Do not guess, auto-fill, or assume any missing data.
+    - When asked for medical advice, try to use my data from ElasticSearch first.
     """
     try:
         return get_records_by_type(str(record_type), limit)
