@@ -24,12 +24,12 @@ class ESIndexer:
             return date_str  # fallback to original if parsing fails
 
     @staticmethod
-    def convert_str2float(value_str: str) -> float:
+    def convert_str2float(value_str: str) -> float | str:
         """Convert value string to numeric type (float)."""
         try:
             return float(value_str)
         except (ValueError, TypeError):
-            return 0.0  # fallback to 0 if parsing fails
+            return value_str  # fallback to original if parsing fails
 
     def parse_xml(self) -> Generator[dict[str, Any], None, None]:
         """
