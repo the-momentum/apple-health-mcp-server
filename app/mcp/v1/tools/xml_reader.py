@@ -3,7 +3,7 @@ from typing import Any
 from fastmcp import FastMCP
 
 from app.schemas.record import RecordType
-from app.services.health.xml import analyze_xml_structure, search_xml, get_records_by_type
+from app.services.health.direct_xml import analyze_xml_structure, search_xml, get_records_by_type
 
 xml_reader_router = FastMCP(name="XML Reader MCP")
 
