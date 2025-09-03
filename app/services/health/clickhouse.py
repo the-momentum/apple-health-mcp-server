@@ -1,6 +1,9 @@
+from time import time
+
 from app.services.ch import CHIndexer
 from app.config import settings
 from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
+
 
 def build_value_range(valuemin, valuemax) -> str | None:
     if valuemax and valuemin:
@@ -72,9 +75,17 @@ class par():
         self.value_max = pars.get('value_max')
 
 if __name__ == '__main__':
-    print(len(get_health_summary_from_ch()))
-    print(len(get_statistics_by_type_ch('HKQuantityTypeIdentifierHeartRate')))
-    print(len(get_trend_data_ch('HKQuantityTypeIdentifierHeartRate', 'month', '2015-06-01', '2015-09-30')))
+    start = time()
+    print('records for get_health_summary_from_ch: ', len(get_health_summary_from_ch()))
+    print('time: ', time() - start)
+    start = time()
+    print('records for get_statistics_by_type_ch: ', len(get_statistics_by_type_ch('HKQuantityTypeIdentifierHeartRate')))
+    print('time: ', time() - start)
+    start = time()
+    print('records for get_trend_data_ch: ', len(get_trend_data_ch('HKQuantityTypeIdentifierHeartRate', 'month', '2015-06-01', '2015-09-30')))
+    print('time: ', time() - start)
+    start = time()
     params = HealthRecordSearchParams(record_type='HKQuantityTypeIdentifierHeartRate', value_min = '10', value_max = '20')
     # params = par({"record_type": 'HKQuantityTypeIdentifierHeartRate', "value_min": '10', "value_max": '20'})
-    print(len(search_health_records_from_ch(params)))
+    print('records for search_health_records_from_ch: ', len(search_health_records_from_ch(params)))
+    print('time: ', time() - start)
