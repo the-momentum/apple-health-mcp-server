@@ -4,11 +4,11 @@ from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParam
 
 def build_value_range(valuemin, valuemax) -> str | None:
     if valuemax and valuemin:
-        return f"valuemin >= '{valuemin}' and valuemax <= '{valuemax}'"
+        return f"value >= '{valuemin}' and value <= '{valuemax}'"
     if valuemin:
-        return f"valuemin >= '{valuemin}'"
+        return f"value >= '{valuemin}'"
     if valuemax:
-        return f"valuemax >= '{valuemax}'"
+        return f"value >= '{valuemax}'"
     return None
 
 
@@ -17,8 +17,8 @@ def fill_query(params: HealthRecordSearchParams) -> str:
     conditions = []
 
     query = f"SELECT * FROM {ch.dbname}.{ch.name} WHERE 1=1"
-    if params.record_type:
-        conditions.append(f" type = {params.record_type}")
+    # if params.record_type:
+    #     conditions.append(f" type = {params.record_type}")
     if params.source_name:
         conditions.append(f" source_name = {params.source_name}")
     if params.date_from or params.date_to:
@@ -33,18 +33,19 @@ def fill_query(params: HealthRecordSearchParams) -> str:
 
 def get_health_summary_from_ch() -> str:
     ch = CHIndexer()
-    return str(ch.inquire(f"SELECT type, COUNT(*) FROM {ch.dbname}.{ch.name} GROUP BY type"))
+    return ch.inquire(f"SELECT type, COUNT(*) FROM {ch.dbname}.{ch.name} GROUP BY type")
 
 
 def search_health_records_from_ch(params: HealthRecordSearchParams) -> str:
-    ch = CHIndexer()
     query: str = fill_query(params)
-    return str(ch.inquire(query))
+    ch = CHIndexer()
+    # return query
+    return ch.inquire(query)
 
 
 def get_statistics_by_type_ch(record_type: RecordType | str):
     ch = CHIndexer()
-    return str(ch.inquire(f"SELECT type, COUNT(*), AVG(numerical), SUM(numerical), MIN(numerical), MAX(numerical) FROM {ch.dbname}.{ch.name} WHERE 1 = 1 GROUP BY type"))
+    return ch.inquire(f"SELECT type, COUNT(*), AVG(numerical), SUM(numerical), MIN(numerical), MAX(numerical) FROM {ch.dbname}.{ch.name} WHERE 1 = 1 GROUP BY type")
 
 
 def get_trend_data_ch(
@@ -74,6 +75,6 @@ if __name__ == '__main__':
     print(len(get_health_summary_from_ch()))
     print(len(get_statistics_by_type_ch('HKQuantityTypeIdentifierHeartRate')))
     print(len(get_trend_data_ch('HKQuantityTypeIdentifierHeartRate', 'month', '2015-06-01', '2015-09-30')))
-    # params = HealthRecordSearchParams(record_type='HKQuantityTypeIdentifierHeartRate', value_min = '10', value_max = '20')
-
+    params = HealthRecordSearchParams(record_type='HKQuantityTypeIdentifierHeartRate', value_min = '10', value_max = '20')
+    # params = par({"record_type": 'HKQuantityTypeIdentifierHeartRate', "value_min": '10', "value_max": '20'})
     print(len(search_health_records_from_ch(params)))

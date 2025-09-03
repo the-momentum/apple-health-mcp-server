@@ -151,4 +151,4 @@ volumes
 *.xml
 
 # ClickHouse database
-*.chdb
+*.chdb/
