@@ -4,11 +4,13 @@ version = "0.1.0"
 description = "MCP server for Apple Health data"
 requires-python = ">=3.13"
 dependencies = [
+    "chdb>=3.5.0",
     "cryptography>=45",
     "elasticsearch>=9.0",
     "fastmcp>=2.10",
     "greenlet>=3.2",
     "httpx>=0.28",
+    "pandas>=2.3.2",
     "passlib>=1.7",
     "pydantic>=2.11",
     "pydantic-settings>=2.10",
