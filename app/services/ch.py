@@ -123,7 +123,7 @@ class CHIndexer:
                 return False
         return True
 
-    def inquire(self, query: str) -> dict[str, Any] | None:
+    def inquire(self, query: str) -> dict[str, Any]:
         """
         Makes an SQL query to the database
         :return: result of the query
@@ -132,8 +132,8 @@ class CHIndexer:
         res: str = json.dumps(str(self.sess.query(query, fmt='JSON')))
         try:
             return json.loads(json.loads(res))
-        except JSONDecodeError:
-            return None
+        except JSONDecodeError as e:
+            return {'error': str(e)}
 
     def run(self) -> bool:
         """

@@ -25,7 +25,7 @@ def get_health_summary_ch() -> dict[str, Any]:
     try:
         return get_health_summary_from_ch()
     except Exception as e:
-        return f"Failed to get health summary from ES: {str(e)}"
+        return {'error': str(e)}
 
 @ch_reader_router.tool
 def search_health_records_ch(params: HealthRecordSearchParams) -> dict[str, Any]:
@@ -49,7 +49,7 @@ def search_health_records_ch(params: HealthRecordSearchParams) -> dict[str, Any]
     try:
         return search_health_records_from_ch(params)
     except Exception as e:
-        return f"Failed to search health records: {str(e)}"
+        return {'error': str(e)}
 
 @ch_reader_router.tool
 def get_statistics_by_type_ch(record_type: RecordType | str) -> dict[str, Any]:
@@ -138,4 +138,4 @@ def update_database() -> dict[str, str | bool]:
     try:
         return update_db_ch()
     except Exception as e:
-        return f"Failed to update database: {str(e)}"
+        return {'error': str(e)}
