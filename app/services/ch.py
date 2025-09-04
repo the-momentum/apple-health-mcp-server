@@ -1,18 +1,22 @@
+from datetime import datetime
+import json
+from json import JSONDecodeError
+from pathlib import Path
 from sys import stderr
 from typing import Any, Generator
-from datetime import datetime
-from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from pandas import DataFrame
 import chdb
+from pandas import DataFrame
 
+from app.config import settings
 
 
 class CHIndexer:
     def __init__(self):
         self.sess = chdb.session.Session("applehealth.chdb")
         self.dbname: str = 'applehealth'
+        self.path: Path = Path(settings.RAW_XML_PATH)
         self.name: str = 'data'
         self.sess.query(f"CREATE DATABASE IF NOT EXISTS {self.dbname}")
 
@@ -27,7 +31,7 @@ class CHIndexer:
         self.sess.query(f"""
                    CREATE TABLE IF NOT EXISTS {self.dbname}.{self.name}
                    (
-                       type VARCHAR,
+                       type String,
                        sourceVersion String,
                        sourceName String,
                        device String,
@@ -42,8 +46,7 @@ class CHIndexer:
                        ORDER BY startDate
                         """)
 
-    @staticmethod
-    def parse_xml(path: Path | str, chunk_size: int = 10000) -> Generator[DataFrame, Any, None]:
+    def parse_xml(self, chunk_size: int = 10000) -> Generator[DataFrame, Any, None]:
         """
         Parses the XML file and yields pandas dataframes of specified chunk_size.
         Extracts attributes from each Record element.
@@ -91,7 +94,7 @@ class CHIndexer:
 
             return document
 
-        for event, elem in ET.iterparse(path, events=("start",)):
+        for event, elem in ET.iterparse(self.path, events=("start",)):
             if elem.tag == "Record" and event == "start":
                 if len(records) >= chunk_size:
                     yield DataFrame(records).reindex(columns=column_names)
@@ -107,7 +110,7 @@ class CHIndexer:
         yield DataFrame(records).reindex(columns=column_names)
 
     def index_data(self) -> bool:
-        for docs in self.parse_xml('data.xml'):
+        for docs in self.parse_xml():
             try:
                 self.sess.query(f"""
                            INSERT INTO {self.dbname}.{self.name}
@@ -118,22 +121,33 @@ class CHIndexer:
                 print(f"Failed to insert {len(docs)} records")
                 print(e, file=stderr)
                 return False
-                # raise RuntimeError(e)
         return True
 
-    def inquire(self, query: str) -> Any:
-        res: Any = self.sess.query(query, fmt='JSON')
-        # self.sess.send_query()
-        return res if res else 'None'
+    def inquire(self, query: str) -> dict[str, Any] | None:
+        """
+        Makes an SQL query to the database
+        :return: result of the query
+        """
+        # weird json hack
+        res: str = json.dumps(str(self.sess.query(query, fmt='JSON')))
+        try:
+            return json.loads(json.loads(res))
+        except JSONDecodeError:
+            return None
 
-    def run(self) -> None:
+    def run(self) -> bool:
+        """
+        Creates a new table in the database and populates it with data from the XML file provided
+        """
         self.create_table()
         print(f"Created table {self.dbname}.{self.name}")
         res: bool = self.index_data()
         if res:
-            print("Indexed data into chdb correctly")
+            print("Inserted data into chdb correctly")
+            return True
         else:
             print("Error during data indexing")
+            return False
 
 if __name__ == "__main__":
     ch = CHIndexer()
