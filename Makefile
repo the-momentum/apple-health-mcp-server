@@ -41,5 +41,12 @@ es:  ## Run Elasticsearch and import Apple Health XML data into ES for Apple Hea
 	./scripts/run_elasticsearch.sh
 	$(UV) python scripts/xml2es.py
 
+ch:
+	$(UV) app/services/ch.py
+	docker volume create applehealth-data
+	docker container create --name temp395629835 -v applehealth-data:/data busybox
+	docker cp ./applehealth.chdb temp395629835:/data
+	docker rm temp395629835
+
 downgrade:  ## Revert the last migration
 	$(ALEMBIC_CMD) downgrade -1

@@ -133,6 +133,7 @@ def update_database_ch() -> dict[str, str | bool]:
 
     Notes for LLMs:
     - Use this only if the user explicitly states that he wants to update the clickhouse database
+    - Inform the user that this may be inefficient and to consult the README to import the data in another way
     - IMPORTANT - always ask the user for confirmation each time before calling this tool, as it can irreversibly delete the data.
     - Do not guess, autofill, or assume any missing data.
     """
