@@ -48,5 +48,10 @@ ch:
 	docker cp ./applehealth.chdb temp395629835:/data
 	docker rm temp395629835
 
+chwin:
+	docker volume create applehealth-data
+	docker build . --file ch.Dockerfile -t uvcopier
+	docker run --rm -v applehealth-data:/volume uvcopier
+
 downgrade:  ## Revert the last migration
 	$(ALEMBIC_CMD) downgrade -1

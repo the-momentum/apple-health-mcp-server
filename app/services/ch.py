@@ -129,9 +129,9 @@ class CHIndexer:
         :return: result of the query
         """
         # weird json hack
-        res: str = json.dumps(str(self.sess.query(query, fmt='JSON')))
+        response: str = json.dumps(str(self.sess.query(query, fmt='JSON')))
         try:
-            return json.loads(json.loads(res))
+            return json.loads(json.loads(response))
         except JSONDecodeError as e:
             return {'error': str(e)}
 
@@ -141,8 +141,8 @@ class CHIndexer:
         """
         self.create_table()
         print(f"Created table {self.dbname}.{self.name}")
-        res: bool = self.index_data()
-        if res:
+        result: bool = self.index_data()
+        if result:
             print("Inserted data into chdb correctly")
             return True
         else:
