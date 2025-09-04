@@ -127,12 +127,13 @@ def get_trend_data_ch(
 
 
 @ch_reader_router.tool
-def update_database() -> dict[str, str | bool]:
+def update_database_ch() -> dict[str, str | bool]:
     """
     Update the ClickHouse database by dropping the table with data if it exists and populating it with new data from the user.
 
     Notes for LLMs:
-    - IMPORTANT - always ask the user for confirmation before calling this tool, as it can irreversibly delete the data.
+    - Use this only if the user explicitly states that he wants to update the clickhouse database
+    - IMPORTANT - always ask the user for confirmation each time before calling this tool, as it can irreversibly delete the data.
     - Do not guess, autofill, or assume any missing data.
     """
     try:
