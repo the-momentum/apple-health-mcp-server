@@ -30,6 +30,7 @@ class Settings(BaseSettings):
 
     CH_DB_NAME: str = "applehealth"
     CH_TABLE_NAME: str = "data"
+    CHUNK_SIZE: int = 10_000
 
     RAW_XML_PATH: str = "raw.xml"
     XML_SAMPLE_SIZE: int = 1000

@@ -18,6 +18,7 @@ class CHIndexer:
         self.db_name: str = settings.CH_DB_NAME
         self.table_name: str = settings.CH_TABLE_NAME
         self.path: Path = Path(settings.RAW_XML_PATH)
+        self.chunk_size: int = settings.CHUNK_SIZE
         self.session.query(f"CREATE DATABASE IF NOT EXISTS {self.db_name}")
 
     def __del__(self):
@@ -46,7 +47,7 @@ class CHIndexer:
                        ORDER BY startDate
                         """)
 
-    def parse_xml(self, chunk_size: int = 10000) -> Generator[DataFrame, Any, None]:
+    def parse_xml(self) -> Generator[DataFrame, Any, None]:
         """
         Parses the XML file and yields pandas dataframes of specified chunk_size.
         Extracts attributes from each Record element.
@@ -96,7 +97,7 @@ class CHIndexer:
 
         for event, elem in ET.iterparse(self.path, events=("start",)):
             if elem.tag == "Record" and event == "start":
-                if len(records) >= chunk_size:
+                if len(records) >= self.chunk_size:
                     yield DataFrame(records).reindex(columns=column_names)
                     records = []
                 record: dict[str, Any] = elem.attrib.copy()
