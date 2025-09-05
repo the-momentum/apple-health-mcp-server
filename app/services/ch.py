@@ -55,7 +55,7 @@ class CHIndexer:
         :param chunk_size: Size of yielded dataframe
         """
         records: list[dict[str, Any]] = []
-        column_names: list[str] = [
+        column_names: tuple[str, ...] = (
             "type",
             "sourceVersion",
             "sourceName",
@@ -66,7 +66,7 @@ class CHIndexer:
             "unit",
             "value",
             "numerical",
-        ]
+        )
 
         def update_record(document: dict[str, Any]) -> dict[str, Any]:
             """

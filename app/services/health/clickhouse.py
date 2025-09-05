@@ -5,7 +5,7 @@ from app.services.ch import CHIndexer
 from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
 
 
-def build_value_range(valuemin, valuemax) -> str | None:
+def build_value_range(valuemin: str | None, valuemax: str | None) -> str | None:
     if valuemax and valuemin:
         return f"value >= '{valuemin}' and value <= '{valuemax}'"
     if valuemin:
@@ -19,7 +19,7 @@ def fill_query(params: HealthRecordSearchParams) -> str:
     ch = CHIndexer()
     conditions = []
 
-    query = f"SELECT * FROM {ch.dbname}.{ch.name} WHERE 1=1"
+    query = f"SELECT * FROM {ch.db_name}.{ch.table_name} WHERE 1=1"
     if params.record_type:
         conditions.append(f" type = '{params.record_type}'")
     if params.source_name:
@@ -37,7 +37,7 @@ def fill_query(params: HealthRecordSearchParams) -> str:
 
 def get_health_summary_from_ch() -> dict[str, Any]:
     ch = CHIndexer()
-    return ch.inquire(f"SELECT type, COUNT(*) FROM {ch.dbname}.{ch.name} GROUP BY type")
+    return ch.inquire(f"SELECT type, COUNT(*) FROM {ch.db_name}.{ch.table_name} GROUP BY type")
 
 
 def search_health_records_from_ch(params: HealthRecordSearchParams) -> dict[str, Any]:
@@ -48,7 +48,7 @@ def search_health_records_from_ch(params: HealthRecordSearchParams) -> dict[str,
 
 def get_statistics_by_type_from_ch(record_type: RecordType | str) -> dict[str, Any]:
     ch = CHIndexer()
-    return ch.inquire(f"SELECT type, COUNT(*), AVG(numerical), SUM(numerical), MIN(numerical), MAX(numerical) FROM {ch.dbname}.{ch.name} WHERE type = '{record_type}' GROUP BY type")
+    return ch.inquire(f"SELECT type, COUNT(*), AVG(numerical), SUM(numerical), MIN(numerical), MAX(numerical) FROM {ch.db_name}.{ch.table_name} WHERE type = '{record_type}' GROUP BY type")
 
 
 def get_trend_data_from_ch(
@@ -60,7 +60,7 @@ def get_trend_data_from_ch(
     ch = CHIndexer()
     return ch.inquire(f"""
         SELECT toStartOfInterval(startDate, INTERVAL 1 {interval}) AS interval,
-        AVG(numerical), MIN(numerical), MAX(numerical), COUNT(*) FROM {ch.dbname}.{ch.name}
+        AVG(numerical), MIN(numerical), MAX(numerical), COUNT(*) FROM {ch.db_name}.{ch.table_name}
         WHERE type = '{record_type}' {f"AND startDate >= '{date_from}'" if date_from else ''} {f"AND startDate <= '{date_to}'" if date_to else ''}
         GROUP BY interval ORDER BY interval ASC 
     """)
