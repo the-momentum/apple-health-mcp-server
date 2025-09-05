@@ -21,6 +21,14 @@ class CHIndexer:
         self.chunk_size: int = settings.CHUNK_SIZE
         self.session.query(f"CREATE DATABASE IF NOT EXISTS {self.db_name}")
 
+    DATE_FIELDS: tuple[str] = ("startDate", "endDate", "creationDate")
+    DEFAULT_VALUES: dict[str, str] = {
+        "unit": "unknown",
+        "sourceVersion": "unknown",
+        "device": "unknown",
+        "value": "unknown",
+    }
+
     def __del__(self):
         self.session.close()
         self.session.cleanup()
@@ -74,19 +82,19 @@ class CHIndexer:
             There are 9 columns that need to be filled out, and there are 4 columns
             that are optional and aren't filled out in every record
             """
-            document['startDate'] = datetime.strptime(document['startDate'], '%Y-%m-%d %H:%M:%S %z')
-            document['endDate'] = datetime.strptime(document['endDate'], '%Y-%m-%d %H:%M:%S %z')
-            document['creationDate'] = datetime.strptime(document['creationDate'], '%Y-%m-%d %H:%M:%S %z')
+            for field in self.DATE_FIELDS:
+                document[field] = datetime.strptime(
+                    document[field], '%Y-%m-%d %H:%M:%S %z'
+                )
 
             if len(document) != 9:
-                if "unit" not in document:
-                    document.update({"unit": "unknown"})
-                if "sourceVersion" not in document:
-                    document.update({"sourceVersion": "unknown"})
-                if "device" not in document:
-                    document.update({"device": "unknown"})
-                if "value" not in document:
-                    document["value"] = "unknown"
+                document.update(
+                    {k: v for k, v in self.DEFAULT_VALUES.items() if k not in document}
+                )
+
+            # making sure there are value field with text values
+            # and numerical which always contain numbers for the sake
+            # of aggregation in clickhouse
             try:
                 val = float(document['value'])
                 document['numerical'] = val
