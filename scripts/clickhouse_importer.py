@@ -4,6 +4,10 @@ from app.services.ch import CHClient
 from scripts.xml_exporter import XMLExporter
 
 class CHIndexer(XMLExporter, CHClient):
+    def __init__(self):
+        XMLExporter.__init__(self)
+        CHClient.__init__(self)
+
     def create_table(self) -> None:
         """
         Create a new table for exported xml health data
