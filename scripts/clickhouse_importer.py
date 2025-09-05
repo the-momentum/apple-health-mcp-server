@@ -7,7 +7,7 @@ from typing import Any
 import chdb
 
 from app.config import settings
-from .xml_exporter import XMLExporter
+from scripts.xml_exporter import XMLExporter
 
 class CHIndexer(XMLExporter):
     def __init__(self):

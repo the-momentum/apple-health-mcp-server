@@ -12,6 +12,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-install-project --no-dev
 
 COPY . /app
+RUN mv /app/xmltemp123 /app/scripts/raw.xml
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-dev
 
@@ -19,10 +20,10 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 RUN echo '#!/bin/bash\n\
     set -e\n\
-	echo "Running ch.py..."\n\
-	uv run app/services/ch.py && \
+	echo "Running clickhouse importer..."\n\
+	uv run --directory /app/scripts/ clickhouse_importer.py && \
 	echo "Copying applehealth.chdb to volume..." && \
-	cp -r applehealth.chdb /volume/applehealth.chdb && \
+	cp -r /app/scripts/applehealth.chdb /volume/applehealth.chdb && \
 	echo "Complete!"' > /app/entrypoint.sh
 
 RUN chmod +x /app/entrypoint.sh
