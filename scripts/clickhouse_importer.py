@@ -7,6 +7,7 @@ class CHIndexer(XMLExporter, CHClient):
     def __init__(self):
         XMLExporter.__init__(self)
         CHClient.__init__(self)
+        self.session.query(f"CREATE DATABASE IF NOT EXISTS {self.db_name}")
 
     def create_table(self) -> None:
         """
