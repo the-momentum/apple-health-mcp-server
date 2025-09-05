@@ -132,8 +132,8 @@ You can run the MCP Server in your LLM Client in two ways:
            "type=bind,source=<project-path>/app,target=/root_project/app", // optional
            "--mount",
            "type=bind,source=<project-path>/config/.env,target=/root_project/config/.env",
-           "--mount",
-		   "type=bind,source=C:\\Users\\czajk\\Desktop\\apple-health-mcp-server\\applehealth.chdb,target=/root_project/applehealth.chdb",
+           "--mount", // optional - only include this if you use clickhouse
+		    "type=bind,source=<project-path>/applehealth.chdb,target=/root_project/applehealth.chdb", // optional
            "-e",
            "ES_HOST=host.docker.internal",
            "mcp-server:latest"
