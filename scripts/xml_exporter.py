@@ -32,43 +32,39 @@ class XMLExporter:
         "numerical",
     )
 
+    def update_record(self, document: dict[str, Any]) -> dict[str, Any]:
+        """
+        Updates records to fill out columns without specified data:
+        There are 9 columns that need to be filled out, and there are 4 columns
+        that are optional and aren't filled out in every record
+        """
+        for field in self.DATE_FIELDS:
+            document[field] = datetime.strptime(
+                document[field], '%Y-%m-%d %H:%M:%S %z'
+            )
+
+        if len(document) != 9:
+            document.update(
+                {k: v for k, v in self.DEFAULT_VALUES.items() if k not in document}
+            )
+
+        # making sure there are value field with text values
+        # and numerical which always contain numbers for the sake
+        # of aggregation in clickhouse
+        try:
+            val = float(document['value'])
+            document['numerical'] = val
+        except (TypeError, ValueError):
+            document['numerical'] = 0.0
+
+        return document
 
     def parse_xml(self) -> Generator[DataFrame, Any, None]:
         """
         Parses the XML file and yields pandas dataframes of specified chunk_size.
         Extracts attributes from each Record element.
-        :param path: path to XML file
-        :param chunk_size: Size of yielded dataframe
         """
         records: list[dict[str, Any]] = []
-
-
-        def update_record(document: dict[str, Any]) -> dict[str, Any]:
-            """
-            Updates records to fill out columns without specified data:
-            There are 9 columns that need to be filled out, and there are 4 columns
-            that are optional and aren't filled out in every record
-            """
-            for field in self.DATE_FIELDS:
-                document[field] = datetime.strptime(
-                    document[field], '%Y-%m-%d %H:%M:%S %z'
-                )
-
-            if len(document) != 9:
-                document.update(
-                    {k: v for k, v in self.DEFAULT_VALUES.items() if k not in document}
-                )
-
-            # making sure there are value field with text values
-            # and numerical which always contain numbers for the sake
-            # of aggregation in clickhouse
-            try:
-                val = float(document['value'])
-                document['numerical'] = val
-            except (TypeError, ValueError):
-                document['numerical'] = 0.0
-
-            return document
 
         for event, elem in ET.iterparse(self.path, events=("start",)):
             if elem.tag == "Record" and event == "start":
@@ -78,7 +74,7 @@ class XMLExporter:
                 record: dict[str, Any] = elem.attrib.copy()
 
                 # fill out empty cells if they exist and convert dates to datetime
-                update_record(record)
+                self.update_record(record)
                 records.append(record)
             elem.clear()
 

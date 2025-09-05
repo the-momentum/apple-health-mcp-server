@@ -1,11 +1,11 @@
 from time import time
 from typing import Any
 
-
-from scripts.clickhouse_importer import CHIndexer
+from app.services.ch import CHClient
 from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
 
-ch = CHIndexer()
+
+ch = CHClient()
 
 def build_value_range(valuemin: str | None, valuemax: str | None) -> str | None:
     if valuemax and valuemin:
