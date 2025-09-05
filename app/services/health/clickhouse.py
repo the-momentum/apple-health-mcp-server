@@ -69,7 +69,7 @@ def get_trend_data_from_ch(
 def update_db_ch() -> dict[str, str | bool]:
     ch = CHIndexer()
     try:
-        ch.sess.sql(f"DROP TABLE IF EXISTS {ch.dbname}.{ch.name}")
+        ch.session.sql(f"DROP TABLE IF EXISTS {ch.db_name}.{ch.table_name}")
         ch.run()
         return {"updated": True}
     except Exception as e:

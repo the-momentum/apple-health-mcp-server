@@ -14,22 +14,22 @@ from app.config import settings
 
 class CHIndexer:
     def __init__(self):
-        self.sess = chdb.session.Session("applehealth.chdb")
-        self.dbname: str = 'applehealth'
+        self.session = chdb.session.Session("applehealth.chdb")
+        self.db_name: str = settings.CH_DB_NAME
+        self.table_name: str = settings.CH_TABLE_NAME
         self.path: Path = Path(settings.RAW_XML_PATH)
-        self.name: str = 'data'
-        self.sess.query(f"CREATE DATABASE IF NOT EXISTS {self.dbname}")
+        self.session.query(f"CREATE DATABASE IF NOT EXISTS {self.db_name}")
 
     def __del__(self):
-        self.sess.close()
-        self.sess.cleanup()
+        self.session.close()
+        self.session.cleanup()
 
     def create_table(self) -> None:
         """
         Create a new table for exported xml health data
         """
-        self.sess.query(f"""
-                   CREATE TABLE IF NOT EXISTS {self.dbname}.{self.name}
+        self.session.query(f"""
+                   CREATE TABLE IF NOT EXISTS {self.db_name}.{self.table_name}
                    (
                        type String,
                        sourceVersion String,
@@ -112,8 +112,8 @@ class CHIndexer:
     def index_data(self) -> bool:
         for docs in self.parse_xml():
             try:
-                self.sess.query(f"""
-                           INSERT INTO {self.dbname}.{self.name}
+                self.session.query(f"""
+                           INSERT INTO {self.db_name}.{self.table_name}
                            SELECT *
                            FROM Python(docs)
                            """)
@@ -129,7 +129,7 @@ class CHIndexer:
         :return: result of the query
         """
         # weird json hack
-        response: str = json.dumps(str(self.sess.query(query, fmt='JSON')))
+        response: str = json.dumps(str(self.session.query(query, fmt='JSON')))
         try:
             return json.loads(json.loads(response))
         except JSONDecodeError as e:
@@ -140,7 +140,7 @@ class CHIndexer:
         Creates a new table in the database and populates it with data from the XML file provided
         """
         self.create_table()
-        print(f"Created table {self.dbname}.{self.name}")
+        print(f"Created table {self.db_name}.{self.table_name}")
         result: bool = self.index_data()
         if result:
             print("Inserted data into chdb correctly")
