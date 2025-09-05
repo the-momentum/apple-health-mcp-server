@@ -1,11 +1,11 @@
 from time import time
 from typing import Any
 
-import chdb.session
 
-from app.services.ch import CHIndexer
+from scripts.clickhouse_importer import CHIndexer
 from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
 
+ch = CHIndexer()
 
 def build_value_range(valuemin: str | None, valuemax: str | None) -> str | None:
     if valuemax and valuemin:
@@ -18,7 +18,6 @@ def build_value_range(valuemin: str | None, valuemax: str | None) -> str | None:
 
 
 def fill_query(params: HealthRecordSearchParams) -> str:
-    ch = CHIndexer()
     conditions = []
 
     query = f"SELECT * FROM {ch.db_name}.{ch.table_name} WHERE 1=1"
@@ -38,18 +37,15 @@ def fill_query(params: HealthRecordSearchParams) -> str:
 
 
 def get_health_summary_from_ch() -> dict[str, Any]:
-    ch = CHIndexer()
     return ch.inquire(f"SELECT type, COUNT(*) FROM {ch.db_name}.{ch.table_name} GROUP BY type")
 
 
 def search_health_records_from_ch(params: HealthRecordSearchParams) -> dict[str, Any]:
     query: str = fill_query(params)
-    ch = CHIndexer()
     return ch.inquire(query)
 
 
 def get_statistics_by_type_from_ch(record_type: RecordType | str) -> dict[str, Any]:
-    ch = CHIndexer()
     return ch.inquire(f"SELECT type, COUNT(*), AVG(numerical), SUM(numerical), MIN(numerical), MAX(numerical) FROM {ch.db_name}.{ch.table_name} WHERE type = '{record_type}' GROUP BY type")
 
 
@@ -59,7 +55,6 @@ def get_trend_data_from_ch(
     date_from: str | None = None,
     date_to: str | None = None,
 ) -> dict[str, Any]:
-    ch = CHIndexer()
     return ch.inquire(f"""
         SELECT toStartOfInterval(startDate, INTERVAL 1 {interval}) AS interval,
         AVG(numerical), MIN(numerical), MAX(numerical), COUNT(*) FROM {ch.db_name}.{ch.table_name}
@@ -69,7 +64,6 @@ def get_trend_data_from_ch(
 
 
 def update_db_ch() -> dict[str, str | bool]:
-    ch = CHIndexer()
     try:
         ch.session.sql(f"DROP TABLE IF EXISTS {ch.db_name}.{ch.table_name}")
         ch.run()
