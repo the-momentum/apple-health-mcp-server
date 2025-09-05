@@ -28,6 +28,18 @@ class CHIndexer:
         "device": "unknown",
         "value": "unknown",
     }
+    COLUMN_NAMES: tuple[str, ...] = (
+        "type",
+        "sourceVersion",
+        "sourceName",
+        "device",
+        "startDate",
+        "endDate",
+        "creationDate",
+        "unit",
+        "value",
+        "numerical",
+    )
 
     def __del__(self):
         self.session.close()
@@ -63,18 +75,7 @@ class CHIndexer:
         :param chunk_size: Size of yielded dataframe
         """
         records: list[dict[str, Any]] = []
-        column_names: tuple[str, ...] = (
-            "type",
-            "sourceVersion",
-            "sourceName",
-            "device",
-            "startDate",
-            "endDate",
-            "creationDate",
-            "unit",
-            "value",
-            "numerical",
-        )
+
 
         def update_record(document: dict[str, Any]) -> dict[str, Any]:
             """
@@ -106,7 +107,7 @@ class CHIndexer:
         for event, elem in ET.iterparse(self.path, events=("start",)):
             if elem.tag == "Record" and event == "start":
                 if len(records) >= self.chunk_size:
-                    yield DataFrame(records).reindex(columns=column_names)
+                    yield DataFrame(records).reindex(columns=self.COLUMN_NAMES)
                     records = []
                 record: dict[str, Any] = elem.attrib.copy()
 
@@ -116,7 +117,7 @@ class CHIndexer:
             elem.clear()
 
         # yield remaining records
-        yield DataFrame(records).reindex(columns=column_names)
+        yield DataFrame(records).reindex(columns=self.COLUMN_NAMES)
 
     def index_data(self) -> bool:
         for docs in self.parse_xml():
