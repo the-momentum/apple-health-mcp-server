@@ -200,6 +200,9 @@ After completing the above steps, restart your MCP Client to apply the changes. 
 | ES_USER            | Elasticsearch username                      | `elastic`            | ❌       |
 | ES_PASSWORD        | Elasticsearch password                      | `elastic`            | ❌       |
 | ES_INDEX           | Elasticsearch index name                    | `apple_health_data`  | ❌       |
+| CH_DB_NAME         | ClickHouse database name                    | `applehealth`        | ❌       |
+| CH_TABLE_NAME      | ClickHouse table name                       | `data`               | ❌       |
+| CHUNK_SIZE         | Number of records indexed into CH at once   | `10000`              | ❌       |
 | XML_SAMPLE_SIZE    | Number of XML records to sample             | `1000`               | ❌       |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
