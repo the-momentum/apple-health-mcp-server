@@ -132,8 +132,8 @@ You can run the MCP Server in your LLM Client in two ways:
            "type=bind,source=<project-path>/app,target=/root_project/app", // optional
            "--mount",
            "type=bind,source=<project-path>/config/.env,target=/root_project/config/.env",
-           "--mount", // optional - add only when using ClickHouse with Docker
-			     "type=volume,source=applehealth-data,target=/root_project/applehealth.chdb", // optional - add only when using ClickHouse with Docker
+           "--mount", // optional - only include this if you use clickhouse
+		    "type=bind,source=<project-path>/applehealth.chdb,target=/root_project/applehealth.chdb", // optional
            "-e",
            "ES_HOST=host.docker.internal",
            "mcp-server:latest"
@@ -200,6 +200,9 @@ After completing the above steps, restart your MCP Client to apply the changes. 
 | ES_USER            | Elasticsearch username                      | `elastic`            | ❌       |
 | ES_PASSWORD        | Elasticsearch password                      | `elastic`            | ❌       |
 | ES_INDEX           | Elasticsearch index name                    | `apple_health_data`  | ❌       |
+| CH_DB_NAME         | ClickHouse database name                    | `applehealth`        | ❌       |
+| CH_TABLE_NAME      | ClickHouse table name                       | `data`               | ❌       |
+| CHUNK_SIZE         | Number of records indexed into CH at once   | `10000`              | ❌       |
 | XML_SAMPLE_SIZE    | Number of XML records to sample             | `1000`               | ❌       |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
