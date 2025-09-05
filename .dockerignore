@@ -25,3 +25,4 @@ Makefile
 .*
 README.md
 *.xml
+*.chdb
