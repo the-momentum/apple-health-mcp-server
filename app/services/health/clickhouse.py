@@ -1,6 +1,8 @@
 from time import time
 from typing import Any
 
+import chdb.session
+
 from app.services.ch import CHIndexer
 from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
 
@@ -11,7 +13,7 @@ def build_value_range(valuemin: str | None, valuemax: str | None) -> str | None:
     if valuemin:
         return f"value >= '{valuemin}'"
     if valuemax:
-        return f"value >= '{valuemax}'"
+        return f"value <= '{valuemax}'"
     return None
 
 

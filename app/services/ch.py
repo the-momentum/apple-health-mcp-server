@@ -129,7 +129,7 @@ class CHIndexer:
         Makes an SQL query to the database
         :return: result of the query
         """
-        # weird json hack
+        # first call to json.loads() only returns a string, and the second one a dict
         response: str = json.dumps(str(self.session.query(query, fmt='JSON')))
         try:
             return json.loads(json.loads(response))
@@ -153,6 +153,3 @@ class CHIndexer:
 if __name__ == "__main__":
     ch = CHIndexer()
     ch.run()
-    # print(ch.inquire(f"SHOW FULL TABLES FROM {ch.dbname}"))
-    # print(ch.inquire(f"SELECT COUNT(*) FROM {ch.dbname}.{ch.name}"))
-    # print(ch.inquire("SELECT type, COUNT(*) FROM applehealth.data WHERE startDate >= '2015-06-24' AND startDate <= '2015-06-28' GROUP BY type"))
