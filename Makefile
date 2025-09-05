@@ -55,6 +55,7 @@ chwin: ## Import Apple Health XML data into a docker volume for ClickHouse (for 
 	docker run --rm -v applehealth-data:/volume uvcopier
 	docker run --rm -v applehealth-data:/source -v $pwd/:/dest alpine cp -r /source/applehealth.chdb /dest/
 	move xmltemp123 raw.xml
+	docker volume rm applehealth-data
 
 downgrade:  ## Revert the last migration
 	$(ALEMBIC_CMD) downgrade -1
