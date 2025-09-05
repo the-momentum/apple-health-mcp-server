@@ -61,29 +61,3 @@ def get_trend_data_from_ch(
         WHERE type = '{record_type}' {f"AND startDate >= '{date_from}'" if date_from else ''} {f"AND startDate <= '{date_to}'" if date_to else ''}
         GROUP BY interval ORDER BY interval ASC 
     """)
-
-
-def update_db_ch() -> dict[str, str | bool]:
-    try:
-        ch.session.sql(f"DROP TABLE IF EXISTS {ch.db_name}.{ch.table_name}")
-        ch.run()
-        return {"updated": True}
-    except Exception as e:
-        return {"updated": False,
-                "error": str(e)}
-
-
-if __name__ == '__main__':
-    start = time()
-    print('records for get_health_summary_from_ch: ', len(get_health_summary_from_ch()['data']))
-    print('time: ', time() - start)
-    start = time()
-    print('records for get_statistics_by_type_ch: ', (get_statistics_by_type_from_ch('HKQuantityTypeIdentifierHeartRate')['data']))
-    print('time: ', time() - start)
-    start = time()
-    print('records for get_trend_data_ch: ', (get_trend_data_from_ch('HKQuantityTypeIdentifierHeartRate', 'month', '2014-06-01', '2020-06-01')['data']))
-    print('time: ', time() - start)
-    start = time()
-    pars = HealthRecordSearchParams(record_type='HKQuantityTypeIdentifierBasalEnergyBurned', value_min = '10', value_max = '20')
-    print('records for search_health_records_from_ch: ', (search_health_records_from_ch(pars)['data']))
-    print('time: ', time() - start)

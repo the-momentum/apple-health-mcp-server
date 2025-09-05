@@ -7,7 +7,6 @@ from app.services.health.clickhouse import (
     search_health_records_from_ch,
     get_statistics_by_type_from_ch,
     get_trend_data_from_ch,
-    update_db_ch
 )
 
 ch_reader_router = FastMCP(name="CH Reader MCP")
@@ -124,20 +123,3 @@ def get_trend_data_ch(
     except Exception as e:
         return {"error": f"Failed to get trend data: {str(e)}"}
 
-
-
-@ch_reader_router.tool
-def update_database_ch() -> dict[str, str | bool]:
-    """
-    Update the ClickHouse database by dropping the table with data if it exists and populating it with new data from the user.
-
-    Notes for LLMs:
-    - Use this only if the user explicitly states that he wants to update the clickhouse database
-    - Inform the user that this may be inefficient and to consult the README to import the data in another way
-    - IMPORTANT - always ask the user for confirmation each time before calling this tool, as it can irreversibly delete the data.
-    - Do not guess, autofill, or assume any missing data.
-    """
-    try:
-        return update_db_ch()
-    except Exception as e:
-        return {'error': str(e)}
