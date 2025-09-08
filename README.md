@@ -21,7 +21,7 @@
 - [🚀 Getting Started](#-getting-started)
 - [📝 Usage](#-usage)
 - [🔧 Configuration](#-configuration)
-- [🐳 Docker Setup](#-docker-setup)
+- [🐳 Docker Setup](#-docker-mcp)
 - [🛠️ MCP Tools](#️-mcp-tools)
 - [🗺️ Roadmap](#️-roadmap)
 - [👥 Contributors](#-contributors)
@@ -29,14 +29,14 @@
 
 ## 🔍 About The Project
 
-**Apple Health MCP Server** implements a Model Context Protocol (MCP) server designed for seamless interaction between LLM-based agents and Apple Health data. It provides a standardized interface for querying, analyzing, and managing Apple Health records—imported from XML exports and indexed in Elasticsearch—through a comprehensive suite of tools. These tools are accessible from MCP-compatible clients (such as Claude Desktop), enabling users to explore, search, and analyze personal health data using natural-language prompts and advanced filtering, all without requiring direct knowledge of the underlying data formats or Elasticsearch queries.
+**Apple Health MCP Server** implements a Model Context Protocol (MCP) server designed for seamless interaction between LLM-based agents and Apple Health data. It provides a standardized interface for querying, analyzing, and managing Apple Health records—imported from XML exports and indexed in Elasticsearch or Clickhouse—through a comprehensive suite of tools. These tools are accessible from MCP-compatible clients (such as Claude Desktop), enabling users to explore, search, and analyze personal health data using natural-language prompts and advanced filtering, all without requiring direct knowledge of the underlying data formats or Elasticsearch/ClickHouse queries.
 
 ### ✨ Key Features
 
 - **🚀 FastMCP Framework**: Built on FastMCP for high-performance MCP server capabilities
 - **🍏 Apple Health Data Management**: Import, parse, and analyze Apple Health XML exports
 - **🔎 Powerful Search & Filtering**: Query and filter health records using natural language and advanced parameters
-- **📦 Elasticsearch Integration**: Index and search health data efficiently at scale
+- **📦 Elasticsearch and ClickHouse Integration**: Index and search health data efficiently at scale
 - **🛠️ Modular MCP Tools**: Tools for structure analysis, record search, type-based extraction, and more
 - **📈 Data Summaries & Trends**: Generate statistics and trend analyses from your health data
 - **🐳 Container Ready**: Docker support for easy deployment and scaling
@@ -49,6 +49,7 @@ The Apple Health MCP Server is built with a modular, extensible architecture des
 - **MCP Tools**: Dedicated tools for Apple Health XML structure analysis, record search, type-based extraction, and statistics/trend generation. Each tool is accessible via the MCP protocol for natural language and programmatic access.
 - **XML Import & Parsing**: Efficient streaming and parsing of large Apple Health XML exports, extracting records, workouts, and metadata for further analysis.
 - **Elasticsearch Backend**: All health records are indexed in Elasticsearch, enabling fast, scalable search, filtering, and aggregation across large datasets.
+- **ClickHouse Backend**: Health records can also be indexed to a ClickHouse database, making the deployment easier for the enduser by using an in-memory database instead of a server-based approach.
 - **Service Layer**: Business logic for XML and Elasticsearch operations is encapsulated in dedicated service modules, ensuring separation of concerns and easy extensibility.
 - **FastMCP Framework**: Provides the MCP server interface, routing, and tool registration, making the system compatible with LLM-based agents and MCP clients (e.g., Claude Desktop).
 - **Configuration & Deployment**: Environment-based configuration and Docker support for easy setup and deployment in various environments.
@@ -96,6 +97,10 @@ Follow these steps to set up Apple Health MCP Server in your environment.
      ```sh
      uv run python scripts/xml2es.py --delete-all
      ```
+3. If you choose to use ClickHouse instead of Elasticsearch:
+   - Run `make ch` to create a database with your exported XML data
+   - **Note: If you are using Windows, Docker is the only way to integrate ClickHouse into this MCP Server.**
+   - On Windows: Run `mingw32-make chwin` (or any other version of `make` available on Windows)
 
 ### Configuration Files
 
@@ -126,6 +131,8 @@ You can run the MCP Server in your LLM Client in two ways:
            "type=bind,source=<project-path>/app,target=/root_project/app", // optional
            "--mount",
            "type=bind,source=<project-path>/config/.env,target=/root_project/config/.env",
+           "--mount", // optional - only include this if you use clickhouse
+		    "type=bind,source=<project-path>/applehealth.chdb,target=/root_project/applehealth.chdb", // optional
            "-e",
            "ES_HOST=host.docker.internal",
            "mcp-server:latest"
@@ -192,6 +199,9 @@ After completing the above steps, restart your MCP Client to apply the changes. 
 | ES_USER            | Elasticsearch username                      | `elastic`            | ❌       |
 | ES_PASSWORD        | Elasticsearch password                      | `elastic`            | ❌       |
 | ES_INDEX           | Elasticsearch index name                    | `apple_health_data`  | ❌       |
+| CH_DB_NAME         | ClickHouse database name                    | `applehealth`        | ❌       |
+| CH_TABLE_NAME      | ClickHouse table name                       | `data`               | ❌       |
+| CHUNK_SIZE         | Number of records indexed into CH at once   | `10000`              | ❌       |
 | XML_SAMPLE_SIZE    | Number of XML records to sample             | `1000`               | ❌       |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -199,7 +209,7 @@ After completing the above steps, restart your MCP Client to apply the changes. 
 
 ## 🛠️ MCP Tools
 
-The Apple Health MCP Server provides a suite of tools for exploring, searching, and analyzing your Apple Health data, both at the raw XML level and in Elasticsearch:
+The Apple Health MCP Server provides a suite of tools for exploring, searching, and analyzing your Apple Health data, both at the raw XML level and in Elasticsearch/ClickHouse:
 
 ### XML Tools (`xml_reader`)
 
@@ -217,6 +227,15 @@ The Apple Health MCP Server provides a suite of tools for exploring, searching, 
 | `search_health_records_es`  | Flexible search for health records in Elasticsearch with advanced filtering and query options.        |
 | `get_statistics_by_type_es` | Get comprehensive statistics (count, min, max, avg, sum) for a specific health record type.          |
 | `get_trend_data_es`         | Analyze trends for a health record type over time (daily, weekly, monthly, yearly aggregations).     |
+
+### ClickHouse Tools (`ch_reader`)
+
+| Tool                        | Description                                                                                         |
+|-----------------------------|-----------------------------------------------------------------------------------------------------|
+| `get_health_summary_ch`     | Get a summary of all Apple Health data in ClickHouse (total count, type breakdown, etc.).         |
+| `search_health_records_ch`  | Flexible search for health records in ClickHouse with advanced filtering and query options.        |
+| `get_statistics_by_type_ch` | Get comprehensive statistics (count, min, max, avg, sum) for a specific health record type.          |
+| `get_trend_data_ch`         | Analyze trends for a health record type over time (daily, weekly, monthly, yearly aggregations).     |
 
 All tools are accessible via MCP-compatible clients and can be used with natural language or programmatic queries to explore and analyze your Apple Health data.
 

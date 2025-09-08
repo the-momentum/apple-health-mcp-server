@@ -149,3 +149,6 @@ volumes
 
 # Data Source
 *.xml
+
+# ClickHouse database
+*.chdb

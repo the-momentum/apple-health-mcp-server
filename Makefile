@@ -41,5 +41,17 @@ es:  ## Run Elasticsearch and import Apple Health XML data into ES for Apple Hea
 	./scripts/run_elasticsearch.sh
 	$(UV) python scripts/xml2es.py
 
+ch: ## Import Apple Health XML data into a docker volume for ClickHouse
+	$(UV) scripts/clickhouse_importer.py
+
+chwin: ## Import Apple Health XML data into a docker volume for ClickHouse (for Windows users)
+	move *.xml xmltemp123
+	docker volume create applehealth-data
+	docker build . --file Dockerfile.ch -t uvcopier
+	docker run --rm -v applehealth-data:/volume uvcopier
+	docker run --rm -v applehealth-data:/source -v $pwd/:/dest alpine cp -r /source/applehealth.chdb /dest/
+	move xmltemp123 raw.xml
+	docker volume rm applehealth-data
+
 downgrade:  ## Revert the last migration
 	$(ALEMBIC_CMD) downgrade -1

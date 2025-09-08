@@ -28,6 +28,11 @@ class Settings(BaseSettings):
     ES_PASSWORD: SecretStr = SecretStr("elastic")
     ES_INDEX: str = "apple_health_data"
 
+    CH_DIRNAME: str = "applehealth.chdb"
+    CH_DB_NAME: str = "applehealth"
+    CH_TABLE_NAME: str = "data"
+    CHUNK_SIZE: int = 10_000
+
     RAW_XML_PATH: str = "raw.xml"
     XML_SAMPLE_SIZE: int = 1000
 
