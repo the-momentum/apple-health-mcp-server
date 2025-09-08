@@ -3,6 +3,7 @@ from sys import stderr
 from app.services.ch import CHClient
 from scripts.xml_exporter import XMLExporter
 
+
 class CHIndexer(XMLExporter, CHClient):
     def __init__(self):
         XMLExporter.__init__(self)
@@ -31,7 +32,6 @@ class CHIndexer(XMLExporter, CHClient):
                        ORDER BY startDate
                         """)
 
-
     def index_data(self) -> bool:
         for docs in self.parse_xml():
             try:
@@ -59,6 +59,7 @@ class CHIndexer(XMLExporter, CHClient):
         else:
             print("Error during data indexing")
             return False
+
 
 if __name__ == "__main__":
     ch = CHIndexer()
