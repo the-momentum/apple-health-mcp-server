@@ -98,8 +98,7 @@ Follow these steps to set up Apple Health MCP Server in your environment.
      uv run python scripts/xml2es.py --delete-all
      ```
 3. If you choose to use ClickHouse instead of Elasticsearch:
-   - Run `make ch` to create a Docker volume with your data in it **OR**
-   - Run `uv run app/services/ch.py` if you're using an uv installation method.
+   - Run `make ch` to create a database with your exported XML data
    - **Note: If you are using Windows, Docker is the only way to integrate ClickHouse into this MCP Server.**
    - On Windows: Run `mingw32-make chwin` (or any other version of `make` available on Windows)
 
