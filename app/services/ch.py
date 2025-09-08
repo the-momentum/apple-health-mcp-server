@@ -28,8 +28,8 @@ class CHClient:
         :return: result of the query
         """
         # first call to json.loads() only returns a string, and the second one a dict
-        response: str = json.dumps(str(self.session.query(query, fmt='JSON')))
+        response: str = json.dumps(str(self.session.query(query, fmt="JSON")))
         try:
             return json.loads(json.loads(response))
         except JSONDecodeError as e:
-            return {'error': str(e)}
+            return {"error": str(e)}

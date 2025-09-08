@@ -1,4 +1,3 @@
-from time import time
 from typing import Any
 
 from app.services.ch import CHClient
@@ -6,6 +5,7 @@ from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParam
 
 
 ch = CHClient()
+
 
 def build_value_range(valuemin: str | None, valuemax: str | None) -> str | None:
     if valuemax and valuemin:
@@ -32,7 +32,7 @@ def fill_query(params: HealthRecordSearchParams) -> str:
 
     if conditions:
         query += " AND " + " AND ".join(conditions)
-    query += f'LIMIT {params.limit}'
+    query += f"LIMIT {params.limit}"
     return query
 
 
@@ -46,7 +46,9 @@ def search_health_records_from_ch(params: HealthRecordSearchParams) -> dict[str,
 
 
 def get_statistics_by_type_from_ch(record_type: RecordType | str) -> dict[str, Any]:
-    return ch.inquire(f"SELECT type, COUNT(*), AVG(numerical), SUM(numerical), MIN(numerical), MAX(numerical) FROM {ch.db_name}.{ch.table_name} WHERE type = '{record_type}' GROUP BY type")
+    return ch.inquire(
+        f"SELECT type, COUNT(*), AVG(numerical), SUM(numerical), MIN(numerical), MAX(numerical) FROM {ch.db_name}.{ch.table_name} WHERE type = '{record_type}' GROUP BY type"
+    )
 
 
 def get_trend_data_from_ch(
@@ -58,6 +60,6 @@ def get_trend_data_from_ch(
     return ch.inquire(f"""
         SELECT toStartOfInterval(startDate, INTERVAL 1 {interval}) AS interval,
         AVG(numerical), MIN(numerical), MAX(numerical), COUNT(*) FROM {ch.db_name}.{ch.table_name}
-        WHERE type = '{record_type}' {f"AND startDate >= '{date_from}'" if date_from else ''} {f"AND startDate <= '{date_to}'" if date_to else ''}
-        GROUP BY interval ORDER BY interval ASC 
+        WHERE type = '{record_type}' {f"AND startDate >= '{date_from}'" if date_from else ""} {f"AND startDate <= '{date_to}'" if date_to else ""}
+        GROUP BY interval ORDER BY interval ASC
     """)

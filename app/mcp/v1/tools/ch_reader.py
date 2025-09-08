@@ -11,6 +11,7 @@ from app.services.health.clickhouse import (
 
 ch_reader_router = FastMCP(name="CH Reader MCP")
 
+
 @ch_reader_router.tool
 def get_health_summary_ch() -> dict[str, Any]:
     """
@@ -24,7 +25,8 @@ def get_health_summary_ch() -> dict[str, Any]:
     try:
         return get_health_summary_from_ch()
     except Exception as e:
-        return {'error': str(e)}
+        return {"error": str(e)}
+
 
 @ch_reader_router.tool
 def search_health_records_ch(params: HealthRecordSearchParams) -> dict[str, Any]:
@@ -48,7 +50,8 @@ def search_health_records_ch(params: HealthRecordSearchParams) -> dict[str, Any]
     try:
         return search_health_records_from_ch(params)
     except Exception as e:
-        return {'error': str(e)}
+        return {"error": str(e)}
+
 
 @ch_reader_router.tool
 def get_statistics_by_type_ch(record_type: RecordType | str) -> dict[str, Any]:
@@ -122,4 +125,3 @@ def get_trend_data_ch(
         return get_trend_data_from_ch(record_type, interval, date_from, date_to)
     except Exception as e:
         return {"error": f"Failed to get trend data: {str(e)}"}
-
