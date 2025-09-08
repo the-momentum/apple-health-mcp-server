@@ -1,0 +1,12 @@
+columns format version: 1
+10 columns:
+`type` String
+`sourceVersion` String
+`sourceName` String
+`device` String
+`startDate` DateTime
+`endDate` DateTime
+`creationDate` DateTime
+`unit` String
+`value` String
+`numerical` Float32

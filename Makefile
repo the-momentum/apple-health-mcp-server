@@ -47,7 +47,7 @@ ch: ## Import Apple Health XML data into a docker volume for ClickHouse
 chwin: ## Import Apple Health XML data into a docker volume for ClickHouse (for Windows users)
 	move *.xml xmltemp123
 	docker volume create applehealth-data
-	docker build . --file ch.Dockerfile -t uvcopier
+	docker build . --file Dockerfile.ch -t uvcopier
 	docker run --rm -v applehealth-data:/volume uvcopier
 	docker run --rm -v applehealth-data:/source -v $pwd/:/dest alpine cp -r /source/applehealth.chdb /dest/
 	move xmltemp123 raw.xml
