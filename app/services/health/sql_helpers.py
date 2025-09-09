@@ -1,5 +1,6 @@
 from app.schemas.record import HealthRecordSearchParams
 
+
 def build_date(date_from: str | None, date_to: str | None) -> str | None:
     if date_from and date_to:
         return f"startDate >= '{date_from}' and startDate <= '{date_to}'"
@@ -9,6 +10,7 @@ def build_date(date_from: str | None, date_to: str | None) -> str | None:
         return f"startDate <= '{date_to}'"
     return None
 
+
 def build_value_range(valuemin: str | None, valuemax: str | None) -> str | None:
     if valuemax and valuemin:
         return f"value >= '{valuemin}' and value <= '{valuemax}'"
@@ -17,6 +19,7 @@ def build_value_range(valuemin: str | None, valuemax: str | None) -> str | None:
     if valuemax:
         return f"value <= '{valuemax}'"
     return None
+
 
 def fill_query(params: HealthRecordSearchParams) -> str:
     conditions: list[str] = []

@@ -3,12 +3,14 @@ from pathlib import Path
 
 import polars as pl
 
-from xml_exporter import XMLExporter
+from app.services.duck import DuckDBClient
+from scripts.xml_exporter import XMLExporter
 
 
-class ParquetImporter(XMLExporter):
+class ParquetImporter(XMLExporter, DuckDBClient):
     def __init__(self):
         XMLExporter.__init__(self)
+        DuckDBClient.__init__(self)
 
     def exportxml(self):
         chunkfiles = []
@@ -33,10 +35,11 @@ class ParquetImporter(XMLExporter):
             chunk_dfs.append(df)
 
         combined_df = pl.concat(chunk_dfs)
-        combined_df.write_parquet("appledata.parquet", compression="zstd")
+        combined_df.write_parquet(f"{self.parquetpath}.parquet", compression="zstd")
 
         for f in chunkfiles:
             os.remove(f)
+
 
 if __name__ == "__main__":
     importer = ParquetImporter()
