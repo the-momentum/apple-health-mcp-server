@@ -8,13 +8,13 @@ class CHIndexer(XMLExporter, CHClient):
     def __init__(self):
         XMLExporter.__init__(self)
         CHClient.__init__(self)
-        self.session.query(f"CREATE DATABASE IF NOT EXISTS {self.db_name}")
+        self.ch_session.query(f"CREATE DATABASE IF NOT EXISTS {self.db_name}")
 
     def create_table(self) -> None:
         """
         Create a new table for exported xml health data
         """
-        self.session.query(f"""
+        self.ch_session.query(f"""
                    CREATE TABLE IF NOT EXISTS {self.db_name}.{self.table_name}
                    (
                        type String,
@@ -34,7 +34,7 @@ class CHIndexer(XMLExporter, CHClient):
     def index_data(self) -> bool:
         for docs in self.parse_xml():
             try:
-                self.session.query(f"""
+                self.ch_session.query(f"""
                            INSERT INTO {self.db_name}.{self.table_name}
                            SELECT *
                            FROM Python(docs)
