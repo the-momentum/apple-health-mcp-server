@@ -1,6 +1,6 @@
 from sys import stderr
 
-from app.services.ch import CHClient
+from app.services.ch_client import CHClient
 from scripts.xml_exporter import XMLExporter
 
 

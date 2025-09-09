@@ -1,6 +1,6 @@
 from typing import Any
 
-from app.services.ch import CHClient
+from app.services.ch_client import CHClient
 from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
 from app.services.health.sql_helpers import fill_query
 

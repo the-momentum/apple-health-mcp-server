@@ -4,7 +4,7 @@ from time import time
 import duckdb
 
 from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
-from app.services.duck import DuckDBClient
+from app.services.duckdb_client import DuckDBClient
 from app.services.health.sql_helpers import fill_query
 
 client = DuckDBClient()

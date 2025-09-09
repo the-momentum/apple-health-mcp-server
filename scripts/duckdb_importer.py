@@ -3,7 +3,7 @@ from pathlib import Path
 
 import polars as pl
 
-from app.services.duck import DuckDBClient
+from app.services.duckdb_client import DuckDBClient
 from scripts.xml_exporter import XMLExporter
 
 
