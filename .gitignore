@@ -152,3 +152,6 @@ volumes
 
 # ClickHouse database
 *.chdb
+
+# Parquet files for DuckDB
+*.parquet
