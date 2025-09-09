@@ -6,6 +6,7 @@ from duckdb import DuckDBPyRelation
 
 from app.config import settings
 
+
 @dataclass
 class DuckDBClient:
     def __init__(self):
