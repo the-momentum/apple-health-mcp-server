@@ -26,3 +26,4 @@ Makefile
 README.md
 *.xml
 *.chdb
+*.parquet
