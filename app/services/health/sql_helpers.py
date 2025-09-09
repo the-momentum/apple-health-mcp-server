@@ -11,11 +11,11 @@ def build_date(date_from: str | None, date_to: str | None) -> str | None:
 
 def build_value_range(valuemin: str | None, valuemax: str | None) -> str | None:
     if valuemax and valuemin:
-        return f"numerical >= '{valuemin}' and numerical <= '{valuemax}'"
+        return f"value >= '{valuemin}' and value <= '{valuemax}'"
     if valuemin:
-        return f"numerical >= '{valuemin}'"
+        return f"value >= '{valuemin}'"
     if valuemax:
-        return f"numerical <= '{valuemax}'"
+        return f"value <= '{valuemax}'"
     return None
 
 def fill_query(params: HealthRecordSearchParams) -> str:
