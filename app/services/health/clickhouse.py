@@ -2,7 +2,10 @@ from typing import Any
 
 from app.services.ch import CHClient
 from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
-from app.services.health.sql_helpers import fill_query
+from app.services.health.sql_helpers import (
+    build_value_range,
+    fill_query
+)
 
 ch = CHClient()
 

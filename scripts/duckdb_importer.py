@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 import polars as pl
 
@@ -12,23 +11,25 @@ class ParquetImporter(XMLExporter):
 
     def exportxml(self):
         chunkfiles = []
-        for i, docs in enumerate(self.parse_xml(), 1):
-            df: pl.DataFrame = pl.DataFrame(docs)
-            chunk_file: Path = Path(f"data.chunk_{i}.parquet")
-            print(f"processed {i * self.chunk_size} docs")
+        for i, docs in enumerate(self.parse_xml()):
+            df = pl.DataFrame(docs)
+            chunk_file = f"data.chunk_{i}.parquet"
+            print(f"processed {(i + 1) * 200000} docs")
             df.write_parquet(chunk_file, compression="zstd", compression_level=1)
             chunkfiles.append(chunk_file)
-            print(f"written {i * self.chunk_size} docs")
+            print(f"written {(i + 1) * 200000} docs")
 
-        chunk_dfs: list[pl.DataFrame] = []
-        reference_columns: list[str] = []
+        chunk_dfs = []
+        reference_columns = None
 
         for chunk_file in chunkfiles:
             df = pl.read_parquet(chunk_file)
 
-            if not reference_columns:
+            # Set reference from first chunk
+            if reference_columns is None:
                 reference_columns = df.columns
 
+            # Reorder columns to match reference
             df = df.select(reference_columns)
             chunk_dfs.append(df)
 
@@ -37,8 +38,3 @@ class ParquetImporter(XMLExporter):
 
         for f in chunkfiles:
             os.remove(f)
-
-
-if __name__ == "__main__":
-    importer = ParquetImporter()
-    importer.exportxml()
