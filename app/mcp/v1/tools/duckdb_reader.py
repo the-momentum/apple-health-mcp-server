@@ -15,7 +15,7 @@ duckdb_reader_router = FastMCP(name="CH Reader MCP")
 @duckdb_reader_router.tool
 def get_health_summary_duckdb() -> list[dict[str, Any]]:
     """
-    Get a summary of Apple Health data from ClickHouse.
+    Get a summary of Apple Health data from DuckDB.
     The function returns total record count, record type breakdown, and (optionally) a date range aggregation.
 
     Notes for LLM:
@@ -32,7 +32,7 @@ def get_health_summary_duckdb() -> list[dict[str, Any]]:
 @duckdb_reader_router.tool
 def search_health_records_duckdb(params: HealthRecordSearchParams) -> list[dict[str, Any]]:
     """
-    Search health records in ClickHouse with flexible query building.
+    Search health records in DuckDB with flexible query building.
 
     Parameters:
     - params: HealthRecordSearchParams object containing all search/filter parameters.
@@ -58,7 +58,7 @@ def search_health_records_duckdb(params: HealthRecordSearchParams) -> list[dict[
 @duckdb_reader_router.tool
 def get_statistics_by_type_duckdb(record_type: RecordType | str) -> list[dict[str, Any]]:
     """
-    Get comprehensive statistics for a specific health record type from ClickHouse.
+    Get comprehensive statistics for a specific health record type from DuckDB.
 
     Parameters:
     - record_type: The type of health record to analyze. Use RecordType for most frequent types. Use str if that type is beyond RecordType scope.
@@ -100,7 +100,7 @@ def get_trend_data_duckdb(
     date_to: str | None = None,
 ) -> list[dict[str, Any]]:
     """
-    Get trend data for a specific health record type over time using ClickHouse date histogram aggregation.
+    Get trend data for a specific health record type over time using DuckDB date histogram aggregation.
 
     Parameters:
     - record_type: The type of health record to analyze (e.g., "HKQuantityTypeIdentifierStepCount")

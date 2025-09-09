@@ -20,7 +20,8 @@ def get_health_summary_ch() -> dict[str, Any]:
 
     Notes for LLM:
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
-    - When asked for medical advice, try to use my data from ClickHouse first.
+    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
+    Elasticsearch.
     """
     try:
         return get_health_summary_from_ch()
@@ -45,7 +46,8 @@ def search_health_records_ch(params: HealthRecordSearchParams) -> dict[str, Any]
     - Example date_from/date_to: "2020-01-01T00:00:00+00:00"
     - Example value_min/value_max: "10", "100.5"
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
-    - When asked for medical advice, try to use my data from ClickHouse first.
+    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
+    Elasticsearch.
     """
     try:
         return search_health_records_from_ch(params)
@@ -81,7 +83,8 @@ def get_statistics_by_type_ch(record_type: RecordType | str) -> dict[str, Any]:
     - The function is useful for health analysis, identifying outliers, and understanding data quality.
     - date_range key for query is commented, since it contained hardcoded from date, but you can use it anyway if you replace startDate with your data.
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
-    - When asked for medical advice, try to use my data from ClickHouse first.
+    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
+    Elasticsearch.
     """
     try:
         return get_statistics_by_type_from_ch(record_type)
@@ -119,7 +122,8 @@ def get_trend_data_ch(
     - The function automatically handles date filtering if date_from/date_to are provided
     - IMPORTANT - interval must be one of: "day", "week", "month", or "year". Do not use other values.
     - Do not guess, autofill, or assume any missing data.
-    - When asked for medical advice, try to use my data from ClickHouse first.
+    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
+    Elasticsearch.
     """
     try:
         return get_trend_data_from_ch(record_type, interval, date_from, date_to)

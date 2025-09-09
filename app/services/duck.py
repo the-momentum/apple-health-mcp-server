@@ -13,7 +13,7 @@ class DuckDBClient:
 
     def __post_init__(self):
         if not self.parquetpath.exists():
-            raise FileNotFoundError(f"XML file not found: {self.parquetpath}")
+            raise FileNotFoundError(f"Parquet file not found: {self.parquetpath}")
 
     @staticmethod
     def format_response(response: DuckDBPyRelation) -> list[dict[str, Any]]:

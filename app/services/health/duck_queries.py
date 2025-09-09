@@ -46,39 +46,27 @@ def get_trend_data_from_duckdb(
 ) -> list[dict[str, Any]]:
     result = duckdb.sql(f"""
         SELECT time_bucket(INTERVAL '1 {interval}', startDate) AS interval,
-        AVG(value), MIN(value), MAX(value), COUNT(*) FROM read_parquet('{client.parquetpath}')
+        AVG(value) AS average, MIN(value) AS min, MAX(value) AS max, COUNT(*) AS count FROM read_parquet('{client.parquetpath}')
         WHERE type = '{record_type}' {f"AND startDate >= '{date_from}'" if date_from else ""} {f"AND startDate <= '{date_to}'" if date_to else ""}
         GROUP BY interval ORDER BY interval ASC
     """)
     return client.format_response(result)
 
-
 if __name__ == "__main__":
     start = time()
-    print("records for get_health_summary_from_duckdb: ", len(get_health_summary_from_duckdb()))
+    print('records for get_health_summary_from_duckdb: ', len(get_health_summary_from_duckdb()))
     # print("time: ", time() - start)
     start = time()
-    print(
-        "records for get_statistics_by_type_duckdb: ",
-        len(get_statistics_by_type_from_duckdb("HKQuantityTypeIdentifierHeartRate")),
-    )
+    print('records for get_statistics_by_type_duckdb: ', len(get_statistics_by_type_from_duckdb('HKQuantityTypeIdentifierHeartRate')))
     # print("time: ", time() - start)
     start = time()
-    print(
-        "records for get_trend_data_duckdb: ",
-        len(
-            get_trend_data_from_duckdb(
-                "HKQuantityTypeIdentifierHeartRate", "year", "2014-06-01", "2020-06-01"
-            )
-        ),
-    )
+    print('records for get_trend_data_duckdb: ', len(get_trend_data_from_duckdb('HKQuantityTypeIdentifierHeartRate', 'year', '2014-06-01', '2020-06-01')))
     # print("time: ", time() - start)
     start = time()
     pars = HealthRecordSearchParams(
         record_type="HKQuantityTypeIdentifierBasalEnergyBurned", value_min="10", value_max="20"
     )
     print(
-        "records for search_health_records_from_duckdb: ",
-        len(search_health_records_from_duckdb(pars)),
+        "records for search_health_records_from_duckdb: ", len(search_health_records_from_duckdb(pars))
     )
     # print("time: ", time() - start)
