@@ -35,7 +35,7 @@ class ParquetImporter(XMLExporter, DuckDBClient):
             chunk_dfs.append(df)
 
         combined_df = pl.concat(chunk_dfs)
-        combined_df.write_parquet(f"{self.parquetpath}.parquet", compression="zstd")
+        combined_df.write_parquet(f"{self.parquetpath}", compression="zstd")
 
         for f in chunkfiles:
             os.remove(f)
