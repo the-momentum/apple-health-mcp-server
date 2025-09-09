@@ -1,4 +1,4 @@
-from typing import Any, Hashable
+from typing import Any
 from fastmcp import FastMCP
 
 from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
@@ -13,7 +13,7 @@ duckdb_reader_router = FastMCP(name="CH Reader MCP")
 
 
 @duckdb_reader_router.tool
-def get_health_summary_duckdb() -> dict[Hashable, Any] | dict[str, str]:
+def get_health_summary_duckdb() -> list[dict[str, Any]]:
     """
     Get a summary of Apple Health data from ClickHouse.
     The function returns total record count, record type breakdown, and (optionally) a date range aggregation.
@@ -26,11 +26,11 @@ def get_health_summary_duckdb() -> dict[Hashable, Any] | dict[str, str]:
     try:
         return get_health_summary_from_duckdb()
     except Exception as e:
-        return {"error": str(e)}
+        return [{"error": str(e)}]
 
 
 @duckdb_reader_router.tool
-def search_health_records_ch(params: HealthRecordSearchParams) -> dict[Hashable, Any] | dict[str, str]:
+def search_health_records_ch(params: HealthRecordSearchParams) -> list[dict[str, Any]]:
     """
     Search health records in ClickHouse with flexible query building.
 
@@ -52,11 +52,11 @@ def search_health_records_ch(params: HealthRecordSearchParams) -> dict[Hashable,
     try:
         return search_health_records_from_duckdb(params)
     except Exception as e:
-        return {"error": str(e)}
+        return [{"error": str(e)}]
 
 
 @duckdb_reader_router.tool
-def get_statistics_by_type_duckdb(record_type: RecordType | str) -> dict[Hashable, Any] | dict[str, str]:
+def get_statistics_by_type_duckdb(record_type: RecordType | str) -> list[dict[str, Any]]:
     """
     Get comprehensive statistics for a specific health record type from ClickHouse.
 
@@ -89,7 +89,7 @@ def get_statistics_by_type_duckdb(record_type: RecordType | str) -> dict[Hashabl
     try:
         return get_statistics_by_type_from_duckdb(record_type)
     except Exception as e:
-        return {"error": f"Failed to get statistics: {str(e)}"}
+        return [{"error": f"Failed to get statistics: {str(e)}"}]
 
 
 @duckdb_reader_router.tool
@@ -98,7 +98,7 @@ def get_trend_data_duckdb(
     interval: IntervalType = "month",
     date_from: str | None = None,
     date_to: str | None = None,
-) -> dict[Hashable, Any] | dict[str, str]:
+) -> list[dict[str, Any]]:
     """
     Get trend data for a specific health record type over time using ClickHouse date histogram aggregation.
 
@@ -128,4 +128,4 @@ def get_trend_data_duckdb(
     try:
         return get_trend_data_from_duckdb(record_type, interval, date_from, date_to)
     except Exception as e:
-        return {"error": f"Failed to get trend data: {str(e)}"}
+        return [{"error": f"Failed to get trend data: {str(e)}"}]

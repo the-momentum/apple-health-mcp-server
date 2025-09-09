@@ -1,6 +1,7 @@
-from typing import Any, Hashable
+from typing import Any
 
 from duckdb import DuckDBPyRelation
+
 
 class DuckDBClient:
     def __init__(self):
@@ -8,7 +9,7 @@ class DuckDBClient:
         self.path = "appledata.parquet"
 
     @staticmethod
-    def format_response(resp: DuckDBPyRelation) -> dict[Hashable, Any]:
-        resp: dict[Hashable, Any] = resp.df().to_dict()
-        resp = {k: v[0] for k, v in resp.items()}
-        return resp
+    def format_response(response: DuckDBPyRelation) -> list[dict[str, Any]]:
+        return response.df().to_dict(orient="records")
+        records = response.fetchall()
+        return records
