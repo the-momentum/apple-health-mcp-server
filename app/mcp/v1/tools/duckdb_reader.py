@@ -30,7 +30,7 @@ def get_health_summary_duckdb() -> list[dict[str, Any]]:
 
 
 @duckdb_reader_router.tool
-def search_health_records_ch(params: HealthRecordSearchParams) -> list[dict[str, Any]]:
+def search_health_records_duckdb(params: HealthRecordSearchParams) -> list[dict[str, Any]]:
     """
     Search health records in ClickHouse with flexible query building.
 
