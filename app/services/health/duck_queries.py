@@ -30,8 +30,8 @@ def get_statistics_by_type_from_duckdb(
     record_type: RecordType | str,
 ) -> list[dict[str, Any]]:
     result = duckdb.sql(f"""
-                    SELECT type, COUNT(*) AS count, AVG(numerical) AS average,
-                    SUM(numerical) AS sum, MIN(numerical) AS min, MAX(numerical) AS max
+                    SELECT type, COUNT(*) AS count, AVG(value) AS average,
+                    SUM(value) AS sum, MIN(value) AS min, MAX(value) AS max
                     FROM read_parquet('{client.path}')
                     WHERE type = '{record_type}' GROUP BY type
                     """)
@@ -46,7 +46,7 @@ def get_trend_data_from_duckdb(
 ) -> list[dict[str, Any]]:
     result = duckdb.sql(f"""
         SELECT time_bucket(INTERVAL '1 {interval}', startDate) AS interval,
-        AVG(numerical), MIN(numerical), MAX(numerical), COUNT(*) FROM read_parquet('{client.path}')
+        AVG(value), MIN(value), MAX(value), COUNT(*) FROM read_parquet('{client.path}')
         WHERE type = '{record_type}' {f"AND startDate >= '{date_from}'" if date_from else ""} {f"AND startDate <= '{date_to}'" if date_to else ""}
         GROUP BY interval ORDER BY interval ASC
     """)
