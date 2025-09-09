@@ -1,3 +1,8 @@
+# this dockerfile can serve as an alternative to the already existing Dockerfile
+# it uses the uv image instead of copying it
+# it provides a slightly faster build speed but uses ~100MB more disk space
+# to use it, change the name in docker-compose.yml or rename this file to Dockerfile
+
 FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
 
 WORKDIR /root_project
