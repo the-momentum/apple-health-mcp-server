@@ -34,10 +34,10 @@ dev = [
     "pytest-asyncio>=1.0.0",
     "pytest-cov>=6.2.1",
 ]
-lint = [
-    "pre-commit>=4.2.0",
-    "ruff>=0.12.1",
-    "ty>=0.0.1a12",
+code-quality = [
+    "pre-commit>=4.3.0",
+    "ruff>=0.12.12",
+    "ty>=0.0.1a20",
 ]
 
 [tool.pytest.ini_options]
@@ -47,13 +47,27 @@ asyncio_default_fixture_loop_scope = "session"
 line-length = 100
 target-version = "py313"
 
-[tool.mypy]
-python_version = "3.13"
-ignore_missing_imports = true
-disallow_untyped_defs = false
-exclude = [
-    "alembic/",
-    "migrations/",
+[tool.ruff.lint]
+select = [
+    "I",     # isort
+    "F",     # pyflakes
+    "FAST",  # FastApi
+    "ANN",   # flake8-annotations
+    "ASYNC", # flake8-async
+    "COM",   # flake8-commas
+    "T10",   # flake8-debugger
+    "PT",    # flake8-pytest-style
+    "RET",   # flake8-return
+    "SIM",   # flake8-simplify
+    "N",     # pep8-naming
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+]
+ignore = [
+    "ANN002", # missing-type-args
+    "ANN003", # missing-type-kwargs
+    "ANN204", # missing-return-type-special-method
+    "ANN401", # any-type
 ]
 
 [project.scripts]
