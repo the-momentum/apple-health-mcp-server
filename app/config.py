@@ -34,7 +34,7 @@ class Settings(BaseSettings):
 
     DUCKDB_FILENAME: str = "applehealth"
 
-    CHUNK_SIZE: int = 200_000
+    CHUNK_SIZE: int = 50_000
 
     RAW_XML_PATH: str = "raw.xml"
     XML_SAMPLE_SIZE: int = 1000

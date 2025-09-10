@@ -52,7 +52,7 @@ chwin: ## Import Apple Health XML data into a docker volume for ClickHouse (for 
 	docker run --rm -v applehealth-data:/source -v $pwd/:/dest alpine cp -r /source/applehealth.chdb /dest/
 	move xmltemp123 raw.xml
 	docker volume rm applehealth-data
-	
+
 duckdb: ## Import Apple Health XML data to a Parquet file for DuckDB
 	$(UV) scripts/duckdb_importer.py
 
