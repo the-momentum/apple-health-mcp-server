@@ -25,4 +25,9 @@ Makefile
 .*
 README.md
 *.xml
+
 *.chdb
+
+*.parquet
+*.db
+*.duckdb

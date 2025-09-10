@@ -6,7 +6,7 @@ from datetime import datetime
 
 from elasticsearch import NotFoundError, helpers
 
-from app.services.es import ESClient
+from app.services.es_client import ESClient
 
 
 class ESIndexer:

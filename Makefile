@@ -53,5 +53,8 @@ chwin: ## Import Apple Health XML data into a docker volume for ClickHouse (for 
 	move xmltemp123 raw.xml
 	docker volume rm applehealth-data
 
+duckdb: ## Import Apple Health XML data to a Parquet file for DuckDB
+	$(UV) scripts/duckdb_importer.py
+
 downgrade:  ## Revert the last migration
 	$(ALEMBIC_CMD) downgrade -1

@@ -1,6 +1,6 @@
 from typing import Any
 from app.config import settings
-from app.services.es import ESClient
+from app.services.es_client import ESClient
 from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
 
 es_client = ESClient()

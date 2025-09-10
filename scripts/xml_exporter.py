@@ -30,7 +30,6 @@ class XMLExporter:
         "creationDate",
         "unit",
         "value",
-        "numerical",
     )
 
     def update_record(self, document: dict[str, Any]) -> dict[str, Any]:
@@ -45,14 +44,10 @@ class XMLExporter:
         if len(document) != 9:
             document.update({k: v for k, v in self.DEFAULT_VALUES.items() if k not in document})
 
-        # making sure there are value field with text values
-        # and numerical which always contain numbers for the sake
-        # of aggregation in clickhouse
         try:
-            val = float(document["value"])
-            document["numerical"] = val
+            document["value"] = float(document["value"])
         except (TypeError, ValueError):
-            document["numerical"] = 0.0
+            document["value"] = 0.0
 
         return document
 
