@@ -51,34 +51,3 @@ def get_trend_data_from_duckdb(
         GROUP BY interval ORDER BY interval ASC
     """)
     return client.format_response(result)
-
-
-if __name__ == "__main__":
-    start = time()
-    print("records for get_health_summary_from_duckdb: ", len(get_health_summary_from_duckdb()))
-    # print("time: ", time() - start)
-    start = time()
-    print(
-        "records for get_statistics_by_type_duckdb: ",
-        len(get_statistics_by_type_from_duckdb("HKQuantityTypeIdentifierHeartRate")),
-    )
-    # print("time: ", time() - start)
-    start = time()
-    print(
-        "records for get_trend_data_duckdb: ",
-        len(
-            get_trend_data_from_duckdb(
-                "HKQuantityTypeIdentifierHeartRate", "year", "2014-06-01", "2020-06-01"
-            )
-        ),
-    )
-    # print("time: ", time() - start)
-    start = time()
-    pars = HealthRecordSearchParams(
-        record_type="HKQuantityTypeIdentifierBasalEnergyBurned", value_min="10", value_max="20"
-    )
-    print(
-        "records for search_health_records_from_duckdb: ",
-        len(search_health_records_from_duckdb(pars)),
-    )
-    # print("time: ", time() - start)
