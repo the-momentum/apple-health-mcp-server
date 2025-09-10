@@ -1,5 +1,4 @@
 from typing import Any
-from time import time
 
 import duckdb
 
