@@ -52,7 +52,7 @@ class EncryptedField(str):
 
 
 class FernetDecryptorField(str):
-    def __get_pydantic_json_schema__(cls, field_schema: dict[str, Any]) -> None:
+    def __get_pydantic_json_schema__(self, field_schema: dict[str, Any]) -> None:
         field_schema.update(type="str", writeOnly=True)
 
     @classmethod

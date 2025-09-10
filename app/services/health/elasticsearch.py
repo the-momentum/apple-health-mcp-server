@@ -24,7 +24,7 @@ def _run_es_query(query: dict) -> Any:
     return es_client.engine.search(index=settings.ES_INDEX, body=query)
 
 
-def get_health_summary_from_es():
+def get_health_summary_from_es() -> dict[str, Any]:
     query = {
         "size": 0,
         "aggs": {

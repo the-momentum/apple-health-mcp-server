@@ -12,7 +12,7 @@ class ParquetImporter(XMLExporter, DuckDBClient):
         XMLExporter.__init__(self)
         DuckDBClient.__init__(self)
 
-    def exportxml(self):
+    def exportxml(self) -> None:
         chunkfiles = []
         for i, docs in enumerate(self.parse_xml(), 1):
             df: pl.DataFrame = pl.DataFrame(docs)

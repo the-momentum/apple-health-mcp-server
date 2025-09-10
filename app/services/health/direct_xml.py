@@ -70,7 +70,10 @@ def search_xml(query: str = "", max_results: int = 50) -> str:
                 break
     if not results:
         return f"No matches found for query: '{query}'"
-    return f"""Search Results for '{query}' (showing up to {max_results} results):\n\n{chr(10).join(results)}\n\nTotal matches found: {len(results)}"""
+    return (
+        f"""Search Results for '{query}' (showing up to {max_results} results):\n\n"""
+        f"""{chr(10).join(results)}\n\nTotal matches found: {len(results)}"""
+    )
 
 
 def get_records_by_type(record_type: str = "", limit: int = 20) -> str:
@@ -83,4 +86,7 @@ def get_records_by_type(record_type: str = "", limit: int = 20) -> str:
                 break
     if not results:
         return f"No records found of type: '{record_type}'"
-    return f"""Records of type '{record_type}' (showing up to {limit} results):\n\n{chr(10).join(results)}\n\nTotal records found: {len(results)}"""
+    return (
+        f"""Records of type '{record_type}' (showing up to {limit} results):\n\n"""
+        f"""{chr(10).join(results)}\n\nTotal records found: {len(results)}"""
+    )
