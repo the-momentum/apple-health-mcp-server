@@ -12,7 +12,7 @@ def get_health_summary_from_ch() -> dict[str, Any]:
 
 
 def search_health_records_from_ch(params: HealthRecordSearchParams) -> dict[str, Any]:
-    query: str = f"SELECT * FROM {ch.db_name}.{ch.table_name} WHERE 1=1"
+    query: str = f"SELECT * FROM {ch.db_name}.{ch.table_name}"
     query += fill_query(params)
     return ch.inquire(query)
 

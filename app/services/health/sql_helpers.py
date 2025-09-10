@@ -23,7 +23,7 @@ def build_value_range(valuemin: str | None, valuemax: str | None) -> str | None:
 
 def fill_query(params: HealthRecordSearchParams) -> str:
     conditions: list[str] = []
-    query: str = ""
+    query: str = " WHERE 1=1"
 
     if params.record_type:
         conditions.append(f" type = '{params.record_type}'")

@@ -20,7 +20,7 @@ def get_health_summary_from_duckdb() -> list[dict[str, Any]]:
 def search_health_records_from_duckdb(
     params: HealthRecordSearchParams,
 ) -> list[dict[str, Any]]:
-    query: str = f"SELECT * FROM read_parquet('{client.parquetpath}') WHERE 1=1"
+    query: str = f"SELECT * FROM read_parquet('{client.parquetpath}')"
     query += fill_query(params)
     response = duckdb.sql(query)
     return client.format_response(response)
