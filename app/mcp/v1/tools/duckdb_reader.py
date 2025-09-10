@@ -1,12 +1,13 @@
 from typing import Any
+
 from fastmcp import FastMCP
 
-from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
+from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType
 from app.services.health.duckdb_queries import (
     get_health_summary_from_duckdb,
-    search_health_records_from_duckdb,
     get_statistics_by_type_from_duckdb,
     get_trend_data_from_duckdb,
+    search_health_records_from_duckdb,
 )
 
 duckdb_reader_router = FastMCP(name="CH Reader MCP")

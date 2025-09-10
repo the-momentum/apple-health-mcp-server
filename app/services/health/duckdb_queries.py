@@ -2,7 +2,7 @@ from typing import Any
 
 import duckdb
 
-from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
+from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType
 from app.services.duckdb_client import DuckDBClient
 from app.services.health.sql_helpers import fill_query
 
@@ -11,7 +11,7 @@ client = DuckDBClient()
 
 def get_health_summary_from_duckdb() -> list[dict[str, Any]]:
     response = duckdb.sql(
-        f"SELECT type, COUNT(*) AS count FROM read_parquet('{client.parquetpath}') GROUP BY ALL"
+        f"SELECT type, COUNT(*) AS count FROM read_parquet('{client.parquetpath}') GROUP BY ALL",
     )
     return client.format_response(response)
 

@@ -1,12 +1,13 @@
 from typing import Any
+
 from fastmcp import FastMCP
 
-from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
+from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType
 from app.services.health.elasticsearch import (
     get_health_summary_from_es,
-    search_health_records_logic,
     get_statistics_by_type_logic,
     get_trend_data_logic,
+    search_health_records_logic,
 )
 
 es_reader_router = FastMCP(name="ES Reader MCP")

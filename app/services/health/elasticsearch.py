@@ -1,7 +1,8 @@
 from typing import Any
+
 from app.config import settings
+from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType
 from app.services.es_client import ESClient
-from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
 
 es_client = ESClient()
 
@@ -107,7 +108,7 @@ def get_trend_data_logic(
                     "max_value": {"max": {"field": "value"}},
                     "count": {"value_count": {"field": "value"}},
                 },
-            }
+            },
         },
     }
     response = _run_es_query(query)
@@ -121,6 +122,6 @@ def get_trend_data_logic(
                 "min_value": bucket["min_value"]["value"],
                 "max_value": bucket["max_value"]["value"],
                 "count": bucket["count"]["value"],
-            }
+            },
         )
     return {"record_type": record_type, "interval": interval, "trend_data": trend_data}

@@ -1,6 +1,7 @@
 import os
 from enum import Enum
 from typing import Any, Callable, Generator, Protocol
+
 from cryptography.fernet import Fernet
 from pydantic import ValidationInfo
 

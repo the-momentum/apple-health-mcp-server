@@ -55,9 +55,8 @@ class CHIndexer(XMLExporter, CHClient):
         if result:
             print("Inserted data into chdb correctly")
             return True
-        else:
-            print("Error during data indexing")
-            return False
+        print("Error during data indexing")
+        return False
 
 
 if __name__ == "__main__":
