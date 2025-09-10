@@ -1,15 +1,13 @@
-from pathlib import Path
 from functools import lru_cache
+from pathlib import Path
 
-from pydantic import AnyHttpUrl, ValidationInfo, field_validator, SecretStr
+from pydantic import AnyHttpUrl, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from app.utils.config_utils import EncryptedField, EnvironmentType
+from app.utils.config_utils import EnvironmentType
 
 
 class Settings(BaseSettings):
-    # FERNET_DECRYPTOR: FernetDecryptorField = Field("MASTER_KEY")
-
     PROJECT_NAME: str = "MCP Server"
     API_V1_STR: str = "/api/v1"
     VERSION: str = "0.0.1"
@@ -39,17 +37,12 @@ class Settings(BaseSettings):
     RAW_XML_PATH: str = "raw.xml"
     XML_SAMPLE_SIZE: int = 1000
 
-    @field_validator("*", mode="after")
-    def _decryptor(cls, v, validation_info: ValidationInfo, *args, **kwargs):
-        if isinstance(v, EncryptedField):
-            return v.get_decrypted_value(validation_info.data["FERNET_DECRYPTOR"])
-        return v
-
     @field_validator("BACKEND_CORS_ORIGINS", mode="after")
+    @classmethod
     def assemble_cors_origins(cls, v: str | list[str]) -> list[str] | str:
         if isinstance(v, str) and not v.startswith("["):
             return [i.strip() for i in v.split(",")]
-        elif isinstance(v, (list, str)):
+        if isinstance(v, (list, str)):
             return v
         raise ValueError(v)
 
@@ -61,7 +54,7 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()
+    return Settings()  # type: ignore[call-arg
 
 
 settings = get_settings()
