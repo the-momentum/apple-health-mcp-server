@@ -155,3 +155,7 @@ volumes
 
 # Parquet files for DuckDB
 *.parquet
+
+# DuckDB database files
+*.db
+*.duckdb
