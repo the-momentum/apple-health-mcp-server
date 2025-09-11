@@ -22,9 +22,12 @@ def get_health_summary_es() -> dict[str, Any]:
     (optionally) a date range aggregation.
 
     Notes for LLM:
-    - IMPORTANT - Do not guess, auto-fill, or assume any missing data.
-    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
-      Elasticsearch.
+    - IMPORTANT - Do not guess, autofill, or assume any missing data.
+    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+      first, ask the user which one he wants to use. DO NOT call any tools before
+      the user specifies his intent.
+    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+      you can use the tools from this database without the user specifying it.
     """
     try:
         return get_health_summary_from_es()
@@ -50,9 +53,12 @@ def search_health_records_es(params: HealthRecordSearchParams) -> list[dict[str,
     - Example source_name: "Rob’s iPhone", "Polar Flow", "Sync Solver".
     - Example date_from/date_to: "2020-01-01T00:00:00+00:00"
     - Example value_min/value_max: "10", "100.5"
-    - IMPORTANT - Do not guess, auto-fill, or assume any missing data.
-    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
-    Elasticsearch.
+    - IMPORTANT - Do not guess, autofill, or assume any missing data.
+    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+      first, ask the user which one he wants to use. DO NOT call any tools before
+      the user specifies his intent.
+    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+      you can use the tools from this database without the user specifying it.
     """
     try:
         return search_health_records_logic(params)
@@ -93,9 +99,12 @@ def get_statistics_by_type_es(record_type: RecordType | str) -> dict[str, Any]:
       understanding data quality.
     - date_range key for query is commented, since it contained hardcoded from
       date, but you can use it anyway if you replace startDate with your data.
-    - IMPORTANT - Do not guess, auto-fill, or assume any missing data.
-    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
-    Elasticsearch.
+    - IMPORTANT - Do not guess, autofill, or assume any missing data.
+    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+      first, ask the user which one he wants to use. DO NOT call any tools before
+      the user specifies his intent.
+    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+      you can use the tools from this database without the user specifying it.
     """
     try:
         return get_statistics_by_type_logic(record_type)
@@ -134,9 +143,12 @@ def get_trend_data_es(
     - The function automatically handles date filtering if date_from/date_to are provided
     - IMPORTANT - interval must be one of: "day", "week", "month", or "year".
       Do not use other values.
-    - Do not guess, auto-fill, or assume any missing data.
-    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
-    Elasticsearch.
+    - Do not guess, autofill, or assume any missing data.
+    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+      first, ask the user which one he wants to use. DO NOT call any tools before
+      the user specifies his intent.
+    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+      you can use the tools from this database without the user specifying it.
     """
     try:
         return get_trend_data_logic(record_type, interval, date_from, date_to)
@@ -152,21 +164,25 @@ def search_values_es(
     date_to: str | None = None,
 ) -> list[dict[str, Any]]:
     """
-    Search for records (including text) with exactly matching values using Elasticsearch.
+    Search for records with exactly matching values (including text) using Elasticsearch.
 
     Parameters:
     - record_type: The type of health record to analyze (e.g., "HKQuantityTypeIdentifierStepCount")
     - value: Value to search for in the data
+    - date_from, date_to: Optional ISO8601 date strings for filtering date range
 
     Notes for LLMs:
     - Use this to search for specific values (for example statistical outliers) in health data
     - It can also be used for text values: e.g.
-     you can search for "HKCategoryTypeIdentifierSleepAnalysis"
-    records with the value of "HKCategoryValueSleepAnalysisAsleepDeep"
+      you can search for "HKCategoryTypeIdentifierSleepAnalysis"
+      records with the value of "HKCategoryValueSleepAnalysisAsleepDeep"
     - The function automatically handles date filtering if date_from/date_to are provided
     - Do not guess, autofill, or assume any missing data.
-    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
-    Elasticsearch.
+    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+      first, ask the user which one he wants to use. DO NOT call any tools before
+      the user specifies his intent.
+    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+      you can use the tools from this database without the user specifying it.
     """
     try:
         return search_values_logic(record_type, value, date_from, date_to)

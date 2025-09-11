@@ -23,8 +23,11 @@ def get_health_summary_duckdb() -> list[dict[str, Any]]:
 
     Notes for LLM:
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
-    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
-      Elasticsearch.
+    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+      first, ask the user which one he wants to use. DO NOT call any tools before
+      the user specifies his intent.
+    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+      you can use the tools from this database without the user specifying it.
     """
     try:
         return get_health_summary_from_duckdb()
@@ -51,8 +54,11 @@ def search_health_records_duckdb(params: HealthRecordSearchParams) -> list[dict[
     - Example date_from/date_to: "2020-01-01T00:00:00+00:00"
     - Example value_min/value_max: "10", "100.5"
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
-    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
-      Elasticsearch.
+    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+      first, ask the user which one he wants to use. DO NOT call any tools before
+      the user specifies his intent.
+    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+      you can use the tools from this database without the user specifying it.
     """
     try:
         return search_health_records_from_duckdb(params)
@@ -94,8 +100,11 @@ def get_statistics_by_type_duckdb(record_type: RecordType | str) -> list[dict[st
     - date_range key for query is commented, since it contained hardcoded from
       date, but you can use it anyway if you replace startDate with your data.
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
-    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
-      Elasticsearch.
+    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+      first, ask the user which one he wants to use. DO NOT call any tools before
+      the user specifies his intent.
+    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+      you can use the tools from this database without the user specifying it.
     """
     try:
         return get_statistics_by_type_from_duckdb(record_type)
@@ -135,8 +144,11 @@ def get_trend_data_duckdb(
     - IMPORTANT - interval must be one of: "day", "week", "month", or "year".
       Do not use other values.
     - Do not guess, autofill, or assume any missing data.
-    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
-      Elasticsearch.
+    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+      first, ask the user which one he wants to use. DO NOT call any tools before
+      the user specifies his intent.
+    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+      you can use the tools from this database without the user specifying it.
     """
     try:
         return get_trend_data_from_duckdb(record_type, interval, date_from, date_to)
@@ -152,11 +164,12 @@ def search_values_duckdb(
     date_to: str | None = None,
 ) -> list[dict[str, Any]]:
     """
-    Search for records (including text) with exactly matching values using DuckDB.
+    Search for records with exactly matching values (including text) using DuckDB.
 
     Parameters:
     - record_type: The type of health record to analyze (e.g., "HKQuantityTypeIdentifierStepCount")
     - value: Value to search for in the data
+    - date_from, date_to: Optional ISO8601 date strings for filtering date range
 
     Notes for LLMs:
     - Use this to search for specific values (for example statistical outliers) in health data
@@ -165,8 +178,11 @@ def search_values_duckdb(
       records with the value of "HKCategoryValueSleepAnalysisAsleepDeep"
     - The function automatically handles date filtering if date_from/date_to are provided
     - Do not guess, autofill, or assume any missing data.
-    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
-      Elasticsearch.
+    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+      first, ask the user which one he wants to use. DO NOT call any tools before
+      the user specifies his intent.
+    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+      you can use the tools from this database without the user specifying it.
     """
     try:
         return search_values_from_duckdb(record_type, value, date_from, date_to)
