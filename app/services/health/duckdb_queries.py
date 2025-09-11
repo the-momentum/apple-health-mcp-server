@@ -63,8 +63,10 @@ def search_values_from_duckdb(
     date_to: str | None = None,
 ) -> list[dict[str, Any]]:
     result = duckdb.sql(f"""
-        SELECT * FROM read_parquet('{client.parquetpath}') WHERE textvalue = '{value}' {f"AND type = '{record_type}'" if record_type else ""}
-        {f"AND startDate >= '{date_from}'" if date_from else ""} {f"AND startDate <= '{date_to}'" if date_to else ""}
+        SELECT * FROM read_parquet('{client.parquetpath}') WHERE textvalue = '{value}'
+        {f"AND type = '{record_type}'" if record_type else ""}
+        {f"AND startDate >= '{date_from}'" if date_from else ""}
+        {f"AND startDate <= '{date_to}'" if date_to else ""}
     """)
     return client.format_response(result)
 
@@ -105,5 +107,5 @@ if __name__ == "__main__":
     # print("time: ", time() - start)
     print(
         "records for search_values_from_duckdb: ",
-        len(search_values_from_duckdb("HKQuantityTypeIdentifierActiveEnergyBurned", "1.353")),
+        (search_values_from_duckdb("HKQuantityTypeIdentifierActiveEnergyBurned", "1.353")),
     )

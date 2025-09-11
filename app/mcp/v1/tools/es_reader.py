@@ -8,7 +8,7 @@ from app.services.health.elasticsearch import (
     get_statistics_by_type_logic,
     get_trend_data_logic,
     search_health_records_logic,
-    search_values_logic
+    search_values_logic,
 )
 
 es_reader_router = FastMCP(name="ES Reader MCP")
@@ -143,8 +143,9 @@ def get_trend_data_es(
     except Exception as e:
         return {"error": f"Failed to get trend data: {str(e)}"}
 
+
 @es_reader_router.tool
-def search_values_duckdb(
+def search_values_es(
     record_type: RecordType | str | None,
     value: str,
     date_from: str | None = None,
@@ -159,7 +160,8 @@ def search_values_duckdb(
 
     Notes for LLMs:
     - Use this to search for specific values (for example statistical outliers) in health data
-    - It can also be used for text values: e.g. you can search for "HKCategoryTypeIdentifierSleepAnalysis"
+    - It can also be used for text values: e.g.
+     you can search for "HKCategoryTypeIdentifierSleepAnalysis"
     records with the value of "HKCategoryValueSleepAnalysisAsleepDeep"
     - The function automatically handles date filtering if date_from/date_to are provided
     - Do not guess, autofill, or assume any missing data.

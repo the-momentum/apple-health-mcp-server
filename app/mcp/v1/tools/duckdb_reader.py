@@ -18,7 +18,8 @@ duckdb_reader_router = FastMCP(name="CH Reader MCP")
 def get_health_summary_duckdb() -> list[dict[str, Any]]:
     """
     Get a summary of Apple Health data from DuckDB.
-    The function returns total record count, record type breakdown, and (optionally) a date range aggregation.
+    The function returns total record count, record type breakdown, and
+     (optionally) a date range aggregation.
 
     Notes for LLM:
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
@@ -40,9 +41,11 @@ def search_health_records_duckdb(params: HealthRecordSearchParams) -> list[dict[
     - params: HealthRecordSearchParams object containing all search/filter parameters.
 
     Notes for LLMs:
-    - This function should return a list of health record documents (dicts) matching the search criteria.
+    - This function should return a list of health record documents (dicts)
+    matching the search criteria.
     - Each document in the list should represent a single health record as stored in ClickHouse.
-    - If an error occurs, the function should return a list with a single dict containing an 'error' key and the error message.
+    - If an error occurs, the function should return a list with a single dict
+     containing an 'error' key and the error message.
     - Use this to retrieve structured health data for further analysis, filtering, or display.
     - Example source_name: "Rob’s iPhone", "Polar Flow", "Sync Solver".
     - Example date_from/date_to: "2020-01-01T00:00:00+00:00"
@@ -63,7 +66,8 @@ def get_statistics_by_type_duckdb(record_type: RecordType | str) -> list[dict[st
     Get comprehensive statistics for a specific health record type from DuckDB.
 
     Parameters:
-    - record_type: The type of health record to analyze. Use RecordType for most frequent types. Use str if that type is beyond RecordType scope.
+    - record_type: The type of health record to analyze. Use RecordType for
+     most frequent types. Use str if that type is beyond RecordType scope.
 
     Returns:
     - record_type: The analyzed record type
@@ -78,12 +82,17 @@ def get_statistics_by_type_duckdb(record_type: RecordType | str) -> list[dict[st
 
     Notes for LLMs:
     - This function provides comprehensive statistical analysis for any health record type.
-    - The value_statistics object contains all basic statistics (count, min, max, avg, sum) for the 'value' field.
+    - The value_statistics object contains all basic statistics (count, min,
+     max, avg, sum) for the 'value' field.
     - The sources breakdown shows which devices/apps contributed data for this record type.
-    - Example types: "HKQuantityTypeIdentifierStepCount", "HKQuantityTypeIdentifierBodyMassIndex", "HKQuantityTypeIdentifierHeartRate", etc.
-    - Use this function to understand the distribution, range, and trends of specific health metrics.
-    - The function is useful for health analysis, identifying outliers, and understanding data quality.
-    - date_range key for query is commented, since it contained hardcoded from date, but you can use it anyway if you replace startDate with your data.
+    - Example types: "HKQuantityTypeIdentifierStepCount",
+     "HKQuantityTypeIdentifierBodyMassIndex", "HKQuantityTypeIdentifierHeartRate", etc.
+    - Use this function to understand the distribution, range, and trends of
+     specific health metrics.
+    - The function is useful for health analysis, identifying outliers, and
+     understanding data quality.
+    - date_range key for query is commented, since it contained hardcoded from
+     date, but you can use it anyway if you replace startDate with your data.
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
     - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
     Elasticsearch.
@@ -102,7 +111,8 @@ def get_trend_data_duckdb(
     date_to: str | None = None,
 ) -> list[dict[str, Any]]:
     """
-    Get trend data for a specific health record type over time using DuckDB date histogram aggregation.
+    Get trend data for a specific health record type over time using DuckDB
+     date histogram aggregation.
 
     Parameters:
     - record_type: The type of health record to analyze (e.g., "HKQuantityTypeIdentifierStepCount")
@@ -122,7 +132,8 @@ def get_trend_data_duckdb(
     Notes for LLMs:
     - Use this to analyze trends, patterns, and seasonal variations in health data
     - The function automatically handles date filtering if date_from/date_to are provided
-    - IMPORTANT - interval must be one of: "day", "week", "month", or "year". Do not use other values.
+    - IMPORTANT - interval must be one of: "day", "week", "month", or "year".
+     Do not use other values.
     - Do not guess, autofill, or assume any missing data.
     - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
     Elasticsearch.
@@ -149,10 +160,10 @@ def search_values_duckdb(
 
     Notes for LLMs:
     - Use this to search for specific values (for example statistical outliers) in health data
-    - It can also be used for text values: e.g. you can search for "HKCategoryTypeIdentifierSleepAnalysis"
+    - It can also be used for text values: e.g.
+     you can search for "HKCategoryTypeIdentifierSleepAnalysis"
     records with the value of "HKCategoryValueSleepAnalysisAsleepDeep"
     - The function automatically handles date filtering if date_from/date_to are provided
-    - IMPORTANT - interval must be one of: "day", "week", "month", or "year". Do not use other values.
     - Do not guess, autofill, or assume any missing data.
     - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
     Elasticsearch.
