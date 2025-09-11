@@ -53,3 +53,18 @@ def get_trend_data_from_duckdb(
         GROUP BY interval ORDER BY interval ASC
     """)
     return client.format_response(result)
+
+
+def search_values_from_duckdb(
+    record_type: RecordType | str | None,
+    value: str,
+    date_from: str | None = None,
+    date_to: str | None = None,
+) -> list[dict[str, Any]]:
+    result = duckdb.sql(f"""
+        SELECT * FROM read_parquet('{client.parquetpath}') WHERE textvalue = '{value}'
+        {f"AND type = '{record_type}'" if record_type else ""}
+        {f"AND startDate >= '{date_from}'" if date_from else ""}
+        {f"AND startDate <= '{date_to}'" if date_to else ""}
+    """)
+    return client.format_response(result)

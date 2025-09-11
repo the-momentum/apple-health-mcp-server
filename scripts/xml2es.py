@@ -42,6 +42,8 @@ class ESIndexer:
         for child in root:
             document: dict[str, Any] = child.attrib.copy()  # dictionary of attributes
 
+            document["textvalue"] = document.get("value", "")
+
             if "startDate" in document:
                 document["startDate"] = self.convert_str2datetime(document["startDate"])
                 document["dateComponents"] = document["startDate"]

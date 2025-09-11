@@ -39,3 +39,17 @@ def get_trend_data_from_ch(
         {f"AND startDate <= '{date_to}'" if date_to else ""}
         GROUP BY interval ORDER BY interval ASC
     """)
+
+
+def search_values_from_ch(
+    record_type: RecordType | str | None,
+    value: str,
+    date_from: str | None = None,
+    date_to: str | None = None,
+) -> dict[str, Any]:
+    return ch.inquire(f"""
+        SELECT * FROM {ch.db_name}.{ch.table_name} WHERE textvalue = '{value}'
+        {f"AND type = '{record_type}'" if record_type else ""}
+        {f"AND startDate >= '{date_from}'" if date_from else ""}
+        {f"AND startDate <= '{date_to}'" if date_to else ""}
+    """)

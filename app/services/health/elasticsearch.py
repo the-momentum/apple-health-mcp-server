@@ -125,3 +125,20 @@ def get_trend_data_logic(
             },
         )
     return {"record_type": record_type, "interval": interval, "trend_data": trend_data}
+
+
+def search_values_logic(
+    record_type: RecordType | str | None,
+    value: str,
+    date_from: str | None = None,
+    date_to: str | None = None,
+) -> list[dict[str, Any]]:
+    must_conditions = [{"match": {"textvalue": value}}]
+    if record_type:
+        must_conditions.append({"match": {"type": record_type}})
+    if date_from or date_to:
+        range_cond = _build_range_condition("dateComponents", date_from, date_to)
+        must_conditions.append(range_cond)
+    query = {"query": {"bool": {"must": must_conditions}}}
+    response = _run_es_query(query)
+    return [hit["_source"] for hit in response["hits"]["hits"]]
