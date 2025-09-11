@@ -24,7 +24,7 @@ def get_health_summary_es() -> dict[str, Any]:
     Notes for LLM:
     - IMPORTANT - Do not guess, auto-fill, or assume any missing data.
     - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
-    Elasticsearch.
+      Elasticsearch.
     """
     try:
         return get_health_summary_from_es()

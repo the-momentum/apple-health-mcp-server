@@ -24,7 +24,7 @@ def get_health_summary_ch() -> dict[str, Any]:
     Notes for LLM:
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
     - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
-    Elasticsearch.
+      Elasticsearch.
     """
     try:
         return get_health_summary_from_ch()
@@ -42,7 +42,7 @@ def search_health_records_ch(params: HealthRecordSearchParams) -> dict[str, Any]
 
     Notes for LLMs:
     - This function should return a list of health record documents (dicts)
-    matching the search criteria.
+      matching the search criteria.
     - Each document in the list should represent a single health record as stored in ClickHouse.
     - If an error occurs, the function should return a list with a single dict
      containing an 'error' key and the error message.
@@ -67,7 +67,7 @@ def get_statistics_by_type_ch(record_type: RecordType | str) -> dict[str, Any]:
 
     Parameters:
     - record_type: The type of health record to analyze. Use RecordType for
-     most frequent types. Use str if that type is beyond RecordType scope.
+      most frequent types. Use str if that type is beyond RecordType scope.
 
     Returns:
     - record_type: The analyzed record type
@@ -83,16 +83,16 @@ def get_statistics_by_type_ch(record_type: RecordType | str) -> dict[str, Any]:
     Notes for LLMs:
     - This function provides comprehensive statistical analysis for any health record type.
     - The value_statistics object contains all basic statistics (count, min,
-     max, avg, sum) for the 'value' field.
+      max, avg, sum) for the 'value' field.
     - The sources breakdown shows which devices/apps contributed data for this record type.
     - Example types: "HKQuantityTypeIdentifierStepCount",
      "HKQuantityTypeIdentifierBodyMassIndex", "HKQuantityTypeIdentifierHeartRate", etc.
     - Use this function to understand the distribution, range, and trends of
-     specific health metrics.
+      specific health metrics.
     - The function is useful for health analysis, identifying outliers, and
-     understanding data quality.
+      understanding data quality.
     - date_range key for query is commented, since it contained hardcoded from
-     date, but you can use it anyway if you replace startDate with your data.
+      date, but you can use it anyway if you replace startDate with your data.
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
     - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
     Elasticsearch.
@@ -133,10 +133,10 @@ def get_trend_data_ch(
     - Use this to analyze trends, patterns, and seasonal variations in health data
     - The function automatically handles date filtering if date_from/date_to are provided
     - IMPORTANT - interval must be one of: "day", "week", "month", or "year".
-     Do not use other values.
+      Do not use other values.
     - Do not guess, autofill, or assume any missing data.
     - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
-    Elasticsearch.
+      Elasticsearch.
     """
     try:
         return get_trend_data_from_ch(record_type, interval, date_from, date_to)
@@ -161,12 +161,12 @@ def search_values_ch(
     Notes for LLMs:
     - Use this to search for specific values (for example statistical outliers) in health data
     - It can also be used for text values: e.g.
-     you can search for "HKCategoryTypeIdentifierSleepAnalysis"
-    records with the value of "HKCategoryValueSleepAnalysisAsleepDeep"
+      you can search for "HKCategoryTypeIdentifierSleepAnalysis"
+      records with the value of "HKCategoryValueSleepAnalysisAsleepDeep"
     - The function automatically handles date filtering if date_from/date_to are provided
     - Do not guess, autofill, or assume any missing data.
     - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
-    Elasticsearch.
+      Elasticsearch.
     """
     try:
         return search_values_from_ch(record_type, value, date_from, date_to)
