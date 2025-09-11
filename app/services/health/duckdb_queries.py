@@ -1,9 +1,9 @@
-from typing import Any
 from time import time
+from typing import Any
 
 import duckdb
 
-from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
+from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType
 from app.services.duckdb_client import DuckDBClient
 from app.services.health.sql_helpers import fill_query
 
@@ -12,7 +12,7 @@ client = DuckDBClient()
 
 def get_health_summary_from_duckdb() -> list[dict[str, Any]]:
     response = duckdb.sql(
-        f"SELECT type, COUNT(*) AS count FROM read_parquet('{client.parquetpath}') GROUP BY ALL"
+        f"SELECT type, COUNT(*) AS count FROM read_parquet('{client.parquetpath}') GROUP BY ALL",
     )
     return client.format_response(response)
 
@@ -46,11 +46,15 @@ def get_trend_data_from_duckdb(
 ) -> list[dict[str, Any]]:
     result = duckdb.sql(f"""
         SELECT time_bucket(INTERVAL '1 {interval}', startDate) AS interval,
-        AVG(value) AS average, MIN(value) AS min, MAX(value) AS max, COUNT(*) AS count FROM read_parquet('{client.parquetpath}')
-        WHERE type = '{record_type}' {f"AND startDate >= '{date_from}'" if date_from else ""} {f"AND startDate <= '{date_to}'" if date_to else ""}
+            AVG(value) AS average, MIN(value) AS min, MAX(value) AS max, COUNT(*) AS count
+        FROM read_parquet('{client.parquetpath}')
+        WHERE type = '{record_type}'
+            {f"AND startDate >= '{date_from}'" if date_from else ""}
+            {f"AND startDate <= '{date_to}'" if date_to else ""}
         GROUP BY interval ORDER BY interval ASC
     """)
     return client.format_response(result)
+
 
 def search_values_from_duckdb(
     record_type: RecordType | str | None,
@@ -80,14 +84,19 @@ if __name__ == "__main__":
         "records for get_trend_data_duckdb: ",
         len(
             get_trend_data_from_duckdb(
-                "HKQuantityTypeIdentifierHeartRate", "year", "2014-06-01", "2020-06-01"
-            )
+                "HKQuantityTypeIdentifierHeartRate",
+                "year",
+                "2014-06-01",
+                "2020-06-01",
+            ),
         ),
     )
     # print("time: ", time() - start)
     start = time()
     pars = HealthRecordSearchParams(
-        record_type="HKQuantityTypeIdentifierBasalEnergyBurned", value_min="10", value_max="20"
+        record_type="HKQuantityTypeIdentifierBasalEnergyBurned",
+        value_min="10",
+        value_max="20",
     )
     print(
         "records for search_health_records_from_duckdb: ",

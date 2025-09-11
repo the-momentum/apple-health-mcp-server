@@ -46,7 +46,7 @@ class XMLExporter:
         if len(document) != 9:
             document.update({k: v for k, v in self.DEFAULT_VALUES.items() if k not in document})
 
-        document['textvalue'] = document['value']
+        document["textvalue"] = document["value"]
 
         try:
             document["value"] = float(document["value"])

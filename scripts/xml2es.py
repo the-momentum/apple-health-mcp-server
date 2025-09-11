@@ -1,8 +1,8 @@
-import xml.etree.ElementTree as ET
-from typing import Any
-from collections.abc import Generator
 import sys
+import xml.etree.ElementTree as ET
+from collections.abc import Generator
 from datetime import datetime
+from typing import Any
 
 from elasticsearch import NotFoundError, helpers
 
@@ -42,6 +42,8 @@ class ESIndexer:
         for child in root:
             document: dict[str, Any] = child.attrib.copy()  # dictionary of attributes
 
+            document["textvalue"] = document["value"]
+
             if "startDate" in document:
                 document["startDate"] = self.convert_str2datetime(document["startDate"])
                 document["dateComponents"] = document["startDate"]
@@ -64,7 +66,8 @@ class ESIndexer:
     def delete_index(self) -> None:
         try:
             resp = self.es.engine.delete_by_query(
-                index=self.es.index, body={"query": {"match_all": {}}}
+                index=self.es.index,
+                body={"query": {"match_all": {}}},
             )
             print(f"Deleted {resp.get('deleted', 0)} documents from '{self.es.index}'")
         except NotFoundError:

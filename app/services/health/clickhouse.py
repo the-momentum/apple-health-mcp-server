@@ -1,7 +1,7 @@
 from typing import Any
 
+from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType
 from app.services.ch_client import CHClient
-from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
 from app.services.health.sql_helpers import fill_query
 
 ch = CHClient()
@@ -19,7 +19,9 @@ def search_health_records_from_ch(params: HealthRecordSearchParams) -> dict[str,
 
 def get_statistics_by_type_from_ch(record_type: RecordType | str) -> dict[str, Any]:
     return ch.inquire(
-        f"SELECT type, COUNT(*), AVG(numerical), SUM(numerical), MIN(numerical), MAX(numerical) FROM {ch.db_name}.{ch.table_name} WHERE type = '{record_type}' GROUP BY type"
+        f"SELECT type, COUNT(*), AVG(value), SUM(value), MIN(value), "
+        f"MAX(value) FROM {ch.db_name}.{ch.table_name} WHERE type = '{record_type}' "
+        f"GROUP BY type",
     )
 
 
@@ -31,10 +33,13 @@ def get_trend_data_from_ch(
 ) -> dict[str, Any]:
     return ch.inquire(f"""
         SELECT toStartOfInterval(startDate, INTERVAL 1 {interval}) AS interval,
-        AVG(numerical), MIN(numerical), MAX(numerical), COUNT(*) FROM {ch.db_name}.{ch.table_name}
-        WHERE type = '{record_type}' {f"AND startDate >= '{date_from}'" if date_from else ""} {f"AND startDate <= '{date_to}'" if date_to else ""}
+        AVG(value), MIN(value), MAX(value), COUNT(*) FROM {ch.db_name}.{ch.table_name}
+        WHERE type = '{record_type}'
+        {f"AND startDate >= '{date_from}'" if date_from else ""}
+        {f"AND startDate <= '{date_to}'" if date_to else ""}
         GROUP BY interval ORDER BY interval ASC
     """)
+
 
 def search_values_from_ch(
     record_type: RecordType | str | None,
@@ -43,6 +48,6 @@ def search_values_from_ch(
     date_to: str | None = None,
 ) -> dict[str, Any]:
     return ch.inquire(f"""
-        SELECT type, COUNT(*) AS count WHERE textvalue = '{value}' {f'AND type = {record_type}' if record_type else ''} 
+        SELECT type, COUNT(*) AS count WHERE textvalue = '{value}' {f"AND type = {record_type}" if record_type else ""}
         {f"AND startDate >= '{date_from}'" if date_from else ""} {f"AND startDate <= '{date_to}'" if date_to else ""}
     """)

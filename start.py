@@ -3,11 +3,11 @@ import sys
 from pathlib import Path
 
 
-def get_project_dir():
+def get_project_dir() -> Path:
     return Path(__file__).parent.resolve()
 
 
-def main():
+def main() -> None:
     project_dir = get_project_dir()
 
     print("Starting the FastMCP application...", file=sys.stderr)

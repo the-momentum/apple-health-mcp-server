@@ -1,12 +1,14 @@
 from typing import Any
+
 from fastmcp import FastMCP
 
-from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
+from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType
 from app.services.health.elasticsearch import (
     get_health_summary_from_es,
-    search_health_records_logic,
     get_statistics_by_type_logic,
     get_trend_data_logic,
+    search_health_records_logic,
+    search_values_logic
 )
 
 es_reader_router = FastMCP(name="ES Reader MCP")
@@ -16,7 +18,8 @@ es_reader_router = FastMCP(name="ES Reader MCP")
 def get_health_summary_es() -> dict[str, Any]:
     """
     Get a summary of Apple Health data from Elasticsearch.
-    The function returns total record count, record type breakdown, and (optionally) a date range aggregation.
+    The function returns total record count, record type breakdown, and
+    (optionally) a date range aggregation.
 
     Notes for LLM:
     - IMPORTANT - Do not guess, auto-fill, or assume any missing data.
@@ -38,9 +41,11 @@ def search_health_records_es(params: HealthRecordSearchParams) -> list[dict[str,
     - params: HealthRecordSearchParams object containing all search/filter parameters.
 
     Notes for LLMs:
-    - This function should return a list of health record documents (dicts) matching the search criteria.
+    - This function should return a list of health record documents (dicts)
+      matching the search criteria.
     - Each document in the list should represent a single health record as stored in Elasticsearch.
-    - If an error occurs, the function should return a list with a single dict containing an 'error' key and the error message.
+    - If an error occurs, the function should return a list with a single dict
+      containing an 'error' key and the error message.
     - Use this to retrieve structured health data for further analysis, filtering, or display.
     - Example source_name: "Rob’s iPhone", "Polar Flow", "Sync Solver".
     - Example date_from/date_to: "2020-01-01T00:00:00+00:00"
@@ -61,7 +66,8 @@ def get_statistics_by_type_es(record_type: RecordType | str) -> dict[str, Any]:
     Get comprehensive statistics for a specific health record type from Elasticsearch.
 
     Parameters:
-    - record_type: The type of health record to analyze. Use RecordType for most frequent types. Use str if that type is beyond RecordType scope.
+    - record_type: The type of health record to analyze. Use RecordType for
+      most frequent types. Use str if that type is beyond RecordType scope.
 
     Returns:
     - record_type: The analyzed record type
@@ -76,12 +82,17 @@ def get_statistics_by_type_es(record_type: RecordType | str) -> dict[str, Any]:
 
     Notes for LLMs:
     - This function provides comprehensive statistical analysis for any health record type.
-    - The value_statistics object contains all basic statistics (count, min, max, avg, sum) for the 'value' field.
+    - The value_statistics object contains all basic statistics (count, min,
+      max, avg, sum) for the 'value' field.
     - The sources breakdown shows which devices/apps contributed data for this record type.
-    - Example types: "HKQuantityTypeIdentifierStepCount", "HKQuantityTypeIdentifierBodyMassIndex", "HKQuantityTypeIdentifierHeartRate", etc.
-    - Use this function to understand the distribution, range, and trends of specific health metrics.
-    - The function is useful for health analysis, identifying outliers, and understanding data quality.
-    - date_range key for query is commented, since it contained hardcoded from date, but you can use it anyway if you replace startDate with your data.
+    - Example types: "HKQuantityTypeIdentifierStepCount",
+      "HKQuantityTypeIdentifierBodyMassIndex", "HKQuantityTypeIdentifierHeartRate", etc.
+    - Use this function to understand the distribution, range, and trends of
+      specific health metrics.
+    - The function is useful for health analysis, identifying outliers, and
+      understanding data quality.
+    - date_range key for query is commented, since it contained hardcoded from
+      date, but you can use it anyway if you replace startDate with your data.
     - IMPORTANT - Do not guess, auto-fill, or assume any missing data.
     - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
     Elasticsearch.
@@ -100,7 +111,8 @@ def get_trend_data_es(
     date_to: str | None = None,
 ) -> dict[str, Any]:
     """
-    Get trend data for a specific health record type over time using Elasticsearch date histogram aggregation.
+    Get trend data for a specific health record type over time using
+    Elasticsearch date histogram aggregation.
 
     Parameters:
     - record_type: The type of health record to analyze (e.g., "HKQuantityTypeIdentifierStepCount")
@@ -120,7 +132,8 @@ def get_trend_data_es(
     Notes for LLMs:
     - Use this to analyze trends, patterns, and seasonal variations in health data
     - The function automatically handles date filtering if date_from/date_to are provided
-    - IMPORTANT - interval must be one of: "day", "week", "month", or "year". Do not use other values.
+    - IMPORTANT - interval must be one of: "day", "week", "month", or "year".
+      Do not use other values.
     - Do not guess, auto-fill, or assume any missing data.
     - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
     Elasticsearch.
@@ -129,3 +142,31 @@ def get_trend_data_es(
         return get_trend_data_logic(record_type, interval, date_from, date_to)
     except Exception as e:
         return {"error": f"Failed to get trend data: {str(e)}"}
+
+@es_reader_router.tool
+def search_values_duckdb(
+    record_type: RecordType | str | None,
+    value: str,
+    date_from: str | None = None,
+    date_to: str | None = None,
+) -> list[dict[str, Any]]:
+    """
+    Search for records (including text) with exactly matching values using Elasticsearch.
+
+    Parameters:
+    - record_type: The type of health record to analyze (e.g., "HKQuantityTypeIdentifierStepCount")
+    - value: Value to search for in the data
+
+    Notes for LLMs:
+    - Use this to search for specific values (for example statistical outliers) in health data
+    - It can also be used for text values: e.g. you can search for "HKCategoryTypeIdentifierSleepAnalysis"
+    records with the value of "HKCategoryValueSleepAnalysisAsleepDeep"
+    - The function automatically handles date filtering if date_from/date_to are provided
+    - Do not guess, autofill, or assume any missing data.
+    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
+    Elasticsearch.
+    """
+    try:
+        return search_values_logic(record_type, value, date_from, date_to)
+    except Exception as e:
+        return [{"error": f"Failed to get trend data: {str(e)}"}]

@@ -1,13 +1,14 @@
 from typing import Any
+
 from fastmcp import FastMCP
 
-from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
+from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType
 from app.services.health.duckdb_queries import (
     get_health_summary_from_duckdb,
-    search_health_records_from_duckdb,
     get_statistics_by_type_from_duckdb,
     get_trend_data_from_duckdb,
-    search_values_from_duckdb
+    search_health_records_from_duckdb,
+    search_values_from_duckdb,
 )
 
 duckdb_reader_router = FastMCP(name="CH Reader MCP")
@@ -131,10 +132,13 @@ def get_trend_data_duckdb(
     except Exception as e:
         return [{"error": f"Failed to get trend data: {str(e)}"}]
 
+
 @duckdb_reader_router.tool
 def search_values_duckdb(
     record_type: RecordType | str | None,
     value: str,
+    date_from: str | None = None,
+    date_to: str | None = None,
 ) -> list[dict[str, Any]]:
     """
     Search for records (including text) with exactly matching values using DuckDB.
@@ -143,18 +147,10 @@ def search_values_duckdb(
     - record_type: The type of health record to analyze (e.g., "HKQuantityTypeIdentifierStepCount")
     - value: Value to search for in the data
 
-    Returns:
-    - record_type: The analyzed record type
-    - interval: The time interval used
-    - trend_data: List of time buckets with statistics for each period:
-      * date: The time period (ISO string)
-      * avg_value: Average value for the period
-      * min_value: Minimum value for the period
-      * max_value: Maximum value for the period
-      * count: Number of records in the period
-
     Notes for LLMs:
-    - Use this to analyze trends, patterns, and seasonal variations in health data
+    - Use this to search for specific values (for example statistical outliers) in health data
+    - It can also be used for text values: e.g. you can search for "HKCategoryTypeIdentifierSleepAnalysis"
+    records with the value of "HKCategoryValueSleepAnalysisAsleepDeep"
     - The function automatically handles date filtering if date_from/date_to are provided
     - IMPORTANT - interval must be one of: "day", "week", "month", or "year". Do not use other values.
     - Do not guess, autofill, or assume any missing data.
@@ -162,6 +158,6 @@ def search_values_duckdb(
     Elasticsearch.
     """
     try:
-        return search_values_from_duckdb(record_type, value)
+        return search_values_from_duckdb(record_type, value, date_from, date_to)
     except Exception as e:
         return [{"error": f"Failed to get trend data: {str(e)}"}]

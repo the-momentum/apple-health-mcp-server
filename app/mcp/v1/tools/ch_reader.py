@@ -1,13 +1,14 @@
 from typing import Any
+
 from fastmcp import FastMCP
 
-from app.schemas.record import RecordType, IntervalType, HealthRecordSearchParams
+from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType
 from app.services.health.clickhouse import (
     get_health_summary_from_ch,
-    search_health_records_from_ch,
     get_statistics_by_type_from_ch,
     get_trend_data_from_ch,
-    search_values_from_ch
+    search_health_records_from_ch,
+    search_values_from_ch,
 )
 
 ch_reader_router = FastMCP(name="CH Reader MCP")
@@ -147,7 +148,9 @@ def search_values_ch(
     - value: Value to search for in the data
 
     Notes for LLMs:
-    - Use this to analyze trends, patterns, and seasonal variations in health data
+    - Use this to search for specific values (for example statistical outliers) in health data
+    - It can also be used for text values: e.g. you can search for "HKCategoryTypeIdentifierSleepAnalysis"
+    records with the value of "HKCategoryValueSleepAnalysisAsleepDeep"
     - The function automatically handles date filtering if date_from/date_to are provided
     - IMPORTANT - interval must be one of: "day", "week", "month", or "year". Do not use other values.
     - Do not guess, autofill, or assume any missing data.

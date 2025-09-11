@@ -1,6 +1,6 @@
 from requests import PreparedRequest
-from requests.structures import CaseInsensitiveDict
 from requests.auth import AuthBase
+from requests.structures import CaseInsensitiveDict
 
 
 class BearerAuth(AuthBase):

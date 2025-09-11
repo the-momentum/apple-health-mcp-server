@@ -1,6 +1,6 @@
 from fastmcp import FastMCP
 
-from app.mcp.v1.tools import xml_reader, es_reader, ch_reader, duckdb_reader
+from app.mcp.v1.tools import ch_reader, duckdb_reader, es_reader, xml_reader
 
 mcp_router = FastMCP(name="Main MCP")
 

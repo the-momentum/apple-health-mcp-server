@@ -1,6 +1,7 @@
 import os
 from enum import Enum
 from typing import Any, Callable, Generator, Protocol
+
 from cryptography.fernet import Fernet
 from pydantic import ValidationInfo
 
@@ -51,7 +52,7 @@ class EncryptedField(str):
 
 
 class FernetDecryptorField(str):
-    def __get_pydantic_json_schema__(cls, field_schema: dict[str, Any]) -> None:
+    def __get_pydantic_json_schema__(self, field_schema: dict[str, Any]) -> None:
         field_schema.update(type="str", writeOnly=True)
 
     @classmethod
