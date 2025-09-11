@@ -7,6 +7,7 @@ from app.services.health.clickhouse import (
     search_health_records_from_ch,
     get_statistics_by_type_from_ch,
     get_trend_data_from_ch,
+    search_values_from_ch
 )
 
 ch_reader_router = FastMCP(name="CH Reader MCP")
@@ -129,3 +130,31 @@ def get_trend_data_ch(
         return get_trend_data_from_ch(record_type, interval, date_from, date_to)
     except Exception as e:
         return {"error": f"Failed to get trend data: {str(e)}"}
+
+
+@ch_reader_router.tool
+def search_values_ch(
+    record_type: RecordType | str | None,
+    value: str,
+    date_from: str | None = None,
+    date_to: str | None = None,
+) -> dict[str, Any]:
+    """
+    Search for records (including text) with exactly matching values using ClickHouse.
+
+    Parameters:
+    - record_type: The type of health record to analyze (e.g., "HKQuantityTypeIdentifierStepCount")
+    - value: Value to search for in the data
+
+    Notes for LLMs:
+    - Use this to analyze trends, patterns, and seasonal variations in health data
+    - The function automatically handles date filtering if date_from/date_to are provided
+    - IMPORTANT - interval must be one of: "day", "week", "month", or "year". Do not use other values.
+    - Do not guess, autofill, or assume any missing data.
+    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
+    Elasticsearch.
+    """
+    try:
+        return search_values_from_ch(record_type, value, date_from, date_to)
+    except Exception as e:
+        return {"error": f"Failed to search for values: {str(e)}"}

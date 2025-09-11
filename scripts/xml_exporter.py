@@ -30,6 +30,7 @@ class XMLExporter:
         "creationDate",
         "unit",
         "value",
+        "textvalue",
     )
 
     def update_record(self, document: dict[str, Any]) -> dict[str, Any]:
@@ -37,12 +38,15 @@ class XMLExporter:
         Updates records to fill out columns without specified data:
         There are 9 columns that need to be filled out, and there are 4 columns
         that are optional and aren't filled out in every record
+        Additionally a textvalue field is added for querying text values
         """
         for field in self.DATE_FIELDS:
             document[field] = datetime.strptime(document[field], "%Y-%m-%d %H:%M:%S %z")
 
         if len(document) != 9:
             document.update({k: v for k, v in self.DEFAULT_VALUES.items() if k not in document})
+
+        document['textvalue'] = document['value']
 
         try:
             document["value"] = float(document["value"])

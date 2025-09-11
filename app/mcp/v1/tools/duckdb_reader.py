@@ -7,6 +7,7 @@ from app.services.health.duckdb_queries import (
     search_health_records_from_duckdb,
     get_statistics_by_type_from_duckdb,
     get_trend_data_from_duckdb,
+    search_values_from_duckdb
 )
 
 duckdb_reader_router = FastMCP(name="CH Reader MCP")
@@ -127,5 +128,40 @@ def get_trend_data_duckdb(
     """
     try:
         return get_trend_data_from_duckdb(record_type, interval, date_from, date_to)
+    except Exception as e:
+        return [{"error": f"Failed to get trend data: {str(e)}"}]
+
+@duckdb_reader_router.tool
+def search_values_duckdb(
+    record_type: RecordType | str | None,
+    value: str,
+) -> list[dict[str, Any]]:
+    """
+    Search for records (including text) with exactly matching values using DuckDB.
+
+    Parameters:
+    - record_type: The type of health record to analyze (e.g., "HKQuantityTypeIdentifierStepCount")
+    - value: Value to search for in the data
+
+    Returns:
+    - record_type: The analyzed record type
+    - interval: The time interval used
+    - trend_data: List of time buckets with statistics for each period:
+      * date: The time period (ISO string)
+      * avg_value: Average value for the period
+      * min_value: Minimum value for the period
+      * max_value: Maximum value for the period
+      * count: Number of records in the period
+
+    Notes for LLMs:
+    - Use this to analyze trends, patterns, and seasonal variations in health data
+    - The function automatically handles date filtering if date_from/date_to are provided
+    - IMPORTANT - interval must be one of: "day", "week", "month", or "year". Do not use other values.
+    - Do not guess, autofill, or assume any missing data.
+    - When asked for medical advice, ask the user whether he wants to use DuckDB, ClickHouse or
+    Elasticsearch.
+    """
+    try:
+        return search_values_from_duckdb(record_type, value)
     except Exception as e:
         return [{"error": f"Failed to get trend data: {str(e)}"}]
