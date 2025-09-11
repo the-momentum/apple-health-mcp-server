@@ -26,6 +26,10 @@ def get_health_summary_duckdb() -> list[dict[str, Any]]:
     - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
       first, ask the user which one he wants to use. DO NOT call any tools before
       the user specifies his intent.
+    - If the user decides on an option, only use tools from this database,
+      do not switch over to another until the user specifies that he wants
+      to use a different one. You do not have to keep asking whether
+      the user wants to use the same database that he used before.
     - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
       you can use the tools from this database without the user specifying it.
     """
@@ -57,6 +61,10 @@ def search_health_records_duckdb(params: HealthRecordSearchParams) -> list[dict[
     - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
       first, ask the user which one he wants to use. DO NOT call any tools before
       the user specifies his intent.
+    - If the user decides on an option, only use tools from this database,
+      do not switch over to another until the user specifies that he wants
+      to use a different one. You do not have to keep asking whether
+      the user wants to use the same database that he used before.
     - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
       you can use the tools from this database without the user specifying it.
     """
@@ -103,6 +111,10 @@ def get_statistics_by_type_duckdb(record_type: RecordType | str) -> list[dict[st
     - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
       first, ask the user which one he wants to use. DO NOT call any tools before
       the user specifies his intent.
+    - If the user decides on an option, only use tools from this database,
+      do not switch over to another until the user specifies that he wants
+      to use a different one. You do not have to keep asking whether
+      the user wants to use the same database that he used before.
     - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
       you can use the tools from this database without the user specifying it.
     """
@@ -147,6 +159,10 @@ def get_trend_data_duckdb(
     - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
       first, ask the user which one he wants to use. DO NOT call any tools before
       the user specifies his intent.
+    - If the user decides on an option, only use tools from this database,
+      do not switch over to another until the user specifies that he wants
+      to use a different one. You do not have to keep asking whether
+      the user wants to use the same database that he used before.
     - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
       you can use the tools from this database without the user specifying it.
     """
@@ -181,6 +197,10 @@ def search_values_duckdb(
     - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
       first, ask the user which one he wants to use. DO NOT call any tools before
       the user specifies his intent.
+    - If the user decides on an option, only use tools from this database,
+      do not switch over to another until the user specifies that he wants
+      to use a different one. You do not have to keep asking whether
+      the user wants to use the same database that he used before.
     - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
       you can use the tools from this database without the user specifying it.
     """
