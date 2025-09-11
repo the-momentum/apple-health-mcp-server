@@ -53,9 +53,3 @@ def search_values_from_ch(
         {f"AND startDate >= '{date_from}'" if date_from else ""}
         {f"AND startDate <= '{date_to}'" if date_to else ""}
     """)
-
-if __name__ == "__main__":
-    print(
-        "records for search_values_from_duckdb: ",
-        (search_values_from_ch("HKQuantityTypeIdentifierActiveEnergyBurned", "1.353")),
-    )
