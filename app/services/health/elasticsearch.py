@@ -138,8 +138,7 @@ def search_values_logic(
         must_conditions.append({"match": {"type": record_type}})
     if date_from or date_to:
         range_cond = _build_range_condition("dateComponents", date_from, date_to)
-        if range_cond:
-            must_conditions.append(range_cond)
+        must_conditions.append(range_cond)
     query = {"query": {"bool": {"must": must_conditions}}}
     response = _run_es_query(query)
     return [hit["_source"] for hit in response["hits"]["hits"]]
