@@ -142,9 +142,11 @@ def get_trend_data_es(
 
     Returns:
     - record_type: The analyzed record type
+    - device: The device on which the data was recorded
     - interval: The time interval used
     - trend_data: List of time buckets with statistics for each period:
       * date: The time period (ISO string)
+      * value_sum: Sum of values for the period
       * avg_value: Average value for the period
       * min_value: Minimum value for the period
       * max_value: Maximum value for the period
@@ -152,6 +154,11 @@ def get_trend_data_es(
 
     Notes for LLMs:
     - Use this to analyze trends, patterns, and seasonal variations in health data
+    - Keep in mind that when there is data from multiple devices spanning the same
+      time period, there is a possibility of data being duplicated. Inform the user
+      of this possibility if you see multiple devices in the same time period.
+    - If a user asks you to sum up some values from their health records, DO NOT
+      search for records and write a script to sum them, instead, use this tool.
     - The function automatically handles date filtering if date_from/date_to are provided
     - IMPORTANT - interval must be one of: "day", "week", "month", or "year".
       Do not use other values.

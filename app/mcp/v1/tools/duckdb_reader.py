@@ -157,6 +157,8 @@ def get_trend_data_duckdb(
     - Keep in mind that when there is data from multiple devices spanning the same
       time period, there is a possibility of data being duplicated. Inform the user
       of this possibility if you see multiple devices in the same time period.
+    - If a user asks you to sum up some values from their health records, DO NOT
+      search for records and write a script to sum them, instead, use this tool.
     - The function automatically handles date filtering if date_from/date_to are provided
     - IMPORTANT - interval must be one of: "day", "week", "month", or "year".
       Do not use other values.
