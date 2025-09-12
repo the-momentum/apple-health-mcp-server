@@ -38,7 +38,7 @@ def get_trend_data_from_ch(
         WHERE type = '{record_type}'
         {f"AND startDate >= '{date_from}'" if date_from else ""}
         {f"AND startDate <= '{date_to}'" if date_to else ""}
-        GROUP BY interval ORDER BY interval ASC
+        GROUP BY interval, device ORDER BY interval ASC
     """)
 
 
@@ -54,3 +54,6 @@ def search_values_from_ch(
         {f"AND startDate >= '{date_from}'" if date_from else ""}
         {f"AND startDate <= '{date_to}'" if date_to else ""}
     """)
+
+if __name__ == "__main__":
+    print(get_trend_data_from_ch("HKQuantityTypeIdentifierStepCount", "week", "2023-03-01", "2023-04-01"))

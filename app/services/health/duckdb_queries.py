@@ -44,7 +44,7 @@ def get_trend_data_from_duckdb(
     date_to: str | None = None,
 ) -> list[dict[str, Any]]:
     result = duckdb.sql(f"""
-        SELECT time_bucket(INTERVAL '1 {interval}', startDate) AS interval,
+        SELECT device, time_bucket(INTERVAL '1 {interval}', startDate) AS interval,
         AVG(value) AS average, SUM(value) AS sum,
         MIN(value) AS min, MAX(value) AS max, COUNT(*) AS count
         FROM read_parquet('{client.parquetpath}')
@@ -69,3 +69,6 @@ def search_values_from_duckdb(
         {f"AND startDate <= '{date_to}'" if date_to else ""}
     """)
     return client.format_response(result)
+
+if __name__ == "__main__":
+    print(get_trend_data_from_duckdb("HKQuantityTypeIdentifierStepCount", "week", "2023-03-01", "2023-04-01"))
