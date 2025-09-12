@@ -51,7 +51,7 @@ def get_trend_data_from_duckdb(
         WHERE type = '{record_type}'
         {f"AND startDate >= '{date_from}'" if date_from else ""}
         {f"AND startDate <= '{date_to}'" if date_to else ""}
-        GROUP BY interval ORDER BY interval ASC
+        GROUP BY interval, device ORDER BY interval ASC
     """)
     return client.format_response(result)
 
