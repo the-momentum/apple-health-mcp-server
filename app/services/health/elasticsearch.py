@@ -106,6 +106,7 @@ def get_trend_data_logic(
                     "avg_value": {"avg": {"field": "value"}},
                     "min_value": {"min": {"field": "value"}},
                     "max_value": {"max": {"field": "value"}},
+                    "value_sum": {"sum": {"field": "value"}},
                     "count": {"value_count": {"field": "value"}},
                 },
             },
@@ -121,6 +122,7 @@ def get_trend_data_logic(
                 "avg_value": bucket["avg_value"]["value"],
                 "min_value": bucket["min_value"]["value"],
                 "max_value": bucket["max_value"]["value"],
+                "value_sum": bucket["value_sum"]["value"],
                 "count": bucket["count"]["value"],
             },
         )
