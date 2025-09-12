@@ -33,7 +33,8 @@ def get_trend_data_from_ch(
 ) -> dict[str, Any]:
     return ch.inquire(f"""
         SELECT toStartOfInterval(startDate, INTERVAL 1 {interval}) AS interval,
-        AVG(value), MIN(value), MAX(value), COUNT(*) FROM {ch.db_name}.{ch.table_name}
+        AVG(value) AS average, SUM(value) AS sum, MIN(value) AS min,
+        MAX(value) AS max, COUNT(*) AS count FROM {ch.db_name}.{ch.table_name}
         WHERE type = '{record_type}'
         {f"AND startDate >= '{date_from}'" if date_from else ""}
         {f"AND startDate <= '{date_to}'" if date_to else ""}
