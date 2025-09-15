@@ -36,7 +36,7 @@ def get_health_summary_es() -> dict[str, Any]:
     try:
         return get_health_summary_from_es()
     except Exception as e:
-        return {"error": f"Failed to get health summary from ES: {str(e)}"}
+        return {"error": f"Failed to get health summary: {str(e)}"}
 
 
 @es_reader_router.tool
@@ -158,7 +158,10 @@ def get_trend_data_es(
       time period, there is a possibility of data being duplicated. Inform the user
       of this possibility if you see multiple devices in the same time period.
     - If a user asks you to sum up some values from their health records, DO NOT
-      search for records and write a script to sum them, instead, use this tool.
+      search for records and write a script to sum them, instead, use this tool:
+      if they ask to sum data from a year, use this tool with date_from set as the
+      beginning of the year and date_to as the end of the year, with an interval
+      of 'year'
     - The function automatically handles date filtering if date_from/date_to are provided
     - IMPORTANT - interval must be one of: "day", "week", "month", or "year".
       Do not use other values.
@@ -214,4 +217,4 @@ def search_values_es(
     try:
         return search_values_logic(record_type, value, date_from, date_to)
     except Exception as e:
-        return [{"error": f"Failed to get trend data: {str(e)}"}]
+        return [{"error": f"Failed to search for values: {str(e)}"}]
