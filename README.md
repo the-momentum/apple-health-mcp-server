@@ -125,23 +125,23 @@ You can run the MCP Server in your LLM Client in two ways:
        "docker-mcp-server": {
          "command": "docker",
          "args": [
-           "run",
-           "-i",
-           "--rm",
-           "--init",
-           "--mount",
-           "type=bind,source=<project-path>/{xml-file-name}.xml,target=/root_project/raw.xml",
-           "--mount", // optional - volume for reload
-           "type=bind,source=<project-path>/app,target=/root_project/app", // optional
-           "--mount",
-           "type=bind,source=<project-path>/config/.env,target=/root_project/config/.env",
-           "--mount", // optional - only include this if you use clickhouse
-		    "type=bind,source=<project-path>/applehealth.chdb,target=/root_project/applehealth.chdb", // optional
-   			"--mount", // optional - only include this if you use duckdb
-		    "type=bind,source=<project-path>/<parquet-file-name>,target=/root_project/applehealth.parquet", // optional
-           "-e",
-           "ES_HOST=host.docker.internal",
-           "mcp-server:latest"
+            "run",
+            "-i",
+            "--rm",
+            "--init",
+            "--mount",
+            "type=bind,source=<project-path>/{xml-file-name}.xml,target=/root_project/raw.xml",
+            "--mount", // optional - volume for reload
+            "type=bind,source=<project-path>/app,target=/root_project/app", // optional
+            "--mount",
+            "type=bind,source=<project-path>/config/.env,target=/root_project/config/.env",
+            "--mount", // optional - only include this if you use clickhouse
+            "type=bind,source=<project-path>/applehealth.chdb,target=/root_project/applehealth.chdb", // optional
+            "--mount", // optional - only include this if you use duckdb
+            "type=bind,source=<project-path>/<parquet-file-name>,target=/root_project/applehealth.parquet", // optional
+            "-e",
+            "ES_HOST=host.docker.internal",
+            "mcp-server:latest"
          ]
        }
      }
