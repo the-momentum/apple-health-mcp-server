@@ -36,7 +36,7 @@ def get_health_summary_duckdb() -> list[dict[str, Any]]:
     try:
         return get_health_summary_from_duckdb()
     except Exception as e:
-        return [{"error": str(e)}]
+        return [{"error": f"Failed to get health summary: {str(e)}"}]
 
 
 @duckdb_reader_router.tool
@@ -71,7 +71,7 @@ def search_health_records_duckdb(params: HealthRecordSearchParams) -> list[dict[
     try:
         return search_health_records_from_duckdb(params)
     except Exception as e:
-        return [{"error": str(e)}]
+        return [{"error": f"Failed to search health records: {str(e)}"}]
 
 
 @duckdb_reader_router.tool
@@ -142,9 +142,11 @@ def get_trend_data_duckdb(
 
     Returns:
     - record_type: The analyzed record type
+    - device: The device on which the data was recorded
     - interval: The time interval used
     - trend_data: List of time buckets with statistics for each period:
       * date: The time period (ISO string)
+      * value_sum: Sum of values for the period
       * avg_value: Average value for the period
       * min_value: Minimum value for the period
       * max_value: Maximum value for the period
@@ -152,6 +154,14 @@ def get_trend_data_duckdb(
 
     Notes for LLMs:
     - Use this to analyze trends, patterns, and seasonal variations in health data
+    - Keep in mind that when there is data from multiple devices spanning the same
+      time period, there is a possibility of data being duplicated. Inform the user
+      of this possibility if you see multiple devices in the same time period.
+    - If a user asks you to sum up some values from their health records, DO NOT
+      search for records and write a script to sum them, instead, use this tool:
+      if they ask to sum data from a year, use this tool with date_from set as the
+      beginning of the year and date_to as the end of the year, with an interval
+      of 'year'
     - The function automatically handles date filtering if date_from/date_to are provided
     - IMPORTANT - interval must be one of: "day", "week", "month", or "year".
       Do not use other values.
@@ -207,4 +217,4 @@ def search_values_duckdb(
     try:
         return search_values_from_duckdb(record_type, value, date_from, date_to)
     except Exception as e:
-        return [{"error": f"Failed to get trend data: {str(e)}"}]
+        return [{"error": f"Failed to search for values: {str(e)}"}]
