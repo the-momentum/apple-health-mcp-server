@@ -10,7 +10,7 @@ from app.config import settings
 
 class XMLExporter:
     def __init__(self):
-        self.path: Path = Path(settings.RAW_XML_PATH)
+        self.xmlpath: Path = Path(settings.RAW_XML_PATH)
         self.chunk_size: int = settings.CHUNK_SIZE
 
     DATE_FIELDS: tuple[str, ...] = ("startDate", "endDate", "creationDate")
@@ -62,7 +62,7 @@ class XMLExporter:
         """
         records: list[dict[str, Any]] = []
 
-        for event, elem in ET.iterparse(self.path, events=("start",)):
+        for event, elem in ET.iterparse(self.xmlpath, events=("start",)):
             if elem.tag == "Record" and event == "start":
                 if len(records) >= self.chunk_size:
                     yield DataFrame(records).reindex(columns=self.COLUMN_NAMES)
