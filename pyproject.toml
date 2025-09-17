@@ -30,6 +30,7 @@ module-name = "app"
 
 [dependency-groups]
 dev = [
+    "fastapi>=0.116.2",
     "pytest>=8.4.1",
     "pytest-asyncio>=1.0.0",
     "pytest-cov>=6.2.1",
