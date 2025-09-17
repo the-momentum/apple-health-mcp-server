@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     CH_DB_NAME: str = "applehealth"
     CH_TABLE_NAME: str = "data"
 
-    DUCKDB_FILENAME: str = "applehealth"
+    DUCKDB_FILENAME: str = "applehealth.parquet"
 
     CHUNK_SIZE: int = 50_000
 
@@ -54,7 +54,7 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    return Settings()  # type: ignore[call-arg
+    return Settings()  # type: ignore[call-arg]
 
 
 settings = get_settings()

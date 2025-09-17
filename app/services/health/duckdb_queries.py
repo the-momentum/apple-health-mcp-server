@@ -11,7 +11,8 @@ client = DuckDBClient()
 
 def get_health_summary_from_duckdb() -> list[dict[str, Any]]:
     response = duckdb.sql(
-        f"SELECT type, COUNT(*) AS count FROM read_parquet('{client.parquetpath}') GROUP BY ALL",
+        f"""SELECT type, COUNT(*) AS count FROM read_parquet('{client.path}')
+         GROUP BY type ORDER BY count DESC""",
     )
     return client.format_response(response)
 
@@ -19,7 +20,7 @@ def get_health_summary_from_duckdb() -> list[dict[str, Any]]:
 def search_health_records_from_duckdb(
     params: HealthRecordSearchParams,
 ) -> list[dict[str, Any]]:
-    query: str = f"SELECT * FROM read_parquet('{client.parquetpath}')"
+    query: str = f"SELECT * FROM read_parquet('{client.path}')"
     query += fill_query(params)
     response = duckdb.sql(query)
     return client.format_response(response)
@@ -31,7 +32,7 @@ def get_statistics_by_type_from_duckdb(
     result = duckdb.sql(f"""
                     SELECT type, COUNT(*) AS count, AVG(value) AS average,
                     SUM(value) AS sum, MIN(value) AS min, MAX(value) AS max
-                    FROM read_parquet('{client.parquetpath}')
+                    FROM read_parquet('{client.path}')
                     WHERE type = '{record_type}' GROUP BY type
                     """)
     return client.format_response(result)
@@ -47,7 +48,7 @@ def get_trend_data_from_duckdb(
         SELECT device, time_bucket(INTERVAL '1 {interval}', startDate) AS interval,
         AVG(value) AS average, SUM(value) AS sum,
         MIN(value) AS min, MAX(value) AS max, COUNT(*) AS count
-        FROM read_parquet('{client.parquetpath}')
+        FROM read_parquet('{client.path}')
         WHERE type = '{record_type}'
         {f"AND startDate >= '{date_from}'" if date_from else ""}
         {f"AND startDate <= '{date_to}'" if date_to else ""}
@@ -63,7 +64,7 @@ def search_values_from_duckdb(
     date_to: str | None = None,
 ) -> list[dict[str, Any]]:
     result = duckdb.sql(f"""
-        SELECT * FROM read_parquet('{client.parquetpath}') WHERE textvalue = '{value}'
+        SELECT * FROM read_parquet('{client.path}') WHERE textvalue = '{value}'
         {f"AND type = '{record_type}'" if record_type else ""}
         {f"AND startDate >= '{date_from}'" if date_from else ""}
         {f"AND startDate <= '{date_to}'" if date_to else ""}
