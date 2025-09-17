@@ -11,7 +11,7 @@ client = DuckDBClient()
 
 def get_health_summary_from_duckdb() -> list[dict[str, Any]]:
     response = duckdb.sql(
-        f"""SELECT type, COUNT(*) AS count FROM read_parquet('{client.path}')"
+        f"""SELECT type, COUNT(*) AS count FROM read_parquet('{client.path}')
          GROUP BY type ORDER BY count DESC""",
     )
     return client.format_response(response)
@@ -70,3 +70,6 @@ def search_values_from_duckdb(
         {f"AND startDate <= '{date_to}'" if date_to else ""}
     """)
     return client.format_response(result)
+
+if __name__=="__main__":
+    print(get_health_summary_from_duckdb())
