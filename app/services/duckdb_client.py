@@ -13,7 +13,6 @@ class DuckDBClient:
     path: Path | str = f"{settings.DUCKDB_FILENAME}"
 
     def __post_init__(self):
-        print("__post_init__")
         if self.path.startswith("localhost"):
             self.path = "http://" + self.path
 
