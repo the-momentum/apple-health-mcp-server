@@ -105,6 +105,10 @@ Follow these steps to set up Apple Health MCP Server in your environment.
 
 4. Lastly, if you're going to be using DuckDB:
    - Run `make duckdb` to create a parquet file with your exported XML data
+   - If you want to connect to the file through http(s):
+     - The only thing you need to do is change the .env path, e.g. `localhost:8080/applehealth.parquet`
+     - If you want an example on how to host the files locally, run `uv run tests/fileserver.py` 
+   
 
 ### Configuration Files
 
@@ -235,6 +239,7 @@ The Apple Health MCP Server provides a suite of tools for exploring, searching, 
 | `search_health_records_es`  | Flexible search for health records in Elasticsearch with advanced filtering and query options.        |
 | `get_statistics_by_type_es` | Get comprehensive statistics (count, min, max, avg, sum) for a specific health record type.          |
 | `get_trend_data_es`         | Analyze trends for a health record type over time (daily, weekly, monthly, yearly aggregations).     |
+| `search_values_es`          | Search for records with exactly matching values (including text).     |
 
 ### ClickHouse Tools (`ch_reader`)
 
@@ -244,6 +249,7 @@ The Apple Health MCP Server provides a suite of tools for exploring, searching, 
 | `search_health_records_ch`  | Flexible search for health records in ClickHouse with advanced filtering and query options.        |
 | `get_statistics_by_type_ch` | Get comprehensive statistics (count, min, max, avg, sum) for a specific health record type.          |
 | `get_trend_data_ch`         | Analyze trends for a health record type over time (daily, weekly, monthly, yearly aggregations).     |
+| `search_values_ch`          | Search for records with exactly matching values (including text).     |
 
 ### DuckDB Tools (`duckdb_reader`)
 
@@ -253,6 +259,7 @@ The Apple Health MCP Server provides a suite of tools for exploring, searching, 
 | `search_health_records_duckdb`  | Flexible search for health records in DuckDB with advanced filtering and query options.        |
 | `get_statistics_by_type_duckdb` | Get comprehensive statistics (count, min, max, avg, sum) for a specific health record type.          |
 | `get_trend_data_duckdb`         | Analyze trends for a health record type over time (daily, weekly, monthly, yearly aggregations).     |
+| `search_values_duckdb`          | Search for records with exactly matching values (including text).     |
 
 All tools are accessible via MCP-compatible clients and can be used with natural language or programmatic queries to explore and analyze your Apple Health data.
 
