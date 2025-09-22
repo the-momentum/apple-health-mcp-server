@@ -17,7 +17,12 @@ Steps to reproduce the behavior.
 A clear and concise description of what you expected to happen.
 
 **Actual result**
-Put logs, traces and/or errors you've got.
+```
+Put here logs, traces and/or errors you've got.
+```
+```
+Put here another log/trace or error.
+```
 
 **Environment (please complete the following information):**
  - OS: [e.g. Darwin 24, Windows 11]
