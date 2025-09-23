@@ -14,7 +14,10 @@
   </a>
 </div>
 
+---
 Connect your Apple Health data with any LLM that supports MCP. Talk to your data and get personalised insights.
+
+## 💡 Demo
 
 This demo shows how Claude uses the `apple-health-mcp-server` to answer questions about your data. Example prompts from the demo:
 - I would like you to help me analyze my Apple Health data. Let's start by analyzing the data types - check what data is available and how much of it there is.
@@ -23,9 +26,10 @@ This demo shows how Claude uses the `apple-health-mcp-server` to answer question
 
 https://github.com/user-attachments/assets/93ddbfb9-6da9-42c1-9872-815abce7e918
 
-**[🚀 Getting Started](docs/getting-started.md)** - Complete setup guide
 
-## 💡 Why to use Apple Health MCP Server?
+Want to try it out? **[🚀 Getting Started](docs/getting-started.md)**
+
+## 🌟 Why to use Apple Health MCP Server?
 
  - **🧩 Fit your data everywhere**: using this software you can import data exported from Apple devices into any DBMS, base importer is already prepared for extensions
  - **🎯 Simplify complex data access**: you don't need to know data structure or use any structured query language, like SQL, simple access is just granted with natural language
@@ -44,6 +48,7 @@ https://github.com/user-attachments/assets/93ddbfb9-6da9-42c1-9872-815abce7e918
 
 ## 📚 Documentation
 
+- **[🚀 Getting Started](docs/getting-started.md)** - Complete setup guide
 - **[🔍 About](docs/about.md)** - Detailed description & architecture
 - **[🔧 Configuration](docs/configuration.md)** - Environment variables and settings
 - **[🛠️ MCP Tools](docs/mcp-tools.md)** - All available tools
