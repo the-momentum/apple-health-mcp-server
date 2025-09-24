@@ -3,8 +3,8 @@ from pathlib import Path
 from typing import Any, Generator
 from xml.etree import ElementTree as ET
 
-from pandas import DataFrame
 import polars as pl
+from pandas import DataFrame
 
 from app.config import settings
 
@@ -31,7 +31,7 @@ class XMLExporter:
         "creationDate",
         "unit",
         "value",
-        "textvalue",
+        "textValue",
     )
     WORKOUT_COLUMNS: tuple[str, ...] = (
         "type",
@@ -55,7 +55,7 @@ class XMLExporter:
         Updates records to fill out columns without specified data:
         There are 9 columns that need to be filled out, and there are 4 columns
         that are optional and aren't filled out in every record
-        Additionally a textvalue field is added for querying text values
+        Additionally a textValue field is added for querying text values
         """
         for field in self.DATE_FIELDS:
             if field in document:
@@ -65,7 +65,7 @@ class XMLExporter:
             if len(document) != 9:
                 document.update({k: v for k, v in self.DEFAULT_VALUES.items() if k not in document})
 
-            document["textvalue"] = document["value"]
+            document["textValue"] = document["value"]
 
             try:
                 document["value"] = float(document["value"])

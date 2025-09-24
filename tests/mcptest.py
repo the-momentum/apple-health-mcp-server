@@ -9,7 +9,6 @@ from agents.mcp import (
 from agents.model_settings import ModelSettings
 from dotenv import load_dotenv
 
-
 load_dotenv()
 nest_asyncio.apply()
 
@@ -46,7 +45,6 @@ async def main() -> None:
         )
         result = await Runner.run(agent, "give me a health summary from duckdb")
         print(result.final_output)
-
 
 
 asyncio.run(main())

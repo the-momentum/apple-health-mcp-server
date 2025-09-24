@@ -107,8 +107,8 @@ Follow these steps to set up Apple Health MCP Server in your environment.
    - Run `make duckdb` to create a parquet file with your exported XML data
    - If you want to connect to the file through http(s):
      - The only thing you need to do is change the .env path, e.g. `localhost:8080/applehealth.parquet`
-     - If you want an example on how to host the files locally, run `uv run tests/fileserver.py` 
-   
+     - If you want an example on how to host the files locally, run `uv run tests/fileserver.py`
+
 
 ### Configuration Files
 

@@ -1,7 +1,6 @@
 from typing import Any
 
 import duckdb
-from duckdb import DuckDBPyRelation
 from fastmcp.server.dependencies import get_context
 
 from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType
@@ -23,8 +22,7 @@ def get_health_summary_from_duckdb() -> list[dict[str, Any]]:
             ctx.error("Failed to connect to DuckDB")
         except RuntimeError:
             print("Failed to connect to DuckDB")
-        return [{'status_code': 400, 'error': 'failed to connect to DuckDB',
-                 'path': client.path}]
+        return [{"status_code": 400, "error": "failed to connect to DuckDB", "path": client.path}]
 
     return client.format_response(response)
 
@@ -76,12 +74,13 @@ def search_values_from_duckdb(
     date_to: str | None = None,
 ) -> list[dict[str, Any]]:
     result = duckdb.sql(f"""
-        SELECT * FROM read_parquet('{client.path}') WHERE textvalue = '{value}'
+        SELECT * FROM read_parquet('{client.path}') WHERE textValue = '{value}'
         {f"AND type = '{record_type}'" if record_type else ""}
         {f"AND startDate >= '{date_from}'" if date_from else ""}
         {f"AND startDate <= '{date_to}'" if date_to else ""}
     """)
     return client.format_response(result)
+
 
 if __name__ == "__main__":
     print(get_health_summary_from_duckdb())
