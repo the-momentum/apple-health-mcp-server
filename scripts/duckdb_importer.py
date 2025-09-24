@@ -75,11 +75,11 @@ class ParquetImporter(XMLExporter, DuckDBClient):
                 os.remove(f)
             raise RuntimeError(f"Failed to concatenate dataframes: {str(e)}")
         try:
-            if record_df:
+            if record_df is not None:
                 record_df.write_parquet(f"{self.path / "records.parquet"}", compression="zstd")
-            if workout_df:
+            if workout_df is not None:
                 workout_df.write_parquet(f"{self.path / "workouts.parquet"}", compression="zstd")
-            if stat_df:
+            if stat_df is not None:
                 stat_df.write_parquet(f"{self.path / "stats.parquet"}", compression="zstd")
         except Exception as e:
             for f in self.chunk_files:
