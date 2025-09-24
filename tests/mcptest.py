@@ -9,6 +9,14 @@ from agents.mcp import (
 from agents.model_settings import ModelSettings
 from dotenv import load_dotenv
 
+from ragas.dataset_schema import MultiTurnSample
+from ragas.llms import LangchainLLMWrapper
+from ragas.messages import AIMessage, HumanMessage, ToolCall, ToolMessage
+from ragas.metrics import AgentGoalAccuracyWithReference
+
+
+
+
 load_dotenv()
 nest_asyncio.apply()
 
@@ -45,6 +53,7 @@ async def main() -> None:
         )
         result = await Runner.run(agent, "give me a health summary from duckdb")
         print(result.final_output)
+
 
 
 asyncio.run(main())
