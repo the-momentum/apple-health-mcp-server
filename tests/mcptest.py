@@ -9,13 +9,15 @@ from agents.mcp import (
 from agents.model_settings import ModelSettings
 from dotenv import load_dotenv
 
+from langchain_openai import ChatOpenAI
 from ragas.dataset_schema import MultiTurnSample
 from ragas.llms import LangchainLLMWrapper
 from ragas.messages import AIMessage, HumanMessage, ToolCall, ToolMessage
 from ragas.metrics import AgentGoalAccuracyWithReference
 
+LangchainLLMWrapper()
 
-
+chat = ChatOpenAI()
 
 load_dotenv()
 nest_asyncio.apply()
