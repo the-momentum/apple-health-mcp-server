@@ -1,0 +1,205 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "[{\"type\":\"HKQuantityTypeIdentifierActiveEnergyBurned\",\"count\":853486},{\"type\":\"HKQuantityTypeIdentifierHeartRate\",\"count\":411634},{\"type\":\"HKQuantityTypeIdentifierBasalEnergyBurned\",\"count\":297838},{\"type\":\"HKQuantityTypeIdentifierDistanceWalkingRunning\",\"count\":291024},{\"type\":\"HKQuantityTypeIdentifierStepCount\",\"count\":249130},{\"type\":\"HKQuantityTypeIdentifierRunningSpeed\",\"count\":80848},{\"type\":\"HKQuantityTypeIdentifierAppleExerciseTime\",\"count\":73715},{\"type\":\"HKQuantityTypeIdentifierRunningPower\",\"count\":68738},{\"type\":\"HKQuantityTypeIdentifierAppleStandTime\",\"count\":45524},{\"type\":\"HKQuantityTypeIdentifierFlightsClimbed\",\"count\":44125},{\"type\":\"HKQuantityTypeIdentifierWalkingStepLength\",\"count\":41021},{\"type\":\"HKQuantityTypeIdentifierWalkingSpeed\",\"count\":41016},{\"type\":\"HKQuantityTypeIdentifierEnvironmentalAudioExposure\",\"count\":40515},{\"type\":\"HKQuantityTypeIdentifierRunningVerticalOscillation\",\"count\":33382},{\"type\":\"HKQuantityTypeIdentifierRunningStrideLength\",\"count\":31271},{\"type\":\"HKQuantityTypeIdentifierWalkingDoubleSupportPercentage\",\"count\":30273},{\"type\":\"HKQuantityTypeIdentifierRunningGroundContactTime\",\"count\":28981},{\"type\":\"HKCategoryTypeIdentifierAppleStandHour\",\"count\":24515},{\"type\":\"HKQuantityTypeIdentifierRespiratoryRate\",\"count\":23939},{\"type\":\"HKQuantityTypeIdentifierHeadphoneAudioExposure\",\"count\":18757},{\"type\":\"HKQuantityTypeIdentifierStairDescentSpeed\",\"count\":14880},{\"type\":\"HKQuantityTypeIdentifierOxygenSaturation\",\"count\":13319},{\"type\":\"HKQuantityTypeIdentifierWalkingAsymmetryPercentage\",\"count\":9659},{\"type\":\"HKQuantityTypeIdentifierStairAscentSpeed\",\"count\":9527},{\"type\":\"HKQuantityTypeIdentifierHeartRateVariabilitySDNN\",\"count\":6904},{\"type\":\"HKQuantityTypeIdentifierBodyMass\",\"count\":3747},{\"type\":\"HKQuantityTypeIdentifierBodyMassIndex\",\"count\":3344},{\"type\":\"HKQuantityTypeIdentifierRestingHeartRate\",\"count\":894},{\"type\":\"HKQuantityTypeIdentifierWalkingHeartRateAverage\",\"count\":877},{\"type\":\"HKQuantityTypeIdentifierVO2Max\",\"count\":739},{\"type\":\"HKQuantityTypeIdentifierEnvironmentalSoundReduction\",\"count\":632},{\"type\":\"HKCategoryTypeIdentifierAudioExposureEvent\",\"count\":250},{\"type\":\"HKQuantityTypeIdentifierSixMinuteWalkTestDistance\",\"count\":104},{\"type\":\"HKCategoryTypeIdentifierHandwashingEvent\",\"count\":86},{\"type\":\"HKCategoryTypeIdentifierMindfulSession\",\"count\":84},{\"type\":\"HKQuantityTypeIdentifierAppleWalkingSteadiness\",\"count\":73},{\"type\":\"HKQuantityTypeIdentifierHeartRateRecoveryOneMinute\",\"count\":67},{\"type\":\"HKQuantityTypeIdentifierDistanceCycling\",\"count\":49},{\"type\":\"HKQuantityTypeIdentifierDistanceSwimming\",\"count\":39},{\"type\":\"HKQuantityTypeIdentifierSwimmingStrokeCount\",\"count\":39},{\"type\":\"HKCategoryTypeIdentifierHeadphoneAudioExposureEvent\",\"count\":13},{\"type\":\"HKQuantityTypeIdentifierDietaryEnergyConsumed\",\"count\":6},{\"type\":\"HKCategoryTypeIdentifierHighHeartRateEvent\",\"count\":5},{\"type\":\"HKCategoryTypeIdentifierLowHeartRateEvent\",\"count\":4},{\"type\":\"HKQuantityTypeIdentifierHeight\",\"count\":2},{\"type\":\"HKQuantityTypeIdentifierDietaryWater\",\"count\":1},{\"type\":\"HKDataTypeSleepDurationGoal\",\"count\":1},{\"type\":\"HKQuantityTypeIdentifierNumberOfTimesFallen\",\"count\":1}]"
+    }
+  ],
+  "structuredContent": {
+    "result": [
+      {
+        "type": "HKQuantityTypeIdentifierActiveEnergyBurned",
+        "count": 853486
+      },
+      {
+        "type": "HKQuantityTypeIdentifierHeartRate",
+        "count": 411634
+      },
+      {
+        "type": "HKQuantityTypeIdentifierBasalEnergyBurned",
+        "count": 297838
+      },
+      {
+        "type": "HKQuantityTypeIdentifierDistanceWalkingRunning",
+        "count": 291024
+      },
+      {
+        "type": "HKQuantityTypeIdentifierStepCount",
+        "count": 249130
+      },
+      {
+        "type": "HKQuantityTypeIdentifierRunningSpeed",
+        "count": 80848
+      },
+      {
+        "type": "HKQuantityTypeIdentifierAppleExerciseTime",
+        "count": 73715
+      },
+      {
+        "type": "HKQuantityTypeIdentifierRunningPower",
+        "count": 68738
+      },
+      {
+        "type": "HKQuantityTypeIdentifierAppleStandTime",
+        "count": 45524
+      },
+      {
+        "type": "HKQuantityTypeIdentifierFlightsClimbed",
+        "count": 44125
+      },
+      {
+        "type": "HKQuantityTypeIdentifierWalkingStepLength",
+        "count": 41021
+      },
+      {
+        "type": "HKQuantityTypeIdentifierWalkingSpeed",
+        "count": 41016
+      },
+      {
+        "type": "HKQuantityTypeIdentifierEnvironmentalAudioExposure",
+        "count": 40515
+      },
+      {
+        "type": "HKQuantityTypeIdentifierRunningVerticalOscillation",
+        "count": 33382
+      },
+      {
+        "type": "HKQuantityTypeIdentifierRunningStrideLength",
+        "count": 31271
+      },
+      {
+        "type": "HKQuantityTypeIdentifierWalkingDoubleSupportPercentage",
+        "count": 30273
+      },
+      {
+        "type": "HKQuantityTypeIdentifierRunningGroundContactTime",
+        "count": 28981
+      },
+      {
+        "type": "HKCategoryTypeIdentifierAppleStandHour",
+        "count": 24515
+      },
+      {
+        "type": "HKQuantityTypeIdentifierRespiratoryRate",
+        "count": 23939
+      },
+      {
+        "type": "HKQuantityTypeIdentifierHeadphoneAudioExposure",
+        "count": 18757
+      },
+      {
+        "type": "HKQuantityTypeIdentifierStairDescentSpeed",
+        "count": 14880
+      },
+      {
+        "type": "HKQuantityTypeIdentifierOxygenSaturation",
+        "count": 13319
+      },
+      {
+        "type": "HKQuantityTypeIdentifierWalkingAsymmetryPercentage",
+        "count": 9659
+      },
+      {
+        "type": "HKQuantityTypeIdentifierStairAscentSpeed",
+        "count": 9527
+      },
+      {
+        "type": "HKQuantityTypeIdentifierHeartRateVariabilitySDNN",
+        "count": 6904
+      },
+      {
+        "type": "HKQuantityTypeIdentifierBodyMass",
+        "count": 3747
+      },
+      {
+        "type": "HKQuantityTypeIdentifierBodyMassIndex",
+        "count": 3344
+      },
+      {
+        "type": "HKQuantityTypeIdentifierRestingHeartRate",
+        "count": 894
+      },
+      {
+        "type": "HKQuantityTypeIdentifierWalkingHeartRateAverage",
+        "count": 877
+      },
+      {
+        "type": "HKQuantityTypeIdentifierVO2Max",
+        "count": 739
+      },
+      {
+        "type": "HKQuantityTypeIdentifierEnvironmentalSoundReduction",
+        "count": 632
+      },
+      {
+        "type": "HKCategoryTypeIdentifierAudioExposureEvent",
+        "count": 250
+      },
+      {
+        "type": "HKQuantityTypeIdentifierSixMinuteWalkTestDistance",
+        "count": 104
+      },
+      {
+        "type": "HKCategoryTypeIdentifierHandwashingEvent",
+        "count": 86
+      },
+      {
+        "type": "HKCategoryTypeIdentifierMindfulSession",
+        "count": 84
+      },
+      {
+        "type": "HKQuantityTypeIdentifierAppleWalkingSteadiness",
+        "count": 73
+      },
+      {
+        "type": "HKQuantityTypeIdentifierHeartRateRecoveryOneMinute",
+        "count": 67
+      },
+      {
+        "type": "HKQuantityTypeIdentifierDistanceCycling",
+        "count": 49
+      },
+      {
+        "type": "HKQuantityTypeIdentifierDistanceSwimming",
+        "count": 39
+      },
+      {
+        "type": "HKQuantityTypeIdentifierSwimmingStrokeCount",
+        "count": 39
+      },
+      {
+        "type": "HKCategoryTypeIdentifierHeadphoneAudioExposureEvent",
+        "count": 13
+      },
+      {
+        "type": "HKQuantityTypeIdentifierDietaryEnergyConsumed",
+        "count": 6
+      },
+      {
+        "type": "HKCategoryTypeIdentifierHighHeartRateEvent",
+        "count": 5
+      },
+      {
+        "type": "HKCategoryTypeIdentifierLowHeartRateEvent",
+        "count": 4
+      },
+      {
+        "type": "HKQuantityTypeIdentifierHeight",
+        "count": 2
+      },
+      {
+        "type": "HKQuantityTypeIdentifierDietaryWater",
+        "count": 1
+      },
+      {
+        "type": "HKDataTypeSleepDurationGoal",
+        "count": 1
+      },
+      {
+        "type": "HKQuantityTypeIdentifierNumberOfTimesFallen",
+        "count": 1
+      }
+    ]
+  },
+  "isError": false
+}
