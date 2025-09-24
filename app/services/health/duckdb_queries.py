@@ -23,7 +23,8 @@ def get_health_summary_from_duckdb() -> list[dict[str, Any]]:
             ctx.error("Failed to connect to DuckDB")
         except RuntimeError:
             print("Failed to connect to DuckDB")
-        return [{'status_code': 400, 'error': 'failed to connect to DuckDB'}]
+        return [{'status_code': 400, 'error': 'failed to connect to DuckDB',
+                 'path': client.path}]
 
     return client.format_response(response)
 
@@ -56,14 +57,14 @@ def get_trend_data_from_duckdb(
     date_to: str | None = None,
 ) -> list[dict[str, Any]]:
     result = duckdb.sql(f"""
-        SELECT device, time_bucket(INTERVAL '1 {interval}', startDate) AS interval,
+        SELECT sourceName, time_bucket(INTERVAL '1 {interval}', startDate) AS interval,
         AVG(value) AS average, SUM(value) AS sum,
         MIN(value) AS min, MAX(value) AS max, COUNT(*) AS count
         FROM read_parquet('{client.path}')
         WHERE type = '{record_type}'
         {f"AND startDate >= '{date_from}'" if date_from else ""}
         {f"AND startDate <= '{date_to}'" if date_to else ""}
-        GROUP BY interval, device ORDER BY interval ASC
+        GROUP BY interval, sourceName ORDER BY interval ASC
     """)
     return client.format_response(result)
 
