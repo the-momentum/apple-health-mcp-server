@@ -62,9 +62,12 @@ class ParquetImporter(XMLExporter, DuckDBClient):
 
 
         try:
-            record_df = pl.concat(record_chunk_dfs)
-            workout_df = pl.concat(workout_chunk_dfs)
-            stat_df = pl.concat(stat_chunk_dfs)
+            if record_chunk_dfs:
+                record_df = pl.concat(record_chunk_dfs)
+            if workout_chunk_dfs:
+                workout_df = pl.concat(workout_chunk_dfs)
+            if stat_chunk_dfs:
+                stat_df = pl.concat(stat_chunk_dfs)
         except Exception as e:
             for f in self.chunk_files:
                 os.remove(f)
