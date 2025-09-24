@@ -11,7 +11,7 @@ from app.config import settings
 
 class XMLExporter:
     def __init__(self):
-        self.xmlpath: Path = Path(settings.RAW_XML_PATH)
+        self.xml_path: Path = Path(settings.RAW_XML_PATH)
         self.chunk_size: int = settings.CHUNK_SIZE
 
     DATE_FIELDS: tuple[str, ...] = ("startDate", "endDate", "creationDate")
@@ -91,7 +91,7 @@ class XMLExporter:
         workouts: list[dict[str, Any]] = []
         workout_stats: list[dict[str, Any]] = []
 
-        for event, elem in ET.iterparse(self.xmlpath, events=("start",)):
+        for event, elem in ET.iterparse(self.xml_path, events=("start",)):
             if elem.tag == "Record" and event == "start":
                 if len(records) >= self.chunk_size:
                     # yield pl.DataFrame(records)

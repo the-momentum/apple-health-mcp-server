@@ -36,7 +36,7 @@ class ParquetImporter(XMLExporter, DuckDBClient):
                 os.remove(file)
             raise RuntimeError(f"Failed to write chunk file to disk: {chunk_file}")
 
-    def exportxml(self) -> None:
+    def export_xml(self) -> None:
         for i, docs in enumerate(self.parse_xml(), 1):
             df: pl.DataFrame = pl.DataFrame(docs)
             self.write_to_file(i, df)
