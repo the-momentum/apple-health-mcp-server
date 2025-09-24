@@ -59,7 +59,9 @@ class ParquetImporter(XMLExporter, DuckDBClient):
                 df = df.select(self.WORKOUT_STATS_COLUMNS)
                 stat_chunk_dfs.append(df)
 
-
+        record_df = None
+        workout_df = None
+        stat_df = None
 
         try:
             if record_chunk_dfs:
@@ -73,9 +75,12 @@ class ParquetImporter(XMLExporter, DuckDBClient):
                 os.remove(f)
             raise RuntimeError(f"Failed to concatenate dataframes: {str(e)}")
         try:
-            record_df.write_parquet(f"{self.path / "records.parquet"}", compression="zstd")
-            workout_df.write_parquet(f"{self.path / "workouts.parquet"}", compression="zstd")
-            stat_df.write_parquet(f"{self.path / "stats.parquet"}", compression="zstd")
+            if record_df:
+                record_df.write_parquet(f"{self.path / "records.parquet"}", compression="zstd")
+            if workout_df:
+                workout_df.write_parquet(f"{self.path / "workouts.parquet"}", compression="zstd")
+            if stat_df:
+                stat_df.write_parquet(f"{self.path / "stats.parquet"}", compression="zstd")
         except Exception as e:
             for f in self.chunk_files:
                 os.remove(f)
