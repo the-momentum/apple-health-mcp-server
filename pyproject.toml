@@ -49,6 +49,7 @@ asyncio_default_fixture_loop_scope = "session"
 [tool.ruff]
 line-length = 100
 target-version = "py313"
+extend-exclude = ["tests/"]
 
 [tool.ruff.lint]
 select = [
@@ -72,6 +73,9 @@ ignore = [
     "ANN204", # missing-return-type-special-method
     "ANN401", # any-type
 ]
+
+[tool.ty.src]
+exclude = ["tests/"]
 
 [project.scripts]
 start = "start:main"

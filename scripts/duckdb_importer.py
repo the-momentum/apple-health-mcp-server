@@ -88,12 +88,12 @@ class ParquetImporter(XMLExporter, DuckDBClient):
         for f in self.chunk_files:
             os.remove(f)
 
-    def export_to_multiple(self):
+    def export_to_multiple(self) -> None:
         con = duckdb.connect("shitass.duckdb")
         for i, docs in enumerate(self.parse_xml(), 1):
             tables = docs.partition_by("type", as_dict=True)
             for key, table in tables.items():
-                pddf = table.to_pandas()
+                pddf = table.to_pandas()  # noqa
                 con.execute(f"""
                     CREATE TABLE IF NOT EXISTS {key[0]}
                     AS SELECT * FROM pddf
@@ -104,4 +104,4 @@ class ParquetImporter(XMLExporter, DuckDBClient):
 
 if __name__ == "__main__":
     importer = ParquetImporter()
-    importer.exportxml()
+    importer.export_xml()
