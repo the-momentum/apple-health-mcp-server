@@ -16,9 +16,10 @@ jobs:
       - name: Install dependencies
         run: uv sync --group dev
       - name: Run fileserver
-        run: uv run --directory tests/ fileserver.py
+        run: uv run --directory tests/ fileserver.py &
       - name: Run mcp server
-        run: uv run fastmcp run -t http app/main.py
+        run: uv run fastmcp run -t http app/main.py &
+      - run: sleep 5
       - name: Run tests
         run: uv run --directory tests/ pytest e2e_tests.py
 
