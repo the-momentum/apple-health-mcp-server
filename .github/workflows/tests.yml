@@ -40,5 +40,5 @@ jobs:
       - name: Run mcp server
         run: uv run fastmcp run -t http app/main.py &
       - name: Run inspector
-        run: npx @modelcontextprotocol/inspector --cli \ http://localhost:8000/mcp --method tools/list
+        run: npx @modelcontextprotocol/inspector --cli \ http://127.0.0.1:8000/mcp --method tools/list
 
