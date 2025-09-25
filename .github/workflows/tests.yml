@@ -2,6 +2,9 @@ name: CI
 
 on: [push]
 
+env:
+  DUCKDB_FILENAME: parquet_example
+
 jobs:
   test:
     runs-on: ubuntu-latest
