@@ -4,6 +4,7 @@ on: [push]
 
 env:
   DUCKDB_FILENAME: parquet_example
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
 jobs:
   test:
