@@ -29,9 +29,14 @@ jobs:
   inspector:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
       - name: Run mcp server
         run: uv run fastmcp run -t http app/main.py &
       - name: Run inspector
-        run: npx @modelcontextprotocol/inspector --cli \
-          http://localhost:8000/mcp --method tools/list
+        run: npx @modelcontextprotocol/inspector --cli \ http://localhost:8000/mcp --method tools/list
 
