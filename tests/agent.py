@@ -35,7 +35,7 @@ class AgentManager:
         self._initialized = True
 
     def _create_agent(self, model: str, system_prompt: str) -> Agent:
-        model = OpenAIChatModel(model, provider=OpenAIProvider(api_key=os.getenv("api_key")))
+        model = OpenAIChatModel(model, provider=OpenAIProvider(api_key=os.getenv("openai_api_key")))
         return Agent(
             model=model,
             deps_type=dict[str, str],
