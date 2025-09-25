@@ -38,7 +38,7 @@ Want to try it out? **[🚀 Getting Started](docs/getting-started.md)**
 ## ✨ Key Features
 
 - **🚀 FastMCP Framework**: Built on FastMCP for high-performance MCP server capabilities
-- **🍏 Apple Health Data Management**: Import, parse, and analyze Apple Health XML exports
+- **🍏 Apple Health Data Exploration**: Import, parse, and analyze Apple Health XML exports
 - **🔎 Powerful Search & Filtering**: Query and filter health records using natural language and advanced parameters
 - **📦 Elasticsearch, ClickHouse or DuckDB Integration**: Index and search health data efficiently at scale
 - **🛠️ Modular MCP Tools**: Tools for structure analysis, record search, type-based extraction, and more
@@ -63,9 +63,10 @@ Want to try it out? **[🚀 Getting Started](docs/getting-started.md)**
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 💼 About Momentum
-This project is part of Momentum’s open-source ecosystem, where we make healthcare technology more secure, interoperable, and AI-ready. Our goal is to help HealthTech teams adopt standards such as FHIR safely and efficiently. Momentum is a digital health agency recognized by FT1000, Deloitte Fast 50, and Forbes for building scalable, HIPAA-compliant solutions that power next-generation healthcare innovation.
+This project is part of Momentum’s open-source ecosystem, where we make healthcare technology more secure, interoperable, and AI-ready. Our goal is to help HealthTech teams adopt standards such as FHIR safely and efficiently. We are healthcare AI development experts, recognized by FT1000, Deloitte Fast 50, and Forbes for building scalable, HIPAA-compliant solutions that power next-generation healthcare innovation.
 
-📖 Want to learn from our experience? Read our insights → <a href="https://www.themomentum.ai/blog">themomentum.ai/blog</a>
+📖 Want to learn from our experience? Read our insights → <a href="https://www.themomentum.ai/blog">themomentum.ai/blog</a>. 
+Interested? <a href="http://themomentum.ai/lets-talk">Let's talk</a>!
 
 <div align="center">
   <p><em>Built with ❤️ by <a href="https://themomentum.ai">Momentum</a> • Transforming healthcare data management with AI</em></p>
