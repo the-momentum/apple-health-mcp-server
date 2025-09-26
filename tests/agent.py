@@ -10,6 +10,7 @@ from pydantic_ai.mcp import MCPServerStreamableHTTP
 from dotenv import load_dotenv
 load_dotenv()
 from app.config import settings
+import opik
 
 class AgentManager:
     def __init__(self):
@@ -44,6 +45,7 @@ class AgentManager:
             output_type=str,
         )
 
+    @opik.track
     async def handle_message(self, message: str) -> str:
         if not self._initialized:
             raise RuntimeError("Agent not initialized. Call initialize() first.")

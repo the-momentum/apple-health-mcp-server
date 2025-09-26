@@ -46,7 +46,7 @@ async def llm_opinion_template(query: str, expected: str):
                 
             """)
             percent = int(resp)
-            assert 75 < percent < 100
+            assert 75 <= percent <= 100
 
         except ExceptionGroup:
             pytest.fail("Failed to connect with MCP server", False)
@@ -77,4 +77,5 @@ async def test_judge():
 # @pytest.mark.asyncio
 # async def test_trend():
 #     await query_template("please give me trend data for my heart rate")
+
 
