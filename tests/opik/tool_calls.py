@@ -95,44 +95,44 @@ dataset.insert([
 
 judge_dataset = client.get_or_create_dataset(name="output_checks")
 
-judge_dataset.insert([
-    {
-        "input": "search for step count records between 65 and 90 steps",
-        "expected_output": """
-            I found some step count records with values between 65 and 90 steps:
-            1. **76 Steps** - **Source:** Rob’s Apple Watch - **Device:**
-            Apple Watch, model Watch6,1 - **Date:** October 25, 2020
-            - **Start Time:** 00:05:13 - **End Time:** 00:06:14
-            2. **87 Steps** - **Source:** Rob’s Apple Watch
-            - **Device:** Apple Watch, model Watch6,1
-            - **Date:** October 25, 2020 - **Start Time:** 00:06:14
-            - **End Time:** 00:07:15 3. **66 Steps** - **Source:**
-            Rob’s Apple Watch - **Device:** Apple Watch, model Watch6,1
-            - **Date:** October 25, 2020 - **Start Time:** 00:11:35 - 
-            **End Time:** 00:12:37 If you need more details or additional
-            records, feel free to ask!
-        """
-    },
-    {
-        "input": "can you search for step records with exactly 13 steps",
-        "expected_output": """
-            I found two records of step count with exactly 13 steps.
-            Here are the details: 1. **Record 1:** - **Source Name:**
-            Rob’s Apple Watch - **Source Version:** 7.0.2 - **Device:**
-            Apple Watch, manufacturer: Apple Inc., model: Watch, hardware:
-            Watch6,1, software: 7.0.2 - **Start Date:** 2020-10-24
-            23:54:51 +02:00 - **End Date:** 2020-10-24 23:55:30 +02:00
-            - **Creation Date:** 2020-10-25 00:04:01 +02:00 - **Unit:**
-            Count - **Value:** 13 2. **Record 2:** - **Source Name:** 
-            Rob’s Apple Watch - **Source Version:** 7.0.2 - **Device:** Apple
-            Watch, manufacturer: Apple Inc., model: Watch, hardware: Watch6,1,
-            software: 7.0.2 - **Start Date:** 2020-10-24 23:56:38 +02:00
-            - **End Date:** 2020-10-24 23:56:46 +02:00 - **Creation Date:**
-            2020-10-25 00:04:01 +02:00 - **Unit:** Count - **Value:** 13 
-            Would you like further details or analysis on these records?
-        """
-    }
-])
+# judge_dataset.insert([
+#     {
+#         "input": "search for step count records between 65 and 90 steps",
+#         "expected_output": """
+#             I found some step count records with values between 65 and 90 steps:
+#             1. **76 Steps** - **Source:** Rob’s Apple Watch - **Device:**
+#             Apple Watch, model Watch6,1 - **Date:** October 25, 2020
+#             - **Start Time:** 00:05:13 - **End Time:** 00:06:14
+#             2. **87 Steps** - **Source:** Rob’s Apple Watch
+#             - **Device:** Apple Watch, model Watch6,1
+#             - **Date:** October 25, 2020 - **Start Time:** 00:06:14
+#             - **End Time:** 00:07:15 3. **66 Steps** - **Source:**
+#             Rob’s Apple Watch - **Device:** Apple Watch, model Watch6,1
+#             - **Date:** October 25, 2020 - **Start Time:** 00:11:35 -
+#             **End Time:** 00:12:37 If you need more details or additional
+#             records, feel free to ask!
+#         """
+#     },
+#     {
+#         "input": "can you search for step records with exactly 13 steps",
+#         "expected_output": """
+#             I found two records of step count with exactly 13 steps.
+#             Here are the details: 1. **Record 1:** - **Source Name:**
+#             Rob’s Apple Watch - **Source Version:** 7.0.2 - **Device:**
+#             Apple Watch, manufacturer: Apple Inc., model: Watch, hardware:
+#             Watch6,1, software: 7.0.2 - **Start Date:** 2020-10-24
+#             23:54:51 +02:00 - **End Date:** 2020-10-24 23:55:30 +02:00
+#             - **Creation Date:** 2020-10-25 00:04:01 +02:00 - **Unit:**
+#             Count - **Value:** 13 2. **Record 2:** - **Source Name:**
+#             Rob’s Apple Watch - **Source Version:** 7.0.2 - **Device:** Apple
+#             Watch, manufacturer: Apple Inc., model: Watch, hardware: Watch6,1,
+#             software: 7.0.2 - **Start Date:** 2020-10-24 23:56:38 +02:00
+#             - **End Date:** 2020-10-24 23:56:46 +02:00 - **Creation Date:**
+#             2020-10-25 00:04:01 +02:00 - **Unit:** Count - **Value:** 13
+#             Would you like further details or analysis on these records?
+#         """
+#     }
+# ])
 
 # eval_results = evaluate(
 #     experiment_name="AgentToolSelectionExperiment",
