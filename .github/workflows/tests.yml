@@ -5,6 +5,7 @@ on: [push]
 env:
   DUCKDB_FILENAME: tests/parquet_example
   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  OPIK_API_KEY: ${{ secrets.OPIK_API_KEY }}
 
 jobs:
   test:
@@ -41,4 +42,15 @@ jobs:
         run: uv run fastmcp run -t http app/main.py &
       - name: Run inspector
         run: npx @modelcontextprotocol/inspector --cli \ http://127.0.0.1:8000/mcp --method tools/list
-
+  opik:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Run opik experiments
+        run: uv run tests/opik/tool_calls.py
