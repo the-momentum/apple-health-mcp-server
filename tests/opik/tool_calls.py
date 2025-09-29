@@ -9,11 +9,9 @@ from opik.evaluation.metrics import (
     LevenshteinRatio,
     AnswerRelevance
 )
-import nest_asyncio
 
 from tests.agent import AgentManager
 
-nest_asyncio.apply()
 
 agent_manager = AgentManager()
 asyncio.run(agent_manager.initialize())
@@ -83,13 +81,17 @@ client = opik.Opik()
 dataset = client.get_dataset(name="tool_calls")
 
 dataset.insert([
-    # {
-    #     "input": "search for step count records between 65 and 90 steps",
-    #     "tool_call": "search_health_records_duckdb"
-    # },
     {
-        "input": "can you search for step records with exactly 13 steps",
-        "tool_call": "search_values_duckdb"
+        "input": "give me a summary of my health from duckdb",
+        "tool_call": "get_health_summary_duckdb"
+    },
+    {
+        "input": "give me some statistics about my heart rate",
+        "tool_call": "get_statistics_by_type_duckdb"
+    },
+    {
+        "input": "give me trend data for my step count in october 2024 from duckdb",
+        "tool_call": "get_trend_data_duckdb"
     }
 ])
 
@@ -97,55 +99,42 @@ judge_dataset = client.get_or_create_dataset(name="output_checks")
 
 # judge_dataset.insert([
 #     {
-#         "input": "search for step count records between 65 and 90 steps",
+#         "input": "give me a summary of my health from duckdb",
 #         "expected_output": """
-#             I found some step count records with values between 65 and 90 steps:
-#             1. **76 Steps** - **Source:** Rob’s Apple Watch - **Device:**
-#             Apple Watch, model Watch6,1 - **Date:** October 25, 2020
-#             - **Start Time:** 00:05:13 - **End Time:** 00:06:14
-#             2. **87 Steps** - **Source:** Rob’s Apple Watch
-#             - **Device:** Apple Watch, model Watch6,1
-#             - **Date:** October 25, 2020 - **Start Time:** 00:06:14
-#             - **End Time:** 00:07:15 3. **66 Steps** - **Source:**
-#             Rob’s Apple Watch - **Device:** Apple Watch, model Watch6,1
-#             - **Date:** October 25, 2020 - **Start Time:** 00:11:35 -
-#             **End Time:** 00:12:37 If you need more details or additional
-#             records, feel free to ask!
+#             Here is a summary of your health data from DuckDB:
+#             - **Basal Energy Burned**: 18 records - **Heart Rate**:
+#             17 records - **Step Count**: 10 records - **Body Mass Index
+#             (BMI)**: 8 records - **Dietary Water**: 1 record If you
+#             need more detailed information or specific statistics
+#             on any of these categories, feel free to ask!
 #         """
 #     },
 #     {
-#         "input": "can you search for step records with exactly 13 steps",
+#         "input": "give me some statistics about my heart rate",
 #         "expected_output": """
-#             I found two records of step count with exactly 13 steps.
-#             Here are the details: 1. **Record 1:** - **Source Name:**
-#             Rob’s Apple Watch - **Source Version:** 7.0.2 - **Device:**
-#             Apple Watch, manufacturer: Apple Inc., model: Watch, hardware:
-#             Watch6,1, software: 7.0.2 - **Start Date:** 2020-10-24
-#             23:54:51 +02:00 - **End Date:** 2020-10-24 23:55:30 +02:00
-#             - **Creation Date:** 2020-10-25 00:04:01 +02:00 - **Unit:**
-#             Count - **Value:** 13 2. **Record 2:** - **Source Name:**
-#             Rob’s Apple Watch - **Source Version:** 7.0.2 - **Device:** Apple
-#             Watch, manufacturer: Apple Inc., model: Watch, hardware: Watch6,1,
-#             software: 7.0.2 - **Start Date:** 2020-10-24 23:56:38 +02:00
-#             - **End Date:** 2020-10-24 23:56:46 +02:00 - **Creation Date:**
-#             2020-10-25 00:04:01 +02:00 - **Unit:** Count - **Value:** 13
-#             Would you like further details or analysis on these records?
+#             idk yet
+#         """
+#     },
+#     {
+#         "input": "give me trend data for my step count in october 2024 from duckdb",
+#         "expected_output": """
+#             idk yet
 #         """
 #     }
 # ])
 
-# eval_results = evaluate(
-#     experiment_name="AgentToolSelectionExperiment",
-#     dataset=dataset,
-#     task=evaluation_task,
-#     scoring_metrics=metrics,
-#     task_threads=1,
-# )
-
-second_evals = evaluate(
-    experiment_name="JudgeOutputExperiment",
-    dataset=judge_dataset,
+eval_results = evaluate(
+    experiment_name="AgentToolSelectionExperiment",
+    dataset=dataset,
     task=evaluation_task,
-    scoring_metrics=[Hallucination(), LevenshteinRatio(), AnswerRelevance(require_context=False)],
+    scoring_metrics=metrics,
     task_threads=1,
 )
+
+# second_evals = evaluate(
+#     experiment_name="JudgeOutputExperiment",
+#     dataset=judge_dataset,
+#     task=evaluation_task,
+#     scoring_metrics=[Hallucination(), LevenshteinRatio(), AnswerRelevance(require_context=False)],
+#     task_threads=1,
+# )

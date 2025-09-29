@@ -40,6 +40,8 @@ jobs:
         run: uv sync --group dev
       - name: Run mcp server
         run: uv run fastmcp run -t http app/main.py &
+      - run: sleep 5
+      - run: curl http://127.0.0.1:8000/mcp
       - name: Run inspector
         run: npx @modelcontextprotocol/inspector --cli \ http://127.0.0.1:8000/mcp --method tools/list
   opik:
