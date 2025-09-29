@@ -78,7 +78,7 @@ def evaluation_task(dataset_item):
 
 # refer to https://github.com/comet-ml/opik/issues/2118
 
-opik_workspace = os.getenv("OPIK_WORKSPACE_NAME")
+opik_workspace = os.getenv("OPIK_WORKSPACE")
 opik_api_key = os.getenv("OPIK_API_KEY")
 
 os.environ["OPIK_WORKSPACE"] = opik_workspace
