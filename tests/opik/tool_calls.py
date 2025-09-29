@@ -1,6 +1,7 @@
 import asyncio
+import os
 
-import opik
+from opik import Opik
 from opik.evaluation import evaluate
 from opik.evaluation.metrics import (
     base_metric,
@@ -75,8 +76,19 @@ def evaluation_task(dataset_item):
             "error": str(e)
         }
 
+# refer to https://github.com/comet-ml/opik/issues/2118
 
-client = opik.Opik()
+opik_workspace = os.getenv("OPIK_WORKSPACE_NAME")
+opik_api_key = os.getenv("OPIK_API_KEY")
+
+os.environ["OPIK_WORKSPACE"] = opik_workspace
+os.environ["OPIK_API_KEY"] = opik_api_key
+
+client = Opik(
+    # use_local=False,  # Set to True if using a local Opik instance
+    workspace=opik_workspace,
+    api_key=opik_api_key
+)
 
 dataset = client.get_dataset(name="tool_calls")
 
