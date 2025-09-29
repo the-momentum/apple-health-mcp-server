@@ -80,7 +80,7 @@ client = opik.Opik()
 
 dataset = client.get_dataset(name="tool_calls")
 
-judge_dataset = client.get_or_create_dataset(name="output_checks")
+judge_dataset = client.get_dataset(name="output_checks")
 
 
 eval_results = evaluate(
@@ -90,6 +90,13 @@ eval_results = evaluate(
     scoring_metrics=[ToolSelectionQuality()],
     task_threads=1,
 )
+
+import requests as req
+
+r1 = req.get("http://localhost:8000/mcp")
+print(r1.text)
+r2 = req.get("https://www.comet.com/opik/api/v1/private/spans/batch")
+print(r2.text)
 
 second_evals = evaluate(
     experiment_name="JudgeOutputExperiment",
