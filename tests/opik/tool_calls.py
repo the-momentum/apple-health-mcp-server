@@ -98,6 +98,9 @@ print(r1.text)
 r2 = req.get("https://www.comet.com/opik/api/v1/private/spans/batch")
 print(r2.text)
 
+print(eval_results.test_results)
+print(eval_results.experiment_name)
+
 second_evals = evaluate(
     experiment_name="JudgeOutputExperiment",
     dataset=judge_dataset,
@@ -105,3 +108,6 @@ second_evals = evaluate(
     scoring_metrics=[Hallucination(), LevenshteinRatio(), AnswerRelevance(require_context=False)],
     task_threads=1,
 )
+
+print(second_evals.test_results)
+print(second_evals.experiment_name)
