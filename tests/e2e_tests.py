@@ -37,13 +37,13 @@ async def llm_opinion_template(query: str, expected: str):
                 two inputs. Respond only with a percentage, e.g. "81", without % sign.
                 Consider things like missing or differing data, you can ignore
                 things like honorifics, your highest priority is data itself
-                
+
                 Input nr. 1:
                     {output.parts[0].content}
-                    
+
                 Input nr. 2:
                     {expected}
-                
+
             """)
             percent = int(resp)
             assert 75 <= percent <= 100
@@ -77,5 +77,3 @@ async def test_judge():
 # @pytest.mark.asyncio
 # async def test_trend():
 #     await query_template("please give me trend data for my heart rate")
-
-

@@ -24,7 +24,8 @@ jobs:
         run: uv run --directory tests/ fileserver.py &
       - name: Run mcp server
         run: uv run fastmcp run -t http app/main.py &
-      - run: sleep 5
+      - name: Wait for mcp initialization
+        run: sleep 5
       - name: Run tests
         run: uv run --directory tests/ pytest e2e_tests.py
   inspector:
@@ -40,7 +41,8 @@ jobs:
         run: uv sync --group dev
       - name: Run mcp server
         run: uv run fastmcp run -t http app/main.py &
-      - run: sleep 5
+      - name: Wait for mcp initialization
+        run: sleep 5
       - name: Run inspector
         run: npx @modelcontextprotocol/inspector --cli http://127.0.0.1:8000/mcp --method tools/list
   opik:

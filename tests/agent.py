@@ -8,9 +8,9 @@ from pydantic_ai.tools import Tool
 from pydantic_ai.mcp import MCPServerStreamableHTTP
 
 from dotenv import load_dotenv
-load_dotenv()
-from app.config import settings
 import opik
+
+load_dotenv()
 
 class AgentManager:
     def __init__(self):

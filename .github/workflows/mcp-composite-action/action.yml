@@ -1,0 +1,25 @@
+name: 'MCP server setup'
+description: 'Sync uv dependencies and run MCP server'
+
+env:
+  DUCKDB_FILENAME: tests/parquet_example
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  OPIK_API_KEY: ${{ secrets.OPIK_API_KEY }}
+  
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+    - name: Install uv
+      run: curl -LsSf https://astral.sh/uv/install.sh | sh
+    - name: Install dependencies
+      run: uv sync --group dev
+    - name: Run fileserver
+      run: uv run --directory tests/ fileserver.py &
+    - name: Run mcp server
+      run: uv run fastmcp run -t http app/main.py &
+    - name: Wait for mcp initialization
+      run: sleep 5

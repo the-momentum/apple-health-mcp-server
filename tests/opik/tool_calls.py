@@ -19,13 +19,14 @@ asyncio.run(agent_manager.initialize())
 
 class ToolSelectionQuality(base_metric.BaseMetric):
     def __init__(self, name: str = "tool_selection_quality"):
-        # super().__init__(name)
+        super().__init__(name)
         self.name = name
 
     def score(self, tool_calls, expected_tool_calls, **kwargs):
         try:
             actual_tool = tool_calls[0]["function_name"]
             expected_tool = expected_tool_calls[0]["function_name"]
+
             if actual_tool == expected_tool:
                 return score_result.ScoreResult(
                     name=self.name,
@@ -51,11 +52,12 @@ def evaluation_task(dataset_item):
         user_message_content = dataset_item["input"]
         expected_tool = dataset_item.get("tool_call", "")
         reference = dataset_item.get("expected_output", "")
-        # This is where you call your agent with the input message and get the real execution results.
-        resp = (agent_manager.agent.run_sync(user_message_content))
+
+        resp = agent_manager.agent.run_sync(user_message_content)
         result = resp.new_messages()
         tool_calls = [{"function_name": result[1].parts[0].tool_name,
                        "function_parameters": {}}]
+
         return {
             "input": user_message_content,
             "output": resp.output,
@@ -74,67 +76,25 @@ def evaluation_task(dataset_item):
         }
 
 
-metrics = [ToolSelectionQuality()]
-
 client = opik.Opik()
 
 dataset = client.get_dataset(name="tool_calls")
 
-dataset.insert([
-    {
-        "input": "give me a summary of my health from duckdb",
-        "tool_call": "get_health_summary_duckdb"
-    },
-    {
-        "input": "give me some statistics about my heart rate",
-        "tool_call": "get_statistics_by_type_duckdb"
-    },
-    {
-        "input": "give me trend data for my step count in october 2024 from duckdb",
-        "tool_call": "get_trend_data_duckdb"
-    }
-])
-
 judge_dataset = client.get_or_create_dataset(name="output_checks")
 
-# judge_dataset.insert([
-#     {
-#         "input": "give me a summary of my health from duckdb",
-#         "expected_output": """
-#             Here is a summary of your health data from DuckDB:
-#             - **Basal Energy Burned**: 18 records - **Heart Rate**:
-#             17 records - **Step Count**: 10 records - **Body Mass Index
-#             (BMI)**: 8 records - **Dietary Water**: 1 record If you
-#             need more detailed information or specific statistics
-#             on any of these categories, feel free to ask!
-#         """
-#     },
-#     {
-#         "input": "give me some statistics about my heart rate",
-#         "expected_output": """
-#             idk yet
-#         """
-#     },
-#     {
-#         "input": "give me trend data for my step count in october 2024 from duckdb",
-#         "expected_output": """
-#             idk yet
-#         """
-#     }
-# ])
 
 eval_results = evaluate(
     experiment_name="AgentToolSelectionExperiment",
     dataset=dataset,
     task=evaluation_task,
-    scoring_metrics=metrics,
+    scoring_metrics=[ToolSelectionQuality()],
     task_threads=1,
 )
 
-# second_evals = evaluate(
-#     experiment_name="JudgeOutputExperiment",
-#     dataset=judge_dataset,
-#     task=evaluation_task,
-#     scoring_metrics=[Hallucination(), LevenshteinRatio(), AnswerRelevance(require_context=False)],
-#     task_threads=1,
-# )
+second_evals = evaluate(
+    experiment_name="JudgeOutputExperiment",
+    dataset=judge_dataset,
+    task=evaluation_task,
+    scoring_metrics=[Hallucination(), LevenshteinRatio(), AnswerRelevance(require_context=False)],
+    task_threads=1,
+)
