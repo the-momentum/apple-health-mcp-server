@@ -13,6 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/workflows/mcp-composite-action
+        with:
+          DUCKDB_FILENAME: 'tests/parquet_example'
       - name: Run tests
         run: uv run --directory tests/ pytest e2e_tests.py
   inspector:
@@ -23,6 +25,8 @@ jobs:
         with:
           node-version: '20'
       - uses: ./.github/workflows/mcp-composite-action
+        with:
+          DUCKDB_FILENAME: 'tests/parquet_example'
       - name: Run inspector
         run: npx @modelcontextprotocol/inspector --cli http://127.0.0.1:8000/mcp --method tools/list
   opik:
