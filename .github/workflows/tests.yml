@@ -6,7 +6,7 @@ env:
   DUCKDB_FILENAME: tests/parquet_example
   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
   OPIK_API_KEY: ${{ secrets.OPIK_API_KEY }}
-  OPIK_WORKSPACE: 'Default Project'
+  OPIK_WORKSPACE: 'czajkub'
 
 jobs:
   test:
