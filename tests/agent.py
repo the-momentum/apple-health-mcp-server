@@ -57,10 +57,6 @@ class AgentManager:
     def is_initialized(self) -> bool:
         return self._initialized
 
-    async def close(self):
-        """Close the MCP client"""
-        if self.mcp_client:
-            await self.mcp_client.close()
 
 
 agent_manager = AgentManager()
@@ -78,7 +74,7 @@ async def main():
             response = await agent_manager.handle_message(user_input)
             print("Agent: ", response)
     finally:
-        await agent_manager.close()
+        print("Closing agent")
 
 
 if __name__ == "__main__":

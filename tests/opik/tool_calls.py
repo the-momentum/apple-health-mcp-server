@@ -85,7 +85,6 @@ os.environ["OPIK_WORKSPACE"] = opik_workspace
 os.environ["OPIK_API_KEY"] = opik_api_key
 
 client = Opik(
-    # use_local=False,  # Set to True if using a local Opik instance
     workspace=opik_workspace,
     api_key=opik_api_key
 )
@@ -95,7 +94,7 @@ dataset = client.get_dataset(name="tool_calls")
 judge_dataset = client.get_dataset(name="output_checks")
 
 
-eval_results = evaluate(
+tool_call_evals = evaluate(
     experiment_name="AgentToolSelectionExperiment",
     dataset=dataset,
     task=evaluation_task,
@@ -103,23 +102,11 @@ eval_results = evaluate(
     task_threads=1,
 )
 
-import requests as req
 
-r1 = req.get("http://localhost:8000/mcp")
-print(r1.text)
-r2 = req.get("https://www.comet.com/opik/api/v1/private/spans/batch")
-print(r2.text)
-
-print(eval_results.test_results)
-print(eval_results.experiment_name)
-
-second_evals = evaluate(
+output_test_evals = evaluate(
     experiment_name="JudgeOutputExperiment",
     dataset=judge_dataset,
     task=evaluation_task,
     scoring_metrics=[Hallucination(), LevenshteinRatio(), AnswerRelevance(require_context=False)],
     task_threads=1,
 )
-
-print(second_evals.test_results)
-print(second_evals.experiment_name)
