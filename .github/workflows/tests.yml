@@ -33,11 +33,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: ./.github/workflows/mcp-composite-action
         with:
-          python-version: '3.13'
-      - name: Install uv
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+          DUCKDB_FILENAME: 'tests/parquet_example'
       - name: Run opik experiments
         run: uv run tests/opik/tool_calls.py
