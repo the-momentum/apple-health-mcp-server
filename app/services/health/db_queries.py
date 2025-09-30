@@ -8,8 +8,7 @@ from app.services.duckdb_client import DuckDBClient
 from app.services.health.sql_helpers import fill_query, get_table, get_value_type
 
 client = DuckDBClient()
-con = duckdb.connect(client.path / "healthdata.duckdb",
-                     read_only = True)
+con = duckdb.connect(client.path, read_only = True)
 
 
 def get_health_summary_from_duckdb() -> list[dict[str, Any]]:
