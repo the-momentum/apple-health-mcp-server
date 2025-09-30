@@ -8,17 +8,17 @@ from app.services.duckdb_client import DuckDBClient
 from app.services.health.sql_helpers import fill_query, get_table, get_value_type
 
 client = DuckDBClient()
-con = duckdb.connect(client.path, read_only = True)
+con = duckdb.connect(client.path, read_only=True)
 
 
 def get_health_summary_from_duckdb() -> list[dict[str, Any]]:
     try:
         records = con.sql(
-            f"""SELECT type, COUNT(*) AS count FROM records
+            """SELECT type, COUNT(*) AS count FROM records
             GROUP BY type ORDER BY count DESC""",
         )
         workouts = con.sql(
-            f"""SELECT workouts.type, COUNT(*) AS count FROM workouts
+            """SELECT workouts.type, COUNT(*) AS count FROM workouts
             INNER JOIN stats ON workouts.startDate = stats.startDate
             GROUP BY workouts.type ORDER BY count DESC""",
         )
@@ -36,7 +36,7 @@ def get_health_summary_from_duckdb() -> list[dict[str, Any]]:
 def search_health_records_from_duckdb(
     params: HealthRecordSearchParams,
 ) -> list[dict[str, Any]]:
-    query: str = f"SELECT * FROM"
+    query: str = "SELECT * FROM"
     query += fill_query(params)
     response = con.sql(query)
     return client.format_response(response)
@@ -63,7 +63,7 @@ def get_trend_data_from_duckdb(
     date_to: str | None = None,
 ) -> list[dict[str, Any]]:
     table = get_table(record_type)
-    value = get_value_type(record_type)
+    value = get_value_type(table)
     result = con.sql(f"""
         SELECT sourceName, time_bucket(INTERVAL '1 {interval}', startDate) AS interval,
         AVG({value}) AS average, SUM({value}) AS sum,
@@ -95,6 +95,7 @@ def search_values_from_duckdb(
 
 if __name__ == "__main__":
     from time import time
+
     # print(len(client.format_response(con.sql("""
     #         SELECT * FROM records WHERE value=0;
     # """))))
@@ -113,14 +114,16 @@ if __name__ == "__main__":
         "records for get_trend_data_duckdb: ",
         len(
             get_trend_data_from_duckdb(
-                "HKQuantityTypeIdentifierHeartRate"
-            )
+                "HKQuantityTypeIdentifierHeartRate",
+            ),
         ),
     )
     # print("time: ", time() - start)
     start = time()
     pars = HealthRecordSearchParams(
-        record_type="HKWorkoutActivityTypeRunning", value_min="30", value_max="45"
+        record_type="HKWorkoutActivityTypeRunning",
+        value_min="30",
+        value_max="45",
     )
     # con.sql("SHOW TABLES").show()
     # con.sql("SELECT * FROM workouts").show()

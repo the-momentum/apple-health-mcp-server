@@ -5,12 +5,14 @@ from app.schemas.record import HealthRecordSearchParams
 join_query: str = "INNER JOIN stats ON workouts.startDate = stats.startDate"
 name_resolution: str = "workouts."
 
-def get_table(record_type: str | Any):
+
+def get_table(record_type: str | Any) -> str:
     if record_type.startswith("HKWorkout"):
         return "workouts"
     return "records"
 
-def get_value_type(table: str):
+
+def get_value_type(table: str | None) -> str:
     match table:
         case "records":
             return "value"
@@ -20,6 +22,7 @@ def get_value_type(table: str):
             return "sum"
         case _:
             return "value"
+
 
 def build_date(date_from: str | None, date_to: str | None) -> str | None:
     if date_from and date_to:
@@ -31,8 +34,8 @@ def build_date(date_from: str | None, date_to: str | None) -> str | None:
     return None
 
 
-def build_value_range(valuemin: str | None, valuemax: str | None, table: str | None = None) -> str | None:
-    value_type = get_value_type(table)
+def build_value_range(valuemin: str | None, valuemax: str | None, table: str | None) -> str | None:
+    value_type: str = get_value_type(table)
 
     if valuemax and valuemin:
         return f"{value_type} >= '{valuemin}' and {value_type} <= '{valuemax}'"

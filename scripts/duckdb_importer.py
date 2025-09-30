@@ -74,9 +74,6 @@ class ParquetImporter(XMLExporter, DuckDBClient):
                 df = df.select(self.WORKOUT_STATS_COLUMNS)
                 stat_chunk_dfs.append(df)
 
-
-
-
         record_df = None
         workout_df = None
         stat_df = None
