@@ -2,7 +2,7 @@ from typing import Any
 
 from fastmcp import FastMCP
 
-from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType
+from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType, WorkoutType
 from app.services.health.db_queries import (
     get_health_summary_from_duckdb,
     get_statistics_by_type_from_duckdb,
@@ -75,7 +75,9 @@ def search_health_records_duckdb(params: HealthRecordSearchParams) -> list[dict[
 
 
 @duckdb_reader_router.tool
-def get_statistics_by_type_duckdb(record_type: RecordType | str) -> list[dict[str, Any]]:
+def get_statistics_by_type_duckdb(
+    record_type: RecordType | WorkoutType | str,
+) -> list[dict[str, Any]]:
     """
     Get comprehensive statistics for a specific health record type from DuckDB.
 
@@ -126,7 +128,7 @@ def get_statistics_by_type_duckdb(record_type: RecordType | str) -> list[dict[st
 
 @duckdb_reader_router.tool
 def get_trend_data_duckdb(
-    record_type: RecordType | str,
+    record_type: RecordType | WorkoutType | str,
     interval: IntervalType = "month",
     date_from: str | None = None,
     date_to: str | None = None,
@@ -184,7 +186,7 @@ def get_trend_data_duckdb(
 
 @duckdb_reader_router.tool
 def search_values_duckdb(
-    record_type: RecordType | str | None,
+    record_type: RecordType | WorkoutType | str | None,
     value: str,
     date_from: str | None = None,
     date_to: str | None = None,

@@ -3,9 +3,21 @@ from typing import Any
 import duckdb
 from fastmcp.server.dependencies import get_context
 
-from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType
+from app.schemas.record import (
+    HealthRecordSearchParams,
+    IntervalType,
+    RecordType,
+    WorkoutType,
+)
 from app.services.duckdb_client import DuckDBClient
-from app.services.health.sql_helpers import fill_query, get_table, get_value_type
+from app.services.health.sql_helpers import (
+    fill_query,
+    get_table,
+    get_value_type,
+    join_query,
+    join_string,
+    value_aggregates
+)
 
 client = DuckDBClient()
 con = duckdb.connect(client.path, read_only=True)
@@ -18,8 +30,7 @@ def get_health_summary_from_duckdb() -> list[dict[str, Any]]:
             GROUP BY type ORDER BY count DESC""",
         )
         workouts = con.sql(
-            """SELECT workouts.type, COUNT(*) AS count FROM workouts
-            INNER JOIN stats ON workouts.startDate = stats.startDate
+            f"""SELECT workouts.type, COUNT(*) AS count FROM workouts {join_query}
             GROUP BY workouts.type ORDER BY count DESC""",
         )
     except duckdb.IOException:
@@ -43,49 +54,59 @@ def search_health_records_from_duckdb(
 
 
 def get_statistics_by_type_from_duckdb(
-    record_type: RecordType | str,
+    record_type: RecordType | WorkoutType | str,
 ) -> list[dict[str, Any]]:
     table = get_table(record_type)
-    value = get_value_type(record_type)
-    result = con.sql(f"""
-                    SELECT type, COUNT(*) AS count, AVG({value}) AS average,
-                    SUM({value}) AS sum, MIN({value}) AS min, MAX({value}) AS max
-                    FROM {table}
-                    WHERE {table}.type = '{record_type}' GROUP BY type
-                    """)
-    return client.format_response(result)
+    join_clause = join_string(table)
+    values = value_aggregates(table)
+    results = []
+
+    for value in values:
+         results.append(con.sql(f"""
+                    SELECT {table}.type, COUNT(*) AS count, AVG({value}) AS average,
+                    SUM({value}) AS sum, MIN({value}) AS min, MAX({value}) AS max,
+                    unit FROM {table} {join_clause}
+                    WHERE {table}.type = '{record_type}' GROUP BY {table}.type, unit
+                    """))
+    return client.format_response(results)
 
 
 def get_trend_data_from_duckdb(
-    record_type: RecordType | str,
+    record_type: RecordType | WorkoutType | str,
     interval: IntervalType = "month",
     date_from: str | None = None,
     date_to: str | None = None,
 ) -> list[dict[str, Any]]:
     table = get_table(record_type)
-    value = get_value_type(table)
-    result = con.sql(f"""
-        SELECT sourceName, time_bucket(INTERVAL '1 {interval}', startDate) AS interval,
-        AVG({value}) AS average, SUM({value}) AS sum,
-        MIN({value}) AS min, MAX({value}) AS max, COUNT(*) AS count
-        FROM records
-        WHERE type = '{record_type}'
-        {f"AND startDate >= '{date_from}'" if date_from else ""}
-        {f"AND startDate <= '{date_to}'" if date_to else ""}
-        GROUP BY interval, sourceName ORDER BY interval ASC
-    """)
-    return client.format_response(result)
+    join_clause = join_string(table)
+    values = value_aggregates(table)
+    results = []
+
+    for value in values:
+        results.append(con.sql(f"""
+            SELECT {table}.type, sourceName, time_bucket(INTERVAL '1 {interval}', {table}.startDate) AS interval,
+            AVG({value}) AS average, SUM({value}) AS sum,
+            MIN({value}) AS min, MAX({value}) AS max, COUNT(*) AS count,
+            unit FROM {table} {join_clause}
+            WHERE {table}.type = '{record_type}'
+            {f"AND startDate >= '{date_from}'" if date_from else ""}
+            {f"AND startDate <= '{date_to}'" if date_to else ""}
+            GROUP BY interval, {table}.type, sourceName, unit ORDER BY interval ASC
+        """))
+    return client.format_response(results)
 
 
 def search_values_from_duckdb(
-    record_type: RecordType | str | None,
+    record_type: RecordType | WorkoutType | str | None,
     value: str,
     date_from: str | None = None,
     date_to: str | None = None,
 ) -> list[dict[str, Any]]:
     table = get_table(record_type)
+    join_clause = join_string(table)
+
     result = con.sql(f"""
-        SELECT * FROM {table} WHERE textValue = '{value}'
+        SELECT * FROM {table} {join_clause} WHERE textValue = '{value}'
         {f"AND {table}.type = '{record_type}'" if record_type else ""}
         {f"AND startDate >= '{date_from}'" if date_from else ""}
         {f"AND startDate <= '{date_to}'" if date_to else ""}
@@ -94,32 +115,32 @@ def search_values_from_duckdb(
 
 
 if __name__ == "__main__":
-    from time import time
+    # from time import time
 
     # print(len(client.format_response(con.sql("""
     #         SELECT * FROM records WHERE value=0;
     # """))))
-    start = time()
+    # start = time()
     # con.sql("SHOW TABLES").show()
     print("records for get_health_summary_from_duckdb: ", len(get_health_summary_from_duckdb()))
     # print("time: ", time() - start)
-    start = time()
+    # start = time()
     print(
         "records for get_statistics_by_type_duckdb: ",
-        len(get_statistics_by_type_from_duckdb("HKQuantityTypeIdentifierHeartRate")),
+        len(get_statistics_by_type_from_duckdb("HKWorkoutActivityTypeRunning")),
     )
     # print("time: ", time() - start)
-    start = time()
+    # start = time()
     print(
         "records for get_trend_data_duckdb: ",
-        len(
+        (
             get_trend_data_from_duckdb(
-                "HKQuantityTypeIdentifierHeartRate",
+                "HKWorkoutActivityTypeRunning",
             ),
         ),
     )
     # print("time: ", time() - start)
-    start = time()
+    # start = time()
     pars = HealthRecordSearchParams(
         record_type="HKWorkoutActivityTypeRunning",
         value_min="30",
