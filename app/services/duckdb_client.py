@@ -25,7 +25,7 @@ class DuckDBClient:
             self.path = Path(self.path)
 
         if isinstance(self.path, Path) and not self.path.exists():
-            raise FileNotFoundError(f"Parquet file not found: {self.path}")
+            raise FileNotFoundError(f"File not found: {self.path}")
 
     @staticmethod
     def format_response(response: DuckDBPyRelation | list[DuckDBPyRelation]) -> list[dict[str, Any]]:
