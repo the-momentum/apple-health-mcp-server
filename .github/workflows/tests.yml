@@ -17,7 +17,7 @@ jobs:
         with:
           DUCKDB_FILENAME: 'tests/parquet.example'
       - name: Run tests
-        run: uv run --directory tests/ pytest e2e_tests.py
+        run: uv run --directory tests/ pytest query_tests.py
   inspector:
     runs-on: ubuntu-latest
     steps:
