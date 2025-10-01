@@ -50,7 +50,7 @@ class XMLExporter:
         "unit",
     )
 
-    def update_record(self, kind: str, document: dict[str, Any]) -> dict[str, Any]:
+    def update_record(self, table: str, document: dict[str, Any]) -> dict[str, Any]:
         """
         Updates records to fill out columns without specified data:
         There are 9 columns that need to be filled out, and there are 4 columns
@@ -61,7 +61,7 @@ class XMLExporter:
             if field in document:
                 document[field] = datetime.strptime(document[field], "%Y-%m-%d %H:%M:%S %z")
 
-        if kind == "record":
+        if table == "record":
             if len(document) != 9:
                 document.update({k: v for k, v in self.DEFAULT_VALUES.items() if k not in document})
 
@@ -72,7 +72,7 @@ class XMLExporter:
             except (TypeError, ValueError):
                 document["value"] = 0.0
 
-        elif kind == "workout":
+        elif table == "workout":
             document["type"] = document.pop("workoutActivityType")
 
             try:
@@ -124,7 +124,6 @@ class XMLExporter:
             elem.clear()
 
         # yield remaining records
-        # yield pl.DataFrame(records)
         yield DataFrame(records).reindex(columns=self.RECORD_COLUMNS)
         yield DataFrame(workouts).reindex(columns=self.WORKOUT_COLUMNS)
         yield DataFrame(workout_stats).reindex(columns=self.WORKOUT_STATS_COLUMNS)

@@ -67,7 +67,7 @@ Want to try it out? **[🚀 Getting Started](docs/getting-started.md)**
 ## 💼 About Momentum
 This project is part of Momentum’s open-source ecosystem, where we make healthcare technology more secure, interoperable, and AI-ready. Our goal is to help HealthTech teams adopt standards such as FHIR safely and efficiently. We are healthcare AI development experts, recognized by FT1000, Deloitte Fast 50, and Forbes for building scalable, HIPAA-compliant solutions that power next-generation healthcare innovation.
 
-📖 Want to learn from our experience? Read our insights → <a href="https://www.themomentum.ai/blog">themomentum.ai/blog</a>. 
+📖 Want to learn from our experience? Read our insights → <a href="https://www.themomentum.ai/blog">themomentum.ai/blog</a>.
 Interested? <a href="http://themomentum.ai/lets-talk">Let's talk</a>!
 
 <div align="center">

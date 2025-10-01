@@ -139,8 +139,6 @@ code-quality = [
 ]
 dev = [
     { name = "fastapi" },
-    { name = "nest-asyncio" },
-    { name = "openai-agents" },
     { name = "opik" },
     { name = "pydantic-ai" },
     { name = "pytest" },
@@ -174,8 +172,6 @@ code-quality = [
 ]
 dev = [
     { name = "fastapi", specifier = ">=0.116.2" },
-    { name = "nest-asyncio", specifier = ">=1.6.0" },
-    { name = "openai-agents", specifier = ">=0.3.2" },
     { name = "opik", specifier = ">=1.8.56" },
     { name = "pydantic-ai", specifier = ">=1.0.10" },
     { name = "pytest", specifier = ">=8.4.1" },
@@ -733,6 +729,7 @@ wheels = [
 name = "fastuuid"
 version = "0.13.3"
 source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/22/00/5ab21d121752b4efe57b0c4ae0b84161261779631bc4c76132c77cce97bb/fastuuid-0.13.3.tar.gz", hash = "sha256:d755dc132addb369877429622535dfb52d79c8968a8a98f15a84c3da1db013c7", size = 18249, upload-time = "2025-09-26T08:50:50.782Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/73/41/9482a375d3af33e2cdb99d3fa1bbbdb95f2e698ceb29e38880f81d919ebe/fastuuid-0.13.3-cp313-cp313-macosx_10_12_x86_64.macosx_11_0_arm64.macosx_10_12_universal2.whl", hash = "sha256:e5be92899120006ed44b263c02588d38632b49aa1fb2a8fcd18bb5b93a1fa7f2", size = 494635, upload-time = "2025-09-25T17:18:44.961Z" },
     { url = "https://files.pythonhosted.org/packages/46/bf/50530bb9bcc505ea74c06ac376af44c2b4e085a897b2d4fb168729267418/fastuuid-0.13.3-cp313-cp313-macosx_10_12_x86_64.whl", hash = "sha256:217c8438e4b2d727c810ff4c49123e45f2109925b04463745e382c7d808472fa", size = 253079, upload-time = "2025-09-25T17:18:19.086Z" },
@@ -1401,15 +1398,6 @@ wheels = [
 ]
 
 [[package]]
-name = "nest-asyncio"
-version = "1.6.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/83/f8/51569ac65d696c8ecbee95938f89d4abf00f47d58d48f6fbabfe8f0baefe/nest_asyncio-1.6.0.tar.gz", hash = "sha256:6f172d5449aca15afd6c646851f4e31e02c598d553a667e38cafa997cfec55fe", size = 7418, upload-time = "2024-01-21T14:25:19.227Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a0/c4/c2971a3ba4c6103a3d10c4b0f24f461ddc027f0f09763220cf35ca1401b3/nest_asyncio-1.6.0-py3-none-any.whl", hash = "sha256:87af6efd6b5e897c81050477ef65c62e2b2f35d51703cae01aff2905b1852e1c", size = 5195, upload-time = "2024-01-21T14:25:17.223Z" },
-]
-
-[[package]]
 name = "nexus-rpc"
 version = "1.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1499,24 +1487,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/62/9f/d11cc7fb2d60af14a97dbef4e3c7b23917387995c257951fdc321d8efd0a/openai-1.109.0.tar.gz", hash = "sha256:701e26d13e3953524ba99f44cf5fbbda40eafd41ba15a8d85b76229a2693cfe5", size = 563971, upload-time = "2025-09-23T16:59:41.508Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/b8/d3/d65e318e8d3b5845afaa5960d8da779988b4cb9f4e1ca82e588fed9c6a9d/openai-1.109.0-py3-none-any.whl", hash = "sha256:8c0910bdd4ee1274d5ff0354786bdd0bc79e68c158d5d2c19e24208b412e5792", size = 948421, upload-time = "2025-09-23T16:59:39.516Z" },
-]
-
-[[package]]
-name = "openai-agents"
-version = "0.3.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "griffe" },
-    { name = "mcp" },
-    { name = "openai" },
-    { name = "pydantic" },
-    { name = "requests" },
-    { name = "types-requests" },
-    { name = "typing-extensions" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/8c/9f/dafa9f80653778179822e1abf77c7f0d9da5a16806c96b5bb9e0e46bd747/openai_agents-0.3.2.tar.gz", hash = "sha256:b71ac04ee9f502f1bc0f4d142407df4ec69db4442db86c4da252b4558fa90cd5", size = 1727988, upload-time = "2025-09-23T20:37:20.7Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/27/7e/6a8437f9f40937bb473ceb120a65e1b37bc87bcee6da67be4c05b25c6a89/openai_agents-0.3.2-py3-none-any.whl", hash = "sha256:55e02c57f2aaf3170ff0aa0ab7c337c28fd06b43b3bb9edc28b77ffd8142b425", size = 194221, upload-time = "2025-09-23T20:37:19.121Z" },
 ]
 
 [[package]]

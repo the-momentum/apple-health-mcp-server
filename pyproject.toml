@@ -31,8 +31,6 @@ module-name = "app"
 [dependency-groups]
 dev = [
     "fastapi>=0.116.2",
-    "nest-asyncio>=1.6.0",
-    "openai-agents>=0.3.2",
     "opik>=1.8.56",
     "pydantic-ai>=1.0.10",
     "pytest>=8.4.1",
