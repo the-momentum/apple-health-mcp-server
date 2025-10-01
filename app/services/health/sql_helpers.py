@@ -11,11 +11,9 @@ def join_string(table: str) -> str:
     return ""
 
 def value_aggregates(table: str) -> list[str]:
-    if table == "workouts":
-        join_clause = join_query
+    if table in ["workouts", "stats"]:
         return ["duration", "sum"]
     else:
-        join_clause = ""
         return ["value"]
 
 def get_table(record_type: str | Any) -> str:
@@ -27,9 +25,7 @@ def get_value_type(table: str | None) -> str:
     match table:
         case "records":
             return "value"
-        case "workouts":
-            return "sum"
-        case "stats":
+        case "workouts" | "stats":
             return "sum"
         case _:
             return "value"
