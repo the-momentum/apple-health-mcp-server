@@ -3,7 +3,7 @@ name: tests
 on: [push]
 
 env:
-  DUCKDB_FILENAME: tests/parquet_example
+  DUCKDB_FILENAME: tests/parquet.example
   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
   OPIK_API_KEY: ${{ secrets.OPIK_API_KEY }}
   OPIK_WORKSPACE: ${{ secrets.OPIK_WORKSPACE }}
@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/workflows/mcp-composite-action
         with:
-          DUCKDB_FILENAME: 'tests/parquet_example'
+          DUCKDB_FILENAME: 'tests/parquet.example'
       - name: Run tests
         run: uv run --directory tests/ pytest e2e_tests.py
   inspector:
@@ -27,7 +27,7 @@ jobs:
           node-version: '20'
       - uses: ./.github/workflows/mcp-composite-action
         with:
-          DUCKDB_FILENAME: 'tests/parquet_example'
+          DUCKDB_FILENAME: 'tests/parquet.example'
       - name: Run inspector
         run: npx @modelcontextprotocol/inspector --cli http://127.0.0.1:8000/mcp --method tools/list
   opik:
@@ -36,6 +36,6 @@ jobs:
       - uses: actions/checkout@v5
       - uses: ./.github/workflows/mcp-composite-action
         with:
-          DUCKDB_FILENAME: 'tests/parquet_example'
+          DUCKDB_FILENAME: 'tests/parquet.example'
       - name: Run opik experiments
         run: uv run tests/opik/tool_calls.py
