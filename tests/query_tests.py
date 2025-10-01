@@ -116,14 +116,14 @@ def test_statistics(statistics: list[dict[str, Any]] | dict[str, Any]) -> None:
 
 
 def test_trend_data(trend_data: list[dict[str, Any]] | dict[str, Any]) -> None:
-    assert len(trend_data) == 3
+    assert len(trend_data) == 2
     # turn list containing 1 dict into a dict
     data: dict[str, Any] = trend_data[0]
-    assert data["count"] == 10
+    assert data["count"] == 5
     assert data["min"] == 0.086
-    assert data["max"] == 2.15
+    assert data["max"] == 0.086
     # floating point values not exactly matching
-    assert 0.999 < data["sum"] / 11 < 1.001
+    assert 0.999 < data["sum"] / (0.086 * 5) < 1.001
 
 
 def test_value_search(value_search: list[dict[str, Any]]) -> None:
