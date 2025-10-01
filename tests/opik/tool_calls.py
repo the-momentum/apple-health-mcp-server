@@ -102,7 +102,19 @@ tool_call_evals = evaluate(
     task_threads=1,
 )
 
-print(tool_call_evals.test_results)
+
+for i, test in enumerate(tool_call_evals.test_results, 1):
+    try:
+        print()
+        print(f"------- Test {i} -------")
+        print("Test query: ", test.test_case.scoring_inputs['input'])
+        print("Expected tool call: ", test.test_case.scoring_inputs['expected_tool_calls'][0]['function_name'])
+        print("Called tool: ", test.test_case.scoring_inputs['tool_calls'][0]['function_name'])
+        print("----------------------")
+        print()
+    except Exception as e:
+        raise RuntimeError(f"Test {i} failed: {e}")
+
 
 output_test_evals = evaluate(
     experiment_name="JudgeOutputExperiment",
@@ -112,4 +124,16 @@ output_test_evals = evaluate(
     task_threads=1,
 )
 
-print(output_test_evals.test_results)
+# print(output_test_evals.test_results)
+
+for i, test in enumerate(output_test_evals.test_results, 1):
+    try:
+        print()
+        print(f"------- Test {i} -------")
+        print("Test query: ", test.test_case.scoring_inputs['input'])
+        print("Expected output: ", test.test_case.scoring_inputs['expected_output'])
+        print("Got output: ", test.test_case.task_output['output'])
+        print("----------------------")
+        print()
+    except Exception as e:
+        raise RuntimeError(f"Test {i} failed: {e}")
