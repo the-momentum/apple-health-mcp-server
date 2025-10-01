@@ -102,6 +102,7 @@ tool_call_evals = evaluate(
     task_threads=1,
 )
 
+print(tool_call_evals.test_results)
 
 output_test_evals = evaluate(
     experiment_name="JudgeOutputExperiment",
@@ -110,3 +111,5 @@ output_test_evals = evaluate(
     scoring_metrics=[Hallucination(), LevenshteinRatio(), AnswerRelevance(require_context=False)],
     task_threads=1,
 )
+
+print(output_test_evals.test_results)
