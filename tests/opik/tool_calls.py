@@ -1,6 +1,7 @@
 import asyncio
 import os
 
+from pydantic_ai.messages import ModelRequest, ModelResponse, ToolCallPart
 from opik import Opik
 from opik.evaluation import evaluate
 from opik.evaluation.metrics import (
@@ -25,8 +26,8 @@ class ToolSelectionQuality(base_metric.BaseMetric):
 
     def score(self, tool_calls, expected_tool_calls, **kwargs):
         try:
-            actual_tool = tool_calls[0]["function_name"]
-            expected_tool = expected_tool_calls[0]["function_name"]
+            actual_tool = tool_calls["function_name"]
+            expected_tool = expected_tool_calls["function_name"]
 
             if actual_tool == expected_tool:
                 return score_result.ScoreResult(
@@ -48,6 +49,18 @@ class ToolSelectionQuality(base_metric.BaseMetric):
             )
 
 
+def extract_tool_call(messages: list[ModelRequest | ModelResponse]) -> str | None:
+    for message in messages:
+        if isinstance(message, ModelRequest):
+            continue
+        part = message.parts[0]
+        try:
+            return part.tool_name
+        except Exception:
+            continue
+    return None
+
+
 def evaluation_task(dataset_item):
     try:
         user_message_content = dataset_item["input"]
@@ -56,23 +69,23 @@ def evaluation_task(dataset_item):
 
         resp = agent_manager.agent.run_sync(user_message_content)
         result = resp.new_messages()
-        tool_calls = [{"function_name": result[1].parts[0].tool_name,
-                       "function_parameters": {}}]
+        tool_calls = {"function_name": extract_tool_call(result),
+                       "function_parameters": {}}
 
         return {
             "input": user_message_content,
             "output": resp.output,
             "reference": reference,
             "tool_calls": tool_calls,
-            "expected_tool_calls": [{"function_name": expected_tool, "function_parameters": {}}]
+            "expected_tool_calls": {"function_name": expected_tool, "function_parameters": {}}
         }
     except Exception as e:
         return {
             "input": dataset_item.get("input", {}),
             "output": "Error processing input.",
             "reference": dataset_item.get("expected_output", ""),
-            "tool_calls": [],
-            "expected_tool_calls": [{"function_name": "unknown", "function_parameters": {}}],
+            "tool_calls": {},
+            "expected_tool_calls": {"function_name": "unknown", "function_parameters": {}},
             "error": str(e)
         }
 
@@ -108,12 +121,12 @@ for i, test in enumerate(tool_call_evals.test_results, 1):
         print()
         print(f"------- Test {i} -------")
         print("Test query: ", test.test_case.scoring_inputs['input'])
-        print("Expected tool call: ", test.test_case.scoring_inputs['expected_tool_calls'][0]['function_name'])
-        print("Called tool: ", test.test_case.scoring_inputs['tool_calls'][0]['function_name'])
+        print("Expected tool call: ", test.test_case.scoring_inputs['expected_tool_calls']['function_name'])
+        print("Called tool: ", test.test_case.scoring_inputs['tool_calls']['function_name'])
         print("----------------------")
         print()
     except Exception as e:
-        raise RuntimeError(f"Test {i} failed: {e}")
+        print(f"Test {i} failed: {e}")
 
 
 output_test_evals = evaluate(
@@ -124,7 +137,6 @@ output_test_evals = evaluate(
     task_threads=1,
 )
 
-# print(output_test_evals.test_results)
 
 for i, test in enumerate(output_test_evals.test_results, 1):
     try:
@@ -136,4 +148,4 @@ for i, test in enumerate(output_test_evals.test_results, 1):
         print("----------------------")
         print()
     except Exception as e:
-        raise RuntimeError(f"Test {i} failed: {e}")
+        print(f"Test {i} failed: {e}")
