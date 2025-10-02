@@ -24,7 +24,6 @@ class DuckDBClient:
         else:
             self.path = Path(self.path)
 
-
     @staticmethod
     def format_response(response: DuckDBPyRelation) -> list[dict[str, Any]]:
         return response.df().to_dict(orient="records")
