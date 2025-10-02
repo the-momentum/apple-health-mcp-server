@@ -1,5 +1,4 @@
-(dodaj strzałke do powrotu)
-(i referencje w readme)
+[← Back to README](../README.md)
 
 ## Testing
 
@@ -47,3 +46,22 @@ Make sure your `OPIK_WORKSPACE` and `OPIK_API_KEY` environmental variables are s
 ```bash
     uv run tests/opik/tool_calls.py
 ```
+
+To add new tests, you can either do it in the code ([example from opik](https://www.comet.com/docs/opik/evaluation/manage_datasets)):
+```python
+import opik
+# Get or create a dataset
+client = opik.Opik()
+dataset = client.get_or_create_dataset(name="My dataset")
+# Add dataset items to it
+dataset.insert([
+    {"user_question": "Hello, world!", "expected_output": {"assistant_answer": "Hello, world!"}},
+    {"user_question": "What is the capital of France?", "expected_output": {"assistant_answer": "Paris"}},
+])
+```
+
+[← Back to README](../README.md)
+Or add it on the website:
+<img width="1919" height="873" alt="image" src="https://github.com/user-attachments/assets/dc9f3807-40b4-4227-b4c2-5a1ea44396e7" />
+
+When adding tool call questions, make sure the `input` and `tool_call` values are present, and when adding output checks make sure `input` and `expected_output` are set correctly.
