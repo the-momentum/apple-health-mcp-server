@@ -3,7 +3,7 @@
 <div align="center">
   <img src="https://cdn.prod.website-files.com/66a1237564b8afdc9767dd3d/66df7b326efdddf8c1af9dbb_Momentum%20Logo.svg" height="80">
   <h1>Apple Health MCP Server</h1>
-  <p><strong>Apple Health Data Management</strong></p>
+  <p><strong>Apple Health Data Exploration</strong></p>
 
   [![Contact us](https://img.shields.io/badge/Contact%20us-AFF476.svg?style=for-the-badge&logo=mail&logoColor=black)](mailto:hello@themomentum.ai?subject=Apple%20Health%20MCP%20Server%20Inquiry)
   [![Visit Momentum](https://img.shields.io/badge/Visit%20Momentum-1f6ff9.svg?style=for-the-badge&logo=safari&logoColor=white)](https://themomentum.ai)
@@ -14,48 +14,8 @@
   </a>
 </div>
 
-## 📋 Table of Contents
-
-- [🔍 About](#-about-the-project)
-- [💡 Demo](#-demo)
-- [🚀 Getting Started](#-getting-started)
-- [📝 Usage](#-usage)
-- [🔧 Configuration](#-configuration)
-- [🐳 Docker Setup](#-docker-mcp)
-- [🛠️ MCP Tools](#️-mcp-tools)
-- [🗺️ Roadmap](#️-roadmap)
-- [👥 Contributors](#-contributors)
-- [📄 License](#-license)
-
-## 🔍 About The Project
-
-**Apple Health MCP Server** implements a Model Context Protocol (MCP) server designed for seamless interaction between LLM-based agents and Apple Health data. It provides a standardized interface for querying, analyzing, and managing Apple Health records—imported from XML exports and indexed in Elasticsearch, Clickhouse or DuckDB—through a comprehensive suite of tools. These tools are accessible from MCP-compatible clients (such as Claude Desktop), enabling users to explore, search, and analyze personal health data using natural-language prompts and advanced filtering, all without requiring direct knowledge of the underlying data formats or Elasticsearch/ClickHouse/DuckDB queries.
-
-### ✨ Key Features
-
-- **🚀 FastMCP Framework**: Built on FastMCP for high-performance MCP server capabilities
-- **🍏 Apple Health Data Management**: Import, parse, and analyze Apple Health XML exports
-- **🔎 Powerful Search & Filtering**: Query and filter health records using natural language and advanced parameters
-- **📦 Elasticsearch, ClickHouse or DuckDB Integration**: Index and search health data efficiently at scale
-- **🛠️ Modular MCP Tools**: Tools for structure analysis, record search, type-based extraction, and more
-- **📈 Data Summaries & Trends**: Generate statistics and trend analyses from your health data
-- **🐳 Container Ready**: Docker support for easy deployment and scaling
-- **🔧 Configurable**: Extensive ```.env```-based configuration options
-
-### 🏗️ Architecture
-
-The Apple Health MCP Server is built with a modular, extensible architecture designed for robust health data management and LLM integration:
-
-- **MCP Tools**: Dedicated tools for Apple Health XML structure analysis, record search, type-based extraction, and statistics/trend generation. Each tool is accessible via the MCP protocol for natural language and programmatic access.
-- **XML Import & Parsing**: Efficient streaming and parsing of large Apple Health XML exports, extracting records, workouts, and metadata for further analysis.
-- **Elasticsearch Backend**: All health records are indexed in Elasticsearch, enabling fast, scalable search, filtering, and aggregation across large datasets.
-- **ClickHouse Backend**: Health records can also be indexed to a ClickHouse database, making the deployment easier for the enduser by using an in-memory database instead of a server-based approach.
-- **DuckDB Backend**: Alternative to both Elasticsearch and ClickHouse, DuckDB may offer faster import and query speeds.
-- **Service Layer**: Business logic for XML and database operations is encapsulated in dedicated service modules, ensuring separation of concerns and easy extensibility.
-- **FastMCP Framework**: Provides the MCP server interface, routing, and tool registration, making the system compatible with LLM-based agents and MCP clients (e.g., Claude Desktop).
-- **Configuration & Deployment**: Environment-based configuration and Docker support for easy setup and deployment in various environments.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+---
+Connect your Apple Health data with any LLM that supports MCP. Talk to your data and get personalised insights.
 
 ## 💡 Demo
 
@@ -66,216 +26,35 @@ This demo shows how Claude uses the `apple-health-mcp-server` to answer question
 
 https://github.com/user-attachments/assets/93ddbfb9-6da9-42c1-9872-815abce7e918
 
-## 🚀 Getting Started
 
-Follow these steps to set up Apple Health MCP Server in your environment.
+Want to try it out? **[🚀 Getting Started](docs/getting-started.md)**
 
-### Prerequisites
+## 🌟 Why to use Apple Health MCP Server?
 
-- **Docker (recommended) or uv + docker**: For dependency management
+ - **🧩 Fit your data everywhere**: using this software you can import data exported from Apple devices into any DBMS, base importer is already prepared for extensions
+ - **🎯 Simplify complex data access**: you don't need to know data structure or use any structured query language, like SQL, simple access is just granted with natural language
+ - **🔍︎ Find hidden trends**: use LLM as a gate to flexible auto-generated queries which will be able to find data trends not so easy to detect manually
 
-   👉 [uv Installation Guide](https://docs.astral.sh/uv/getting-started/installation/)
-- **Clone the repository**:
-   ```sh
-   git clone https://github.com/the-momentum/apple-health-mcp-server
-   cd apple-health-mcp-server
-   ```
+## ✨ Key Features
 
-- **Set up environment variables**:
-   ```sh
-   cp config/.env.example config/.env
-   ```
-   Edit the `config/.env` file with your credentials and configuration. See [Environment Variables](#-Environment-Variables)
+- **🚀 FastMCP Framework**: Built on FastMCP for high-performance MCP server capabilities
+- **🍏 Apple Health Data Exploration**: Import, parse, and analyze Apple Health XML exports
+- **🔎 Powerful Search & Filtering**: Query and filter health records using natural language and advanced parameters
+- **📦 Elasticsearch, ClickHouse or DuckDB Integration**: Index and search health data efficiently at scale
+- **🛠️ Modular MCP Tools**: Tools for structure analysis, record search, type-based extraction, and more
+- **📈 Data Summaries & Trends**: Generate statistics and trend analyses from your health data
+- **🐳 Container Ready**: Docker support for easy deployment and scaling
+- **🔧 Configurable**: Extensive ```.env```-based configuration options
 
-### Prepare Your Data
+## 📚 Documentation
 
-1. Export your Apple Health data as an XML file from your iPhone and place it somewhere in your filesystem. By default, the server expects the file in the project root directory.
-  - if you need working example, we suggest this dataset: https://drive.google.com/file/d/1bWiWmlqFkM3MxJZUD2yAsNHlYrHvCmcZ/view?usp=drive_link
-    - Rob Mulla. Predict My Sleep Patterns. https://kaggle.com/competitions/kaggle-pog-series-s01e04, 2023. Kaggle.
-2. Prepare an Elasticsearch instance and populate it from the XML file:
-   - Run `make es` to start Elasticsearch and import your XML data.
-   - (Optional) To clear all data from the Elasticsearch index, run:
-     ```sh
-     uv run python scripts/xml2es.py --delete-all
-     ```
-3. If you choose to use ClickHouse instead of Elasticsearch:
-   - Run `make ch` to create a database with your exported XML data
-   - **Note: If you are using Windows, Docker is the only way to integrate ClickHouse into this MCP Server.**
-   - On Windows: Run `mingw32-make chwin` (or any other version of `make` available on Windows)
+- **[🚀 Getting Started](docs/getting-started.md)** - Complete setup guide
+- **[🔍 About](docs/about.md)** - Detailed description & architecture
+- **[🔧 Configuration](docs/configuration.md)** - Environment variables and settings
+- **[🛠️ MCP Tools](docs/mcp-tools.md)** - All available tools
+- **[🗺️ Roadmap](docs/roadmap.md)** - Upcoming features and roadmap
 
-4. Lastly, if you're going to be using DuckDB:
-   - Run `make duckdb` to create a parquet file with your exported XML data
-   - If you want to connect to the file through http(s):
-     - The only thing you need to do is change the .env path, e.g. `localhost:8080/applehealth.parquet`
-     - If you want an example on how to host the files locally, run `uv run tests/fileserver.py`
-
-
-### Configuration Files
-
-You can run the MCP Server in your LLM Client in two ways:
-- **Docker** (recommended)
-- **Local (uv run)**
-
-#### Docker MCP Server
-
-1. Build the Docker image:
-   ```sh
-   make build
-   ```
-2. Add the following config to your LLM Client settings (replace `<project-path>` with your local repository path and `<xml-file-name>` with name of your raw data from apple health file (without `.xml` extension)):
-   ```json
-   {
-     "mcpServers": {
-       "docker-mcp-server": {
-         "command": "docker",
-         "args": [
-            "run",
-            "-i",
-            "--rm",
-            "--init",
-            "--mount",
-            "type=bind,source=<project-path>/{xml-file-name}.xml,target=/root_project/raw.xml",
-            "--mount", // optional - volume for reload
-            "type=bind,source=<project-path>/app,target=/root_project/app", // optional
-            "--mount",
-            "type=bind,source=<project-path>/config/.env,target=/root_project/config/.env",
-            "--mount", // optional - only include this if you use clickhouse
-            "type=bind,source=<project-path>/applehealth.chdb,target=/root_project/applehealth.chdb", // optional
-            "--mount", // optional - only include this if you use duckdb
-            "type=bind,source=<project-path>/<parquet-file-name>,target=/root_project/applehealth.parquet", // optional
-            "-e",
-            "ES_HOST=host.docker.internal",
-            "mcp-server:latest"
-         ]
-       }
-     }
-   }
-   ```
-
-#### Local uv MCP Server
-
-1. Get the path to your `uv` binary:
-   - On Windows:
-     ```powershell
-     (Get-Command uv).Path
-     ```
-   - On MacOS/Linux:
-     ```sh
-     which uv
-     ```
-2. Add the following config to your LLM Client settings (replace `<project-path>` and `<path-to-bin-folder>` as appropriate):
-   ```json
-   {
-     "mcpServers": {
-       "uv-mcp-server": {
-         "command": "uv",
-         "args": [
-           "run",
-           "--frozen",
-           "--directory",
-           "<project-path>",
-           "start"
-         ],
-         "env": {
-           "PATH": "<path-to-uv-bin-folder>"
-         }
-       }
-     }
-   }
-   ```
-   - `<path-to-uv-bin-folder>` should be the folder containing the `uv` binary (do not include `uv` itself at the end).
-
-### 3. Restart Your MCP Client
-
-After completing the above steps, restart your MCP Client to apply the changes. In some cases, you may need to terminate all related processes using Task Manager or your system's process manager to ensure:
-- The updated configuration is properly loaded
-- Environment variables are correctly applied
-- The Apple Health MCP client initializes with the correct settings
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-## 🔧 Configuration
-
-### Environment Variables
-
-> **Note:** All variables below are optional unless marked as required. If not set, the server will use the default values shown. Only `RAW_XML_PATH` is required and must point to your Apple Health XML file.
-
-| Variable           | Description                                | Example Value         | Required |
-|--------------------|--------------------------------------------|----------------------|----------|
-| RAW_XML_PATH       | Path to the Apple Health XML file           | `raw.xml`            | ✅       |
-| ES_HOST            | Elasticsearch host                          | `localhost`          | ❌       |
-| ES_PORT            | Elasticsearch port                          | `9200`               | ❌       |
-| ES_USER            | Elasticsearch username                      | `elastic`            | ❌       |
-| ES_PASSWORD        | Elasticsearch password                      | `elastic`            | ❌       |
-| ES_INDEX           | Elasticsearch index name                    | `apple_health_data`  | ❌       |
-| CH_DIRNAME         | ClickHouse directory name                   | `applehealth.chdb`   | ❌       |
-| CH_DB_NAME         | ClickHouse database name                    | `applehealth`        | ❌       |
-| CH_TABLE_NAME      | ClickHouse table name                       | `data`               | ❌       |
-| DUCKDB_FILENAME    | DuckDB parquet file name                    | `applehealth`        | ❌       |
-| CHUNK_SIZE         | Records indexed into CH/DuckDB at once      | `50000`              | ❌       |
-| XML_SAMPLE_SIZE    | Number of XML records to sample             | `1000`               | ❌       |
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-## 🛠️ MCP Tools
-
-The Apple Health MCP Server provides a suite of tools for exploring, searching, and analyzing your Apple Health data, both at the raw XML level and in Elasticsearch/ClickHouse:
-
-### XML Tools (`xml_reader`)
-
-| Tool                | Description                                                                                   |
-|---------------------|-----------------------------------------------------------------------------------------------|
-| `get_xml_structure` | Analyze the structure and metadata of your Apple Health XML export (file size, tags, types).   |
-| `search_xml_content`| Search for specific content in the XML file (by attribute value, device, type, etc.).          |
-| `get_xml_by_type`   | Extract all records of a specific health record type from the XML file.                        |
-
-### Elasticsearch Tools (`es_reader`)
-
-| Tool                        | Description                                                                                         |
-|-----------------------------|-----------------------------------------------------------------------------------------------------|
-| `get_health_summary_es`     | Get a summary of all Apple Health data in Elasticsearch (total count, type breakdown, etc.).         |
-| `search_health_records_es`  | Flexible search for health records in Elasticsearch with advanced filtering and query options.        |
-| `get_statistics_by_type_es` | Get comprehensive statistics (count, min, max, avg, sum) for a specific health record type.          |
-| `get_trend_data_es`         | Analyze trends for a health record type over time (daily, weekly, monthly, yearly aggregations).     |
-| `search_values_es`          | Search for records with exactly matching values (including text).     |
-
-### ClickHouse Tools (`ch_reader`)
-
-| Tool                        | Description                                                                                         |
-|-----------------------------|-----------------------------------------------------------------------------------------------------|
-| `get_health_summary_ch`     | Get a summary of all Apple Health data in ClickHouse (total count, type breakdown, etc.).         |
-| `search_health_records_ch`  | Flexible search for health records in ClickHouse with advanced filtering and query options.        |
-| `get_statistics_by_type_ch` | Get comprehensive statistics (count, min, max, avg, sum) for a specific health record type.          |
-| `get_trend_data_ch`         | Analyze trends for a health record type over time (daily, weekly, monthly, yearly aggregations).     |
-| `search_values_ch`          | Search for records with exactly matching values (including text).     |
-
-### DuckDB Tools (`duckdb_reader`)
-
-| Tool                        | Description                                                                                         |
-|-----------------------------|-----------------------------------------------------------------------------------------------------|
-| `get_health_summary_duckdb`     | Get a summary of all Apple Health data in DuckDB (total count, type breakdown, etc.).         |
-| `search_health_records_duckdb`  | Flexible search for health records in DuckDB with advanced filtering and query options.        |
-| `get_statistics_by_type_duckdb` | Get comprehensive statistics (count, min, max, avg, sum) for a specific health record type.          |
-| `get_trend_data_duckdb`         | Analyze trends for a health record type over time (daily, weekly, monthly, yearly aggregations).     |
-| `search_values_duckdb`          | Search for records with exactly matching values (including text).     |
-
-All tools are accessible via MCP-compatible clients and can be used with natural language or programmatic queries to explore and analyze your Apple Health data.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-## 🗺️ Roadmap
-
-We're continuously enhancing Apple Health MCP Server with new capabilities. Here's what's on the horizon:
-
-- [ ] **Time Series Sampling During Import**: Add advanced analytical tools to sample and generate time series data directly during the XML-to-Elasticsearch loading process.
-- [ ] **Optimized XML Tools**: Improve the performance and efficiency of XML parsing and querying tools.
-- [ ] **Expanded Elasticsearch Analytics**: Add more advanced analytics and aggregation functions to the Elasticsearch toolset.
-- [ ] **Embedded Database Tools**: Integrate tools for working with embedded databases for local/offline analytics and storage.
-
-Have a suggestion? We'd love to hear from you! Contact us or contribute directly.
+**Need help?** Looking for guidance on use cases or implementation? Don't hesitate to ask your question in our [GitHub discussion forum](https://github.com/the-momentum/apple-health-mcp-server/discussions)! You'll also find interesting use cases, tips, and community insights there.
 
 ## 👥 Contributors
 
@@ -285,11 +64,11 @@ Have a suggestion? We'd love to hear from you! Contact us or contribute directly
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## 📄 License
+## 💼 About Momentum
+This project is part of Momentum’s open-source ecosystem, where we make healthcare technology more secure, interoperable, and AI-ready. Our goal is to help HealthTech teams adopt standards such as FHIR safely and efficiently. We are healthcare AI development experts, recognized by FT1000, Deloitte Fast 50, and Forbes for building scalable, HIPAA-compliant solutions that power next-generation healthcare innovation.
 
-Distributed under the MIT License. See [MIT License](LICENSE) for more information.
-
----
+📖 Want to learn from our experience? Read our insights → <a href="https://www.themomentum.ai/blog">themomentum.ai/blog</a>. 
+Interested? <a href="http://themomentum.ai/lets-talk">Let's talk</a>!
 
 <div align="center">
   <p><em>Built with ❤️ by <a href="https://themomentum.ai">Momentum</a> • Transforming healthcare data management with AI</em></p>
