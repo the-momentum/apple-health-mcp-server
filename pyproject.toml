@@ -48,9 +48,13 @@ code-quality = [
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "session"
 
+[tool.ty.src]
+exclude = ["./tests/", "./docs/", "./README.md"]
+
 [tool.ruff]
 line-length = 100
 target-version = "py313"
+extend-exclude = ["tests/", "./docs/", "./README.md"]
 
 [tool.ruff.lint]
 select = [

@@ -148,8 +148,8 @@ if __name__ == "__main__":
     pars = HealthRecordSearchParams(
         limit=20,
         record_type="HKWorkoutActivityTypeRunning",
-        max_workout_duration = "60",
-        min_workout_duration = "30"
+        max_workout_duration="60",
+        min_workout_duration="30",
     )
     # con.sql("SHOW TABLES").show()
     # con.sql("SELECT * FROM workouts").show()
