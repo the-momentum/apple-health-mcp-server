@@ -13,10 +13,9 @@ from app.services.duckdb_client import DuckDBClient
 from app.services.health.sql_helpers import (
     fill_query,
     get_table,
-    get_value_type,
     join_query,
     join_string,
-    value_aggregates
+    value_aggregates,
 )
 
 client = DuckDBClient()
@@ -62,12 +61,14 @@ def get_statistics_by_type_from_duckdb(
     results = []
 
     for value in values:
-         results.append(con.sql(f"""
+        results.append(
+            con.sql(f"""
                     SELECT {table}.type, COUNT(*) AS count, AVG({value}) AS average,
                     SUM({value}) AS sum, MIN({value}) AS min, MAX({value}) AS max,
                     unit FROM {table} {join_clause}
                     WHERE {table}.type = '{record_type}' GROUP BY {table}.type, unit
-                    """))
+                    """),
+        )
     return client.format_response(results)
 
 
@@ -83,8 +84,10 @@ def get_trend_data_from_duckdb(
     results = []
 
     for value in values:
-        results.append(con.sql(f"""
-            SELECT {table}.type, sourceName, time_bucket(INTERVAL '1 {interval}', {table}.startDate) AS interval,
+        results.append(
+            con.sql(f"""
+            SELECT {table}.type, sourceName, time_bucket(INTERVAL '1 {interval}',
+            {table}.startDate) AS interval,
             AVG({value}) AS average, SUM({value}) AS sum,
             MIN({value}) AS min, MAX({value}) AS max, COUNT(*) AS count,
             unit FROM {table} {join_clause}
@@ -92,7 +95,8 @@ def get_trend_data_from_duckdb(
             {f"AND startDate >= '{date_from}'" if date_from else ""}
             {f"AND startDate <= '{date_to}'" if date_to else ""}
             GROUP BY interval, {table}.type, sourceName, unit ORDER BY interval ASC
-        """))
+        """),
+        )
     return client.format_response(results)
 
 

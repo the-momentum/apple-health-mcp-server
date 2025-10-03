@@ -28,9 +28,10 @@ class DuckDBClient:
             raise FileNotFoundError(f"File not found: {self.path}")
 
     @staticmethod
-    def format_response(response: DuckDBPyRelation | list[DuckDBPyRelation]) -> list[dict[str, Any]]:
+    def format_response(
+        response: DuckDBPyRelation | list[DuckDBPyRelation],
+    ) -> list[dict[str, Any]]:
         if isinstance(response, DuckDBPyRelation):
             return response.df().to_dict(orient="records")
         records = [record.df().to_dict(orient="records") for record in response]
         return sum(records, [])
-

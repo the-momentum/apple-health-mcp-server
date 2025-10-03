@@ -2,24 +2,26 @@ from typing import Any
 
 from app.schemas.record import HealthRecordSearchParams
 
-
 join_query: str = "INNER JOIN stats ON workouts.startDate = stats.startDate"
+
 
 def join_string(table: str) -> str:
     if table == "workouts":
         return join_query
     return ""
 
+
 def value_aggregates(table: str) -> list[str]:
     if table in ["workouts", "stats"]:
         return ["duration", "sum"]
-    else:
-        return ["value"]
+    return ["value"]
+
 
 def get_table(record_type: str | Any) -> str:
     if record_type.startswith("HKWorkout"):
         return "workouts"
     return "records"
+
 
 def get_value_type(table: str | None) -> str:
     match table:
@@ -29,6 +31,7 @@ def get_value_type(table: str | None) -> str:
             return "sum"
         case _:
             return "value"
+
 
 def build_date(date_from: str | None, date_to: str | None) -> str | None:
     if date_from and date_to:
@@ -40,8 +43,11 @@ def build_date(date_from: str | None, date_to: str | None) -> str | None:
     return None
 
 
-def build_value_range(valuemin: str | None, valuemax: str | None, value_type: str | None)\
-        -> str | None:
+def build_value_range(
+    valuemin: str | None,
+    valuemax: str | None,
+    value_type: str | None,
+) -> str | None:
     # value_type: str = get_value_type(table)
 
     if valuemax and valuemin:
