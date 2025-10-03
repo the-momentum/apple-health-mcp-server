@@ -80,6 +80,8 @@ def fill_query(params: HealthRecordSearchParams) -> str:
     if params.min_workout_duration or params.max_workout_duration:
         conditions.append(build_value_range(params.value_min, params.value_max, "duration"))
 
+    conditions = [condition for condition in conditions if condition is not None]
+
     if conditions:
         query += " AND " + " AND ".join(conditions)
 

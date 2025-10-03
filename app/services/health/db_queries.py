@@ -146,9 +146,10 @@ if __name__ == "__main__":
     # print("time: ", time() - start)
     # start = time()
     pars = HealthRecordSearchParams(
+        limit=20,
         record_type="HKWorkoutActivityTypeRunning",
-        value_min="30",
-        value_max="45",
+        max_workout_duration = "60",
+        min_workout_duration = "30"
     )
     # con.sql("SHOW TABLES").show()
     # con.sql("SELECT * FROM workouts").show()
