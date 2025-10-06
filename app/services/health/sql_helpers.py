@@ -33,13 +33,14 @@ def get_value_type(table: str | None) -> str:
             return "value"
 
 
-def build_date(date_from: str | None, date_to: str | None) -> str | None:
+def build_date(date_from: str | None, date_to: str | None, table: str) -> str | None:
     if date_from and date_to:
-        return f"startDate >= '{date_from}' and startDate <= '{date_to}'"
+        return (f"{table}.startDate >= '{date_from}'"
+                f" and {table}.startDate <= '{date_to}'")
     if date_from:
-        return f"startDate >= '{date_from}'"
+        return f"{table}.startDate >= '{date_from}'"
     if date_to:
-        return f"startDate <= '{date_to}'"
+        return f"{table}.startDate <= '{date_to}'"
     return None
 
 
@@ -74,7 +75,7 @@ def fill_query(params: HealthRecordSearchParams) -> str:
     if params.source_name:
         conditions.append(f" source_name = '{params.source_name}'")
     if params.date_from or params.date_to:
-        conditions.append(build_date(params.date_from, params.date_to))
+        conditions.append(build_date(params.date_from, params.date_to, table))
     if params.value_min or params.value_max:
         conditions.append(build_value_range(params.value_min, params.value_max, value_type))
     if params.min_workout_duration or params.max_workout_duration:
@@ -85,5 +86,5 @@ def fill_query(params: HealthRecordSearchParams) -> str:
     if conditions:
         query += " AND " + " AND ".join(conditions)
 
-    query += f"LIMIT {params.limit}"
+    query += f"ORDER BY {table}.startDate DESC LIMIT {params.limit}"
     return query

@@ -92,8 +92,8 @@ def get_trend_data_from_duckdb(
             MIN({value}) AS min, MAX({value}) AS max, COUNT(*) AS count,
             unit FROM {table} {join_clause}
             WHERE {table}.type = '{record_type}'
-            {f"AND startDate >= '{date_from}'" if date_from else ""}
-            {f"AND startDate <= '{date_to}'" if date_to else ""}
+            {f"AND {table}.startDate >= '{date_from}'" if date_from else ""}
+            {f"AND {table}.startDate <= '{date_to}'" if date_to else ""}
             GROUP BY interval, {table}.type, sourceName, unit ORDER BY interval ASC
         """),
         )
@@ -114,6 +114,7 @@ def search_values_from_duckdb(
         {f"AND {table}.type = '{record_type}'" if record_type else ""}
         {f"AND startDate >= '{date_from}'" if date_from else ""}
         {f"AND startDate <= '{date_to}'" if date_to else ""}
+        ORDER BY startDate DESC
     """)
     return client.format_response(result)
 

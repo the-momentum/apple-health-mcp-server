@@ -21,6 +21,12 @@ class XMLExporter:
         "device": "",
         "value": "",
     }
+    DEFAULT_STATS: dict[str, float] = {
+        "sum": 0.0,
+        "average": 0.0,
+        "maximum": 0.0,
+        "minimum": 0.0,
+    }
     RECORD_COLUMNS: tuple[str, ...] = (
         "type",
         "sourceVersion",
@@ -47,6 +53,9 @@ class XMLExporter:
         "startDate",
         "endDate",
         "sum",
+        "average",
+        "maximum",
+        "minimum",
         "unit",
     )
 
@@ -79,6 +88,9 @@ class XMLExporter:
                 document["duration"] = float(document["duration"])
             except (TypeError, ValueError):
                 document["duration"] = 0.0
+
+        elif kind == "stat":
+            document.update({k: v for k, v in self.DEFAULT_STATS.items() if k not in document})
 
         return document
 

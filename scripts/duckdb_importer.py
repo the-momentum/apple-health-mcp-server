@@ -142,10 +142,14 @@ class ParquetImporter(XMLExporter, DuckDBClient):
                 startDate TIMESTAMP,
                 endDate TIMESTAMP,
                 sum DOUBLE,
+                average DOUBLE,
+                maximum DOUBLE,
+                minimum DOUBLE,
                 unit VARCHAR
             )
         """)
 
+        docs_count = 0
         for i, docs in enumerate(self.parse_xml(), 1):
             # tables = docs.partition_by("type", as_dict=True)
             cols = set(docs.columns)
@@ -164,7 +168,8 @@ class ParquetImporter(XMLExporter, DuckDBClient):
                 con.sql("""
                     INSERT INTO stats SELECT * FROM docs;
                 """)
-            print(f"processed {i * self.chunk_size} docs")
+            print(f"processed {docs_count + len(docs)} docs")
+            docs_count += len(docs)
 
 
 if __name__ == "__main__":
