@@ -56,17 +56,19 @@ def get_statistics_by_type_from_duckdb(
     record_type: RecordType | WorkoutType | str,
 ) -> list[dict[str, Any]]:
     table = get_table(record_type)
+    complimentary_table = "stats" if table == 'workouts' else "records"
     join_clause = join_string(table)
     values = value_aggregates(table)
     results = []
-
+    value = values[0]
     for value in values:
         results.append(
             con.sql(f"""
-                    SELECT {table}.type, COUNT(*) AS count, AVG({value}) AS average,
-                    SUM({value}) AS sum, MIN({value}) AS min, MAX({value}) AS max,
-                    unit FROM {table} {join_clause}
-                    WHERE {table}.type = '{record_type}' GROUP BY {table}.type, unit
+                    SELECT {table}.type, {complimentary_table}.type AS stat_type, COUNT(*) AS count,
+                    AVG({value}) AS average, SUM({value}) AS sum, MIN({value}) AS min,
+                    MAX({value}) AS max, unit FROM {table} {join_clause}
+                    WHERE {table}.type = '{record_type}' GROUP BY {table}.type,
+                    {complimentary_table}.type, unit
                     """),
         )
     return client.format_response(results)
@@ -141,7 +143,9 @@ if __name__ == "__main__":
         (
             get_trend_data_from_duckdb(
                 "HKWorkoutActivityTypeRunning",
-            ),
+                date_from="2016-01-01T00:00:00+00:00",
+                date_to="2016-12-31T23:59:59+00:00",
+            )
         ),
     )
     # print("time: ", time() - start)
@@ -149,13 +153,13 @@ if __name__ == "__main__":
     pars = HealthRecordSearchParams(
         limit=20,
         record_type="HKWorkoutActivityTypeRunning",
-        max_workout_duration="60",
-        min_workout_duration="30",
+        date_from="2016-01-01T00:00:00+00:00",
+        date_to="2016-12-31T23:59:59+00:00",
     )
     # con.sql("SHOW TABLES").show()
     # con.sql("SELECT * FROM workouts").show()
     print(
         "records for search_health_records_from_duckdb: ",
-        len(search_health_records_from_duckdb(pars)),
+        (search_health_records_from_duckdb(pars)),
     )
     # print("time: ", time() - start)

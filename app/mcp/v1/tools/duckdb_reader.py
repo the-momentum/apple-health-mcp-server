@@ -23,6 +23,8 @@ def get_health_summary_duckdb() -> list[dict[str, Any]]:
 
     Notes for LLM:
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
+    - Use this tool if you're not certain of the record type that
+      should be called
     - If there are multiple databases available (DuckDB, Elasticsearch):
       first, ask the user which one he wants to use. DO NOT call any tools before
       the user specifies his intent.
@@ -50,7 +52,7 @@ def search_health_records_duckdb(params: HealthRecordSearchParams) -> list[dict[
 
     Notes for LLMs:
     - This function should return a list of health record documents (dicts)
-      matching the search criteria.
+      matching the search criteria ordered by date from most to least recent.
     - Each document in the list should represent a single health record as stored in ClickHouse.
     - If an error occurs, the function should return a list with a single dict
       containing an 'error' key and the error message.
@@ -59,6 +61,8 @@ def search_health_records_duckdb(params: HealthRecordSearchParams) -> list[dict[
     - Example date_from/date_to: "2020-01-01T00:00:00+00:00"
     - Example value_min/value_max: "10", "100.5"
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
+    - This tool can be used to search for most recent records of a given type,
+      in which case you should use this tool with a limit of 1.
     - If there are multiple databases available (DuckDB, Elasticsearch):
       first, ask the user which one he wants to use. DO NOT call any tools before
       the user specifies his intent.
@@ -108,6 +112,8 @@ def get_statistics_by_type_duckdb(
      specific health metrics.
     - The function is useful for health analysis, identifying outliers, and
       understanding data quality.
+    - This tool can also be used to figure out the value of the record with
+      the shortest/longest duration or highest/lowest value
     - date_range key for query is commented, since it contained hardcoded from
       date, but you can use it anyway if you replace startDate with your data.
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
