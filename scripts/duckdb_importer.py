@@ -3,6 +3,7 @@ from pathlib import Path
 
 import duckdb
 import pandas as pd
+import polars as pl
 
 from app.services.duckdb_client import DuckDBClient
 from scripts.xml_exporter import XMLExporter
@@ -15,7 +16,69 @@ class ParquetImporter(XMLExporter, DuckDBClient):
 
     chunk_files = []
 
-    def write_to_file(self, index: int, df: pd.DataFrame) -> None:
+    def export_xml(self) -> None:
+        """
+        Export xml data from Apple Health export file
+        to a .duckdb database with path specified by user
+        """
+        con = duckdb.connect(self.path)
+        con.sql("""
+            CREATE TABLE IF NOT EXISTS records (
+                type VARCHAR,
+                sourceVersion VARCHAR,
+                sourceName VARCHAR,
+                device VARCHAR,
+                startDate TIMESTAMP,
+                endDate TIMESTAMP,
+                creationDate TIMESTAMP,
+                unit VARCHAR,
+                value DOUBLE,
+                textValue VARCHAR
+            );
+        """)
+        con.sql("""
+            CREATE TABLE IF NOT EXISTS workouts (
+                type VARCHAR,
+                duration DOUBLE,
+                durationUnit VARCHAR,
+                sourceName VARCHAR,
+                startDate TIMESTAMP,
+                endDate TIMESTAMP,
+                creationDate TIMESTAMP
+            )
+        """)
+        con.sql("""
+            CREATE TABLE IF NOT EXISTS stats (
+                type VARCHAR,
+                startDate TIMESTAMP,
+                endDate TIMESTAMP,
+                sum DOUBLE,
+                average DOUBLE,
+                maximum DOUBLE,
+                minimum DOUBLE,
+                unit VARCHAR
+            )
+        """)
+
+        docs_count = 0
+        for i, docs in enumerate(self.parse_xml(), 1):
+            cols = set(docs.columns)
+            if cols == set(self.RECORD_COLUMNS):
+                con.sql("""
+                    INSERT INTO records SELECT * FROM docs;
+                """)
+            if cols == set(self.WORKOUT_COLUMNS):
+                con.sql("""
+                    INSERT INTO workouts SELECT * FROM docs;
+                """)
+            if cols == set(self.WORKOUT_STATS_COLUMNS):
+                con.sql("""
+                    INSERT INTO stats SELECT * FROM docs;
+                """)
+            print(f"processed {docs_count + len(docs)} docs")
+            docs_count += len(docs)
+
+    def write_to_file(self, index: int, df: pl.DataFrame) -> None:
         chunk_file: Path | None = None
         try:
             # check for columns specific for each table
@@ -26,7 +89,7 @@ class ParquetImporter(XMLExporter, DuckDBClient):
             elif "sum" in df.columns:
                 chunk_file = Path(f"workout_stats.chunk_{index}.parquet")
             print(f"processed {index * self.chunk_size} docs")
-            df.to_parquet(chunk_file, compression="zstd", compression_level=1)
+            df.write_parquet(chunk_file, compression="zstd", compression_level=1)
             self.chunk_files.append(chunk_file)
 
         except Exception:
@@ -40,7 +103,6 @@ class ParquetImporter(XMLExporter, DuckDBClient):
         corresponding to each table in the duckdb database
         use export_xml instead
         """
-        import polars as pl
 
         for i, docs in enumerate(self.parse_xml(), 1):
             df: pd.DataFrame = docs
@@ -95,71 +157,6 @@ class ParquetImporter(XMLExporter, DuckDBClient):
 
         for f in self.chunk_files:
             os.remove(f)
-
-    def export_xml(self) -> None:
-        """
-        Export xml data from Apple Health export file
-        to a .duckdb database with path specified by user
-        """
-        con = duckdb.connect(self.path)
-        con.sql("""
-            CREATE TABLE IF NOT EXISTS records (
-                type VARCHAR,
-                sourceVersion VARCHAR,
-                sourceName VARCHAR,
-                device VARCHAR,
-                startDate TIMESTAMP,
-                endDate TIMESTAMP,
-                creationDate TIMESTAMP,
-                unit VARCHAR,
-                value DOUBLE,
-                textValue VARCHAR
-            );
-        """)
-        con.sql("""
-            CREATE TABLE IF NOT EXISTS workouts (
-                type VARCHAR,
-                duration DOUBLE,
-                durationUnit VARCHAR,
-                sourceName VARCHAR,
-                startDate TIMESTAMP,
-                endDate TIMESTAMP,
-                creationDate TIMESTAMP
-            )
-        """)
-        con.sql("""
-            CREATE TABLE IF NOT EXISTS stats (
-                type VARCHAR,
-                startDate TIMESTAMP,
-                endDate TIMESTAMP,
-                sum DOUBLE,
-                average DOUBLE,
-                maximum DOUBLE,
-                minimum DOUBLE,
-                unit VARCHAR
-            )
-        """)
-
-        docs_count = 0
-        for i, docs in enumerate(self.parse_xml(), 1):
-            cols = set(docs.columns)
-            if cols == set(self.RECORD_COLUMNS):
-                print("record chunk dfs")
-                con.sql("""
-                    INSERT INTO records SELECT * FROM docs;
-                """)
-            if cols == set(self.WORKOUT_COLUMNS):
-                print("wk chunk dfs")
-                con.sql("""
-                    INSERT INTO workouts SELECT * FROM docs;
-                """)
-            if cols == set(self.WORKOUT_STATS_COLUMNS):
-                print("stat chunk dfs")
-                con.sql("""
-                    INSERT INTO stats SELECT * FROM docs;
-                """)
-            print(f"processed {docs_count + len(docs)} docs")
-            docs_count += len(docs)
 
 
 if __name__ == "__main__":
