@@ -79,7 +79,7 @@ class ParquetImporter(XMLExporter, DuckDBClient):
             docs_count += len(docs)
 
     def write_to_file(self, index: int, df: pl.DataFrame) -> None:
-        chunk_file: Path | None = None
+        chunk_file: str | Path = ""
         try:
             # check for columns specific for each table
             if "workoutActivityType" in df.columns:

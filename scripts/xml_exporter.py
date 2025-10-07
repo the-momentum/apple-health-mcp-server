@@ -126,7 +126,9 @@ class XMLExporter:
                     self.update_record("stat", statistic)
                     workout_stats.append(statistic)
                     if len(workout_stats) >= self.chunk_size:
-                        yield pd.DataFrame(workout_stats).reindex(columns=self.WORKOUT_STATS_COLUMNS)
+                        yield pd.DataFrame(workout_stats).reindex(
+                            columns=self.WORKOUT_STATS_COLUMNS,
+                        )
                         workout_stats = []
 
                 self.update_record("workout", workout)
