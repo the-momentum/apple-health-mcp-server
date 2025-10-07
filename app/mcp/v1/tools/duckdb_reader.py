@@ -11,7 +11,7 @@ from app.services.health.duckdb_queries import (
     search_values_from_duckdb,
 )
 
-duckdb_reader_router = FastMCP(name="CH Reader MCP")
+duckdb_reader_router = FastMCP(name="DuckDB Reader MCP")
 
 
 @duckdb_reader_router.tool
