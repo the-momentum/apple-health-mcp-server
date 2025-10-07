@@ -43,7 +43,7 @@ npx @modelcontextprotocol/inspector --cli http://localhost:8000/mcp --transport 
 Make sure your `OPIK_WORKSPACE` and `OPIK_API_KEY` environmental variables are set
 (Opik workspace refers to your profile name and not project name)
 ```bash
-    uv run tests/opik/tool_calls.py
+uv run tests/opik/tool_calls.py
 ```
 
 ### How to run Opik tests in pipeline:
