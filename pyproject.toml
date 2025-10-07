@@ -30,7 +30,6 @@ module-name = "app"
 [dependency-groups]
 dev = [
     "fastapi>=0.116.2",
-    "langchain>=0.3.27",
     "nest-asyncio>=1.6.0",
     "openai-agents>=0.3.2",
     "pytest>=8.4.1",
