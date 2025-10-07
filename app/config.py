@@ -37,6 +37,12 @@ class Settings(BaseSettings):
     RAW_XML_PATH: str = "raw.xml"
     XML_SAMPLE_SIZE: int = 1000
 
+    # Opik tests
+    OPENAI_API_KEY: str = ""
+    OPIK_WORKSPACE: str = ""
+    OPIK_API_KEY: str = ""
+
+
     @field_validator("BACKEND_CORS_ORIGINS", mode="after")
     @classmethod
     def assemble_cors_origins(cls, v: str | list[str]) -> list[str] | str:
