@@ -21,7 +21,7 @@ class ParquetImporter(XMLExporter, DuckDBClient):
         Export xml data from Apple Health export file
         to a .duckdb database with path specified by user
         """
-        con = duckdb.connect(self.path)
+        con = duckdb.connect("data.duckdb")
         con.sql("""
             CREATE TABLE IF NOT EXISTS records (
                 type VARCHAR,
@@ -75,7 +75,7 @@ class ParquetImporter(XMLExporter, DuckDBClient):
                 con.sql("""
                     INSERT INTO stats SELECT * FROM docs;
                 """)
-            print(f"processed {docs_count + len(docs)} docs")
+            print(f"processed {len(docs)} docs")
             docs_count += len(docs)
 
     def write_to_file(self, index: int, df: pl.DataFrame) -> None:
@@ -105,7 +105,7 @@ class ParquetImporter(XMLExporter, DuckDBClient):
         """
 
         for i, docs in enumerate(self.parse_xml(), 1):
-            df: pd.DataFrame = docs
+            df: pl.DataFrame = pl.DataFrame(docs)
             self.write_to_file(i, df)
 
         record_chunk_dfs: list[pd.DataFrame] = []
@@ -116,15 +116,12 @@ class ParquetImporter(XMLExporter, DuckDBClient):
             df = pl.read_parquet(chunk_file)
             cols = set(df.columns)
             if cols == set(self.RECORD_COLUMNS):
-                print("record chunk dfs")
                 df = df.select(self.RECORD_COLUMNS)
                 record_chunk_dfs.append(df)
             elif cols == set(self.WORKOUT_COLUMNS):
-                print("wk chunk dfs")
                 df = df.select(self.WORKOUT_COLUMNS)
                 workout_chunk_dfs.append(df)
             elif cols == set(self.WORKOUT_STATS_COLUMNS):
-                print("stat chunk dfs")
                 df = df.select(self.WORKOUT_STATS_COLUMNS)
                 stat_chunk_dfs.append(df)
 

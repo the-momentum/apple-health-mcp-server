@@ -117,39 +117,34 @@ logger = logging.getLogger(__name__)
 
 
 def main() -> None:
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO, filename="duckdb.log", format='%(message)s')
     logger.info("Starting logging for duckdb queries")
 
-    print("-----------------")
-    print("records for get_health_summary_from_duckdb: ", get_health_summary_from_duckdb())
-    print("-----------------")
-    print(
-        "records for get_statistics_by_type_duckdb: ",
-        get_statistics_by_type_from_duckdb("HKWorkoutActivityTypeRunning"),
-    )
-    print("-----------------")
-    print(
-        "records for get_trend_data_duckdb: ",
-        (
+    logger.info("-----------------")
+    logger.info(f"records for get_health_summary_from_duckdb:"
+                f" {get_health_summary_from_duckdb()}")
+    logger.info("-----------------")
+    logger.info(
+        f"records for get_statistics_by_type_duckdb:"
+        f" {get_statistics_by_type_from_duckdb('HKWorkoutActivityTypeRunning')}")
+    logger.info("-----------------")
+    logger.info(
+        f"records for get_trend_data_duckdb: {
             get_trend_data_from_duckdb(
-                "HKWorkoutActivityTypeRunning",
-                date_from="2016-01-01T00:00:00+00:00",
-                date_to="2016-12-31T23:59:59+00:00",
-            )
-        ),
-    )
-    print("-----------------")
+                'HKWorkoutActivityTypeRunning',
+                date_from='2016-01-01T00:00:00+00:00',
+                date_to='2016-12-31T23:59:59+00:00')
+        }")
+    logger.info("-----------------")
     pars = HealthRecordSearchParams(
         limit=20,
         record_type="HKWorkoutActivityTypeRunning",
         date_from="2016-01-01T00:00:00+00:00",
         date_to="2016-12-31T23:59:59+00:00",
     )
-    print(
-        "records for search_health_records_from_duckdb: ",
-        (search_health_records_from_duckdb(pars)),
-    )
-    print("-----------------")
+    logger.info(f"records for search_health_records_from_duckdb:"
+                f" {search_health_records_from_duckdb(pars)}")
+    logger.info("-----------------")
     logger.info("Finished logging")
 
 
