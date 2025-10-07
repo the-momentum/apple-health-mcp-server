@@ -9,11 +9,11 @@ Every test is done on [pre-prepared mock apple health data](https://gist.github.
 
 ## Unit tests 🔧:
   - Testing the importing of XML data to .parquet and database calls to DuckDB
-   
+
 ## MCP Inspector tests 🔍:
   - Uses the [inspector](https://modelcontextprotocol.io/docs/tools/inspector) provided by anthropic to test connection to the server hosted with streamable http
   - Mainly used in the pipeline, but can be run locally
- 
+
 ## Opik tests 🤖:
   - End-to-End tests using an agent created from [this](https://github.com/the-momentum/python-ai-kit) AI development kit
   - Two types of tests:
@@ -22,13 +22,13 @@ Every test is done on [pre-prepared mock apple health data](https://gist.github.
        - Answer relevancy: whether the answer is relevant to the user's question 🎯
        - Hallucination: whether the answer contains misleading or false information 🚫
        - Levenshtein ratio: Heuristic checking the text structure similarity 📊
-    
+
 # How to run tests locally 💻:
-- ### Unit tests 🔧: 
+- ### Unit tests 🔧:
 ```bash
 pytest tests/query_tests.py
 ```
- 
+
 Before running the next tests, make sure you have the server up and running:
 ```bash
 uv run fastmcp run -t http app/main.py

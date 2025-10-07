@@ -42,7 +42,6 @@ class Settings(BaseSettings):
     OPIK_WORKSPACE: str = ""
     OPIK_API_KEY: str = ""
 
-
     @field_validator("BACKEND_CORS_ORIGINS", mode="after")
     @classmethod
     def assemble_cors_origins(cls, v: str | list[str]) -> list[str] | str:
