@@ -35,8 +35,7 @@ def get_value_type(table: str | None) -> str:
 
 def build_date(date_from: str | None, date_to: str | None, table: str) -> str | None:
     if date_from and date_to:
-        return (f"{table}.startDate >= '{date_from}'"
-                f" and {table}.startDate <= '{date_to}'")
+        return f"{table}.startDate >= '{date_from}' and {table}.startDate <= '{date_to}'"
     if date_from:
         return f"{table}.startDate >= '{date_from}'"
     if date_to:

@@ -40,6 +40,8 @@ class ParquetImporter(XMLExporter, DuckDBClient):
         corresponding to each table in the duckdb database
         use export_xml instead
         """
+        import polars as pl
+
         for i, docs in enumerate(self.parse_xml(), 1):
             df: pd.DataFrame = pd.DataFrame(docs)
             self.write_to_file(i, df)

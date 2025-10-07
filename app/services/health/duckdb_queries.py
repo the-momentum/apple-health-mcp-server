@@ -48,7 +48,7 @@ def get_statistics_by_type_from_duckdb(
     record_type: RecordType | WorkoutType | str,
 ) -> list[dict[str, Any]]:
     table = get_table(record_type)
-    complimentary_table = "stats" if table == 'workouts' else "records"
+    complimentary_table = "stats" if table == "workouts" else "records"
     join_clause = join_string(table)
     values = value_aggregates(table)
     results = []
@@ -112,7 +112,10 @@ def search_values_from_duckdb(
     """)
     return client.format_response(result)
 
+
 logger = logging.getLogger(__name__)
+
+
 def main() -> None:
     logging.basicConfig(level=logging.INFO)
     logger.info("Starting logging for duckdb queries")
@@ -148,6 +151,7 @@ def main() -> None:
     )
     print("-----------------")
     logger.info("Finished logging")
+
 
 if __name__ == "__main__":
     main()
