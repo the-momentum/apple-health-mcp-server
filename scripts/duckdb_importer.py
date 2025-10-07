@@ -26,7 +26,7 @@ class ParquetImporter(XMLExporter, DuckDBClient):
             elif "sum" in df.columns:
                 chunk_file = Path(f"workout_stats.chunk_{index}.parquet")
             print(f"processed {index * self.chunk_size} docs")
-            df.write_parquet(chunk_file, compression="zstd", compression_level=1)
+            df.to_parquet(chunk_file, compression="zstd", compression_level=1)
             self.chunk_files.append(chunk_file)
 
         except Exception:
@@ -43,7 +43,7 @@ class ParquetImporter(XMLExporter, DuckDBClient):
         import polars as pl
 
         for i, docs in enumerate(self.parse_xml(), 1):
-            df: pd.DataFrame = pd.DataFrame(docs)
+            df: pd.DataFrame = docs
             self.write_to_file(i, df)
 
         record_chunk_dfs: list[pd.DataFrame] = []
