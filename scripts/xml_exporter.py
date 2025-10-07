@@ -3,8 +3,7 @@ from pathlib import Path
 from typing import Any, Generator
 from xml.etree import ElementTree as ET
 
-import polars as pl
-from pandas import DataFrame
+import pandas as pd
 
 from app.config import settings
 
@@ -94,7 +93,7 @@ class XMLExporter:
 
         return document
 
-    def parse_xml(self) -> Generator[pl.DataFrame, Any, None]:
+    def parse_xml(self) -> Generator[pd.DataFrame, Any, None]:
         """
         Parses the XML file and yields pandas dataframes of specified chunk_size.
         Extracts attributes from each Record element.
@@ -106,8 +105,7 @@ class XMLExporter:
         for event, elem in ET.iterparse(self.xml_path, events=("start",)):
             if elem.tag == "Record" and event == "start":
                 if len(records) >= self.chunk_size:
-                    # yield pl.DataFrame(records)
-                    yield DataFrame(records).reindex(columns=self.RECORD_COLUMNS)
+                    yield pd.DataFrame(records).reindex(self.RECORD_COLUMNS)
                     records = []
                 record: dict[str, Any] = elem.attrib.copy()
 
@@ -117,7 +115,7 @@ class XMLExporter:
 
             elif elem.tag == "Workout" and event == "start":
                 if len(workouts) >= self.chunk_size:
-                    yield DataFrame(workouts).reindex(columns=self.WORKOUT_COLUMNS)
+                    yield pd.DataFrame(workouts).reindex(self.WORKOUT_COLUMNS)
                     workouts = []
                 workout: dict[str, Any] = elem.attrib.copy()
 
@@ -128,7 +126,7 @@ class XMLExporter:
                     self.update_record("stat", statistic)
                     workout_stats.append(statistic)
                     if len(workout_stats) >= self.chunk_size:
-                        yield DataFrame(workout_stats).reindex(columns=self.WORKOUT_STATS_COLUMNS)
+                        yield pd.DataFrame(workout_stats).reindex(self.WORKOUT_STATS_COLUMNS)
                         workout_stats = []
 
                 self.update_record("workout", workout)
@@ -137,7 +135,6 @@ class XMLExporter:
             elem.clear()
 
         # yield remaining records
-        # yield pl.DataFrame(records)
-        yield DataFrame(records).reindex(columns=self.RECORD_COLUMNS)
-        yield DataFrame(workouts).reindex(columns=self.WORKOUT_COLUMNS)
-        yield DataFrame(workout_stats).reindex(columns=self.WORKOUT_STATS_COLUMNS)
+        yield pd.DataFrame(records).reindex(self.RECORD_COLUMNS)
+        yield pd.DataFrame(workouts).reindex(self.WORKOUT_COLUMNS)
+        yield pd.DataFrame(workout_stats).reindex(self.WORKOUT_STATS_COLUMNS)

@@ -13,7 +13,6 @@ dependencies = [
     "httpx>=0.28",
     "pandas>=2.3.2",
     "passlib>=1.7",
-    "polars>=1.33.0",
     "pydantic>=2.11",
     "pydantic-settings>=2.10",
     "testcontainers>=4.10",
