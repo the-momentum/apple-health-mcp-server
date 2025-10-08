@@ -6,7 +6,7 @@ inputs:
   DUCKDB_FILENAME:
     description: 'path to duckdb file'
     required: false
-    default: 'tests/parquet_example'
+    default: 'tests/duckdb.example'
 
 runs:
   using: "composite"
