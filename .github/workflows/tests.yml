@@ -3,7 +3,7 @@ name: tests
 on: [push]
 
 env:
-  DUCKDB_FILENAME: tests/parquet.example
+  DUCKDB_FILENAME: tests/duckdb.example
   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
   OPIK_API_KEY: ${{ secrets.OPIK_API_KEY }}
   OPIK_WORKSPACE: ${{ secrets.OPIK_WORKSPACE }}
