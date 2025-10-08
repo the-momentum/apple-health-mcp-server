@@ -1,7 +1,7 @@
 import asyncio
 import os
 
-from pydantic_ai.messages import ModelRequest, ModelResponse, ToolCallPart
+from pydantic_ai.messages import ModelRequest, ModelResponse
 from opik import Opik
 from opik.evaluation import evaluate
 from opik.evaluation.metrics import (

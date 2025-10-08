@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 
-path = Path(__file__).parent.parent / "data.duckdb"
+path = Path(__file__).parent / "duckdb.example"
 os.environ["DUCKDB_FILENAME"] = str(path)
 
 from app.schemas.record import HealthRecordSearchParams
