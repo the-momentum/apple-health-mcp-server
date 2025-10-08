@@ -75,7 +75,7 @@ class ParquetImporter(XMLExporter, DuckDBClient):
                 con.sql("""
                     INSERT INTO stats SELECT * FROM docs;
                 """)
-            print(f"processed {len(docs)} docs")
+            print(f"processed {docs_count + len(docs)} docs")
             docs_count += len(docs)
 
     def write_to_file(self, index: int, df: pl.DataFrame) -> None:
