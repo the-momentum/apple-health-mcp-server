@@ -8,10 +8,10 @@ Every test is done on [pre-prepared mock apple health data](https://gist.github.
 
 
 ## Unit tests 🔧:
-  - Testing the importing of XML data to .parquet and database calls to DuckDB
+  - Testing the importing of XML data to .duckdb and database calls to DuckDB
 
 ## MCP Inspector tests 🔍:
-  - Uses the [inspector](https://modelcontextprotocol.io/docs/tools/inspector) provided by anthropic to test connection to the server hosted with streamable http
+  - Uses the [MCP Inspector](https://modelcontextprotocol.io/docs/tools/inspector) provided by Anthropic to test connection to the server hosted with streamable HTTP
   - Mainly used in the pipeline, but can be run locally
 
 ## Opik tests 🤖:
@@ -40,7 +40,7 @@ npx @modelcontextprotocol/inspector --cli http://localhost:8000/mcp --transport 
 ```
 
 - ### Opik tests 🤖:
-Make sure your `OPIK_WORKSPACE` and `OPIK_API_KEY` environmental variables are set
+Make sure your `OPENAI_API_KEY`, `OPIK_WORKSPACE` and `OPIK_API_KEY` environmental variables are set
 (Opik workspace refers to your profile name and not project name)
 ```bash
 uv run tests/opik/tool_calls.py
