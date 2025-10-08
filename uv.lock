@@ -172,6 +172,8 @@ code-quality = [
 ]
 dev = [
     { name = "fastapi", specifier = ">=0.116.2" },
+    { name = "opik", specifier = ">=1.8.56" },
+    { name = "pydantic-ai", specifier = ">=1.0.10" },
     { name = "pytest", specifier = ">=8.4.2" },
     { name = "pytest-asyncio", specifier = ">=1.0.0" },
     { name = "pytest-cov", specifier = ">=6.2.1" },

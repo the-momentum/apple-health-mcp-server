@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 
-path = Path(__file__).parent / "parquet.example"
+path = Path(__file__).parent.parent / "data.duckdb"
 os.environ["DUCKDB_FILENAME"] = str(path)
 
 from app.schemas.record import HealthRecordSearchParams
@@ -50,7 +50,15 @@ def counts() -> dict[str, int]:
         "HKQuantityTypeIdentifierEnvironmentalAudioExposure": 2,
         "HKQuantityTypeIdentifierStairAscentSpeed": 2,
         "HKQuantityTypeIdentifierRespiratoryRate": 2,
-        "HKQuantityTypeIdentifierHeight": 1
+        "HKQuantityTypeIdentifierHeight": 1,
+        "HKWorkoutActivityTypeRunning": 24,
+        "HKWorkoutActivityTypeWalking": 5,
+        "HKWorkoutActivityTypeHiking": 3,
+        "HKWorkoutActivityTypeCycling": 3,
+        "HKWorkoutActivityTypeMixedMetabolicCardioTraining": 2,
+        "HKWorkoutActivityTypeHockey": 2,
+        "HKWorkoutActivityTypeHighIntensityIntervalTraining": 2,
+        "HKWorkoutActivityTypeTraditionalStrengthTraining": 2
     }
 
 
@@ -67,6 +75,17 @@ def records() -> list[dict[str, Any]]:
             value_min="65",
             value_max="90",
         ),
+    )
+
+@pytest.fixture
+def workouts() -> list[dict[str, Any]]:
+    return search_health_records_from_duckdb(
+        HealthRecordSearchParams(
+            limit=20,
+            record_type="HKWorkoutActivityTypeRunning",
+            min_workout_duration="45",
+            max_workout_duration="53"
+        )
     )
 
 
@@ -104,6 +123,14 @@ def test_records(records: list[dict[str, Any]]) -> None:
     for record in records:
         assert 65 < record["value"] < 90
         assert record["type"] == "HKQuantityTypeIdentifierStepCount"
+
+def test_workouts(workouts: list[dict[str, Any]]) -> None:
+    # 3 records, however there are 20 total stats associated with them
+    assert len(workouts) == 20
+    for record in workouts:
+        assert 30 < record["duration"] < 60
+        assert record["type"] == "HKWorkoutActivityTypeRunning"
+
 
 
 def test_statistics(statistics: list[dict[str, Any]] | dict[str, Any]) -> None:
