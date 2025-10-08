@@ -24,4 +24,6 @@ repos:
 exclude: |
     (?x)(
         ^tests/
+        ^docs/
+        ^README.md/
     )

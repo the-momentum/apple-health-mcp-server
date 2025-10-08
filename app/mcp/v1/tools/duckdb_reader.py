@@ -2,7 +2,7 @@ from typing import Any
 
 from fastmcp import FastMCP
 
-from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType
+from app.schemas.record import HealthRecordSearchParams, IntervalType, RecordType, WorkoutType
 from app.services.health.duckdb_queries import (
     get_health_summary_from_duckdb,
     get_statistics_by_type_from_duckdb,
@@ -11,7 +11,7 @@ from app.services.health.duckdb_queries import (
     search_values_from_duckdb,
 )
 
-duckdb_reader_router = FastMCP(name="CH Reader MCP")
+duckdb_reader_router = FastMCP(name="DuckDB Reader MCP")
 
 
 @duckdb_reader_router.tool
@@ -23,14 +23,16 @@ def get_health_summary_duckdb() -> list[dict[str, Any]]:
 
     Notes for LLM:
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
-    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+    - Use this tool if you're not certain of the record type that
+      should be called
+    - If there are multiple databases available (DuckDB, Elasticsearch):
       first, ask the user which one he wants to use. DO NOT call any tools before
       the user specifies his intent.
     - If the user decides on an option, only use tools from this database,
       do not switch over to another until the user specifies that he wants
       to use a different one. You do not have to keep asking whether
       the user wants to use the same database that he used before.
-    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+    - If there is only one database available (DuckDB, Elasticsearch):
       you can use the tools from this database without the user specifying it.
     """
     try:
@@ -46,10 +48,11 @@ def search_health_records_duckdb(params: HealthRecordSearchParams) -> list[dict[
 
     Parameters:
     - params: HealthRecordSearchParams object containing all search/filter parameters.
+      (required parameters: record_type)
 
     Notes for LLMs:
     - This function should return a list of health record documents (dicts)
-      matching the search criteria.
+      matching the search criteria ordered by date from most to least recent.
     - Each document in the list should represent a single health record as stored in ClickHouse.
     - If an error occurs, the function should return a list with a single dict
       containing an 'error' key and the error message.
@@ -58,14 +61,16 @@ def search_health_records_duckdb(params: HealthRecordSearchParams) -> list[dict[
     - Example date_from/date_to: "2020-01-01T00:00:00+00:00"
     - Example value_min/value_max: "10", "100.5"
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
-    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+    - This tool can be used to search for most recent records of a given type,
+      in which case you should use this tool with a limit of 1.
+    - If there are multiple databases available (DuckDB, Elasticsearch):
       first, ask the user which one he wants to use. DO NOT call any tools before
       the user specifies his intent.
     - If the user decides on an option, only use tools from this database,
       do not switch over to another until the user specifies that he wants
       to use a different one. You do not have to keep asking whether
       the user wants to use the same database that he used before.
-    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+    - If there is only one database available (DuckDB, Elasticsearch):
       you can use the tools from this database without the user specifying it.
     """
     try:
@@ -75,7 +80,9 @@ def search_health_records_duckdb(params: HealthRecordSearchParams) -> list[dict[
 
 
 @duckdb_reader_router.tool
-def get_statistics_by_type_duckdb(record_type: RecordType | str) -> list[dict[str, Any]]:
+def get_statistics_by_type_duckdb(
+    record_type: RecordType | WorkoutType | str,
+) -> list[dict[str, Any]]:
     """
     Get comprehensive statistics for a specific health record type from DuckDB.
 
@@ -105,17 +112,19 @@ def get_statistics_by_type_duckdb(record_type: RecordType | str) -> list[dict[st
      specific health metrics.
     - The function is useful for health analysis, identifying outliers, and
       understanding data quality.
+    - This tool can also be used to figure out the value of the record with
+      the shortest/longest duration or highest/lowest value
     - date_range key for query is commented, since it contained hardcoded from
       date, but you can use it anyway if you replace startDate with your data.
     - IMPORTANT - Do not guess, autofill, or assume any missing data.
-    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+    - If there are multiple databases available (DuckDB, Elasticsearch):
       first, ask the user which one he wants to use. DO NOT call any tools before
       the user specifies his intent.
     - If the user decides on an option, only use tools from this database,
       do not switch over to another until the user specifies that he wants
       to use a different one. You do not have to keep asking whether
       the user wants to use the same database that he used before.
-    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+    - If there is only one database available (DuckDB, Elasticsearch):
       you can use the tools from this database without the user specifying it.
     """
     try:
@@ -126,7 +135,7 @@ def get_statistics_by_type_duckdb(record_type: RecordType | str) -> list[dict[st
 
 @duckdb_reader_router.tool
 def get_trend_data_duckdb(
-    record_type: RecordType | str,
+    record_type: RecordType | WorkoutType | str,
     interval: IntervalType = "month",
     date_from: str | None = None,
     date_to: str | None = None,
@@ -166,14 +175,14 @@ def get_trend_data_duckdb(
     - IMPORTANT - interval must be one of: "day", "week", "month", or "year".
       Do not use other values.
     - Do not guess, autofill, or assume any missing data.
-    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+    - If there are multiple databases available (DuckDB, Elasticsearch):
       first, ask the user which one he wants to use. DO NOT call any tools before
       the user specifies his intent.
     - If the user decides on an option, only use tools from this database,
       do not switch over to another until the user specifies that he wants
       to use a different one. You do not have to keep asking whether
       the user wants to use the same database that he used before.
-    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+    - If there is only one database available (DuckDB, Elasticsearch):
       you can use the tools from this database without the user specifying it.
     """
     try:
@@ -184,7 +193,7 @@ def get_trend_data_duckdb(
 
 @duckdb_reader_router.tool
 def search_values_duckdb(
-    record_type: RecordType | str | None,
+    record_type: RecordType | WorkoutType | str | None,
     value: str,
     date_from: str | None = None,
     date_to: str | None = None,
@@ -204,14 +213,14 @@ def search_values_duckdb(
       records with the value of "HKCategoryValueSleepAnalysisAsleepDeep"
     - The function automatically handles date filtering if date_from/date_to are provided
     - Do not guess, autofill, or assume any missing data.
-    - If there are multiple databases available (DuckDB, ClickHouse, Elasticsearch):
+    - If there are multiple databases available (DuckDB, Elasticsearch):
       first, ask the user which one he wants to use. DO NOT call any tools before
       the user specifies his intent.
     - If the user decides on an option, only use tools from this database,
       do not switch over to another until the user specifies that he wants
       to use a different one. You do not have to keep asking whether
       the user wants to use the same database that he used before.
-    - If there is only one database available (DuckDB, ClickHouse, Elasticsearch):
+    - If there is only one database available (DuckDB, Elasticsearch):
       you can use the tools from this database without the user specifying it.
     """
     try:
