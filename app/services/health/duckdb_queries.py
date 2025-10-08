@@ -142,7 +142,7 @@ def main() -> None:
         limit=20,
         record_type="HKWorkoutActivityTypeRunning",
         min_workout_duration="45",
-        max_workout_duration="53"
+        max_workout_duration="53",
     )
     logger.info(
         f"records for search_health_records_from_duckdb: {search_health_records_from_duckdb(pars)}",

@@ -52,7 +52,7 @@ exclude = ["./tests/", "./docs/", "./README.md"]
 [tool.ruff]
 line-length = 100
 target-version = "py313"
-extend-exclude = ["tests/", "./docs/", "./README.md"]
+extend-exclude = ["./tests/", "./docs/", "./README.md"]
 
 [tool.ruff.lint]
 select = [
