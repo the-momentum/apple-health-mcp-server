@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     CH_DB_NAME: str = "applehealth"
     CH_TABLE_NAME: str = "data"
 
-    DUCKDB_FILENAME: str = "applehealth.parquet"
+    DUCKDB_FILENAME: str = "applehealth.duckdb"
 
     CHUNK_SIZE: int = 50_000
 
