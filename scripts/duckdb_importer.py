@@ -21,7 +21,7 @@ class ParquetImporter(XMLExporter, DuckDBClient):
         Export xml data from Apple Health export file
         to a .duckdb database with path specified by user
         """
-        con = duckdb.connect("data.duckdb")
+        con = duckdb.connect(str(self.path))
         con.sql("""
             CREATE TABLE IF NOT EXISTS records (
                 type VARCHAR,
