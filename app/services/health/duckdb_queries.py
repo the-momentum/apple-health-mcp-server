@@ -141,8 +141,8 @@ def main() -> None:
     pars = HealthRecordSearchParams(
         limit=20,
         record_type="HKWorkoutActivityTypeRunning",
-        date_from="2016-01-01T00:00:00+00:00",
-        date_to="2016-12-31T23:59:59+00:00",
+        min_workout_duration="45",
+        max_workout_duration="53",
     )
     logger.info(
         f"records for search_health_records_from_duckdb: {search_health_records_from_duckdb(pars)}",

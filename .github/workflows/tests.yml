@@ -1,0 +1,41 @@
+name: tests
+
+on: [push]
+
+env:
+  DUCKDB_FILENAME: tests/duckdb.example
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  OPIK_API_KEY: ${{ secrets.OPIK_API_KEY }}
+  OPIK_WORKSPACE: ${{ secrets.OPIK_WORKSPACE }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/workflows/mcp-composite-action
+        with:
+          DUCKDB_FILENAME: 'tests/duckdb.example'
+      - name: Run tests
+        run: uv run --directory tests/ pytest query_tests.py
+  inspector:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: ./.github/workflows/mcp-composite-action
+        with:
+          DUCKDB_FILENAME: 'tests/duckdb.example'
+      - name: Run inspector
+        run: npx @modelcontextprotocol/inspector --cli http://127.0.0.1:8000/mcp --method tools/list
+  opik:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/workflows/mcp-composite-action
+        with:
+          DUCKDB_FILENAME: 'tests/duckdb.example'
+      - name: Run opik experiments
+        run: uv run tests/opik/tool_calls.py

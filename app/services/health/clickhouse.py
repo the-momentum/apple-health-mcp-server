@@ -49,7 +49,7 @@ def search_values_from_ch(
     date_to: str | None = None,
 ) -> dict[str, Any]:
     return ch.inquire(f"""
-        SELECT * FROM {ch.db_name}.{ch.table_name} WHERE textvalue = '{value}'
+        SELECT * FROM {ch.db_name}.{ch.table_name} WHERE textValue = '{value}'
         {f"AND type = '{record_type}'" if record_type else ""}
         {f"AND startDate >= '{date_from}'" if date_from else ""}
         {f"AND startDate <= '{date_to}'" if date_to else ""}
