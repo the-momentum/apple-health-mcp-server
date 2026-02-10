@@ -15,7 +15,7 @@
 </div>
 
 > [!NOTE]
-> **This project has evolved into [Open Wearables](https://github.com/the-momentum/open-wearables)** - Self-hosted platform to unify wearable health data from multiple devices, including Apple Health. Open Wearables also provides an MCP server and a companion app for **continuous Apple Health data sync**, eliminating the need for manual XML exports. Check it out: [github.com/the-momentum/open-wearables](https://github.com/the-momentum/open-wearables)
+> **This project has evolved into [Open Wearables](https://github.com/the-momentum/open-wearables)** - self-hosted platform to unify wearable health data from multiple devices, including Apple Health. Open Wearables also provides an MCP server and a companion app for continuous Apple Health data sync, eliminating the need for manual XML exports. Check it out: [github.com/the-momentum/open-wearables](https://github.com/the-momentum/open-wearables)
 
 ---
 Connect your Apple Health data with any LLM that supports MCP. Talk to your data and get personalised insights.
