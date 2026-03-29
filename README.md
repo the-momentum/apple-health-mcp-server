@@ -76,3 +76,8 @@ Interested? <a href="http://themomentum.ai/lets-talk">Let's talk</a>!
 <div align="center">
   <p><em>Built with ❤️ by <a href="https://themomentum.ai">Momentum</a> • Transforming healthcare data management with AI</em></p>
 </div>
+
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/the-momentum-apple-health-mcp-server).
+
