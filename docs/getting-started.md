@@ -24,7 +24,7 @@ Follow these steps to set up Apple Health MCP Server in your environment.
 ## Prepare Your Data
 
 1. Export your Apple Health data as an XML file from your iPhone and place it somewhere in your filesystem. By default, the server expects the file in the project root directory.
-  - if you need working example, we suggest this dataset: https://drive.google.com/file/d/1bWiWmlqFkM3MxJZUD2yAsNHlYrHvCmcZ/view?usp=drive_link
+  - if you need working example, we suggest this dataset: https://drive.google.com/file/d/1msBrYuW5e4xHql4KNvUVIJJwA7lg4j1m/view?usp=drive_link
     - Rob Mulla. Predict My Sleep Patterns. https://kaggle.com/competitions/kaggle-pog-series-s01e04, 2023. Kaggle.
 2. Prepare an Elasticsearch instance and populate it from the XML file:
    - Run `make es` to start Elasticsearch and import your XML data.
