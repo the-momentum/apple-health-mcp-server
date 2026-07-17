@@ -26,7 +26,7 @@ class CHIndexer(XMLExporter, CHClient):
                        creationDate DateTime,
                        unit String,
                        value Float32,
-                       textvalue String,
+                       textValue String,
                    )
                        ENGINE = MergeTree
                        ORDER BY startDate

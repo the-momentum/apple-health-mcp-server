@@ -56,6 +56,7 @@ Want to try it out? **[🚀 Getting Started](docs/getting-started.md)**
 - **[🔧 Configuration](docs/configuration.md)** - Environment variables and settings
 - **[🛠️ MCP Tools](docs/mcp-tools.md)** - All available tools
 - **[🗺️ Roadmap](docs/roadmap.md)** - Upcoming features and roadmap
+- **[🧪 Testing](docs/tests.md)** - Instructions on tests and how to run them
 
 **Need help?** Looking for guidance on use cases or implementation? Don't hesitate to ask your question in our [GitHub discussion forum](https://github.com/the-momentum/apple-health-mcp-server/discussions)! You'll also find interesting use cases, tips, and community insights there.
 
