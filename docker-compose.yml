@@ -1,7 +1,7 @@
 services:
   mcp-server:
-    container_name: mcp-server
-    image: mcp-server:latest
+    container_name: apple-health-mcp
+    image: apple-health-mcp:latest
     build:
       context: .
       dockerfile: Dockerfile
@@ -14,6 +14,12 @@ services:
         target: /root_project/config/.env
         bind:
           create_host_path: false
+      - type: bind
+        source: ./applehealth.duckdb
+        target: /root_project/applehealth.duckdb
+      - type: bind
+        source: ./manual_logs.duckdb
+        target: /root_project/manual_logs.duckdb
     ports:
       - 8000:8000
     stdin_open: true

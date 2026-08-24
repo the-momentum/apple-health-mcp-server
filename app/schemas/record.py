@@ -37,7 +37,7 @@ IntervalType = Literal["day", "week", "month", "year"]
 
 
 class HealthRecordSearchParams(BaseModel):
-    record_type: RecordType | WorkoutType | str | None = None
+    record_type: RecordType | WorkoutType | list[str] | str | None = None
     source_name: str | None = None
     date_from: str | None = None
     date_to: str | None = None

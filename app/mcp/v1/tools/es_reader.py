@@ -40,19 +40,34 @@ def get_health_summary_es() -> dict[str, Any]:
 
 
 @es_reader_router.tool
-def search_health_records_es(params: HealthRecordSearchParams) -> list[dict[str, Any]]:
+def search_health_records_es(
+    record_type: RecordType | str | None = None,
+    source_name: str | None = None,
+    date_from: str | None = None,
+    date_to: str | None = None,
+    min_workout_duration: str | None = None,
+    max_workout_duration: str | None = None,
+    value_min: str | None = None,
+    value_max: str | None = None,
+    limit: int = 10,
+) -> list[dict[str, Any]]:
     """
     Search health records in Elasticsearch with flexible query building.
 
     Parameters:
-    - params: HealthRecordSearchParams object containing all search/filter parameters.
+    - record_type: The type of health record to search for.
+    - source_name: Filter by the device/app that recorded the data (e.g. "Rob’s iPhone").
+    - date_from, date_to: Optional ISO8601 date strings for filtering date range.
+    - min_workout_duration, max_workout_duration: Optional duration bounds for workouts.
+    - value_min, value_max: Optional numeric value bounds for quantity samples.
+    - limit: Maximum number of records to return (default 10).
 
     Notes for LLMs:
     - This function should return a list of health record documents (dicts)
       matching the search criteria.
     - Each document in the list should represent a single health record as stored in Elasticsearch.
     - If an error occurs, the function should return a list with a single dict
-      containing an 'error' key and the error message.
+      containing an ‘error’ key and the error message.
     - Use this to retrieve structured health data for further analysis, filtering, or display.
     - Example source_name: "Rob’s iPhone", "Polar Flow", "Sync Solver".
     - Example date_from/date_to: "2020-01-01T00:00:00+00:00"
@@ -69,6 +84,17 @@ def search_health_records_es(params: HealthRecordSearchParams) -> list[dict[str,
       you can use the tools from this database without the user specifying it.
     """
     try:
+        params = HealthRecordSearchParams(
+            record_type=record_type,
+            source_name=source_name,
+            date_from=date_from,
+            date_to=date_to,
+            min_workout_duration=min_workout_duration,
+            max_workout_duration=max_workout_duration,
+            value_min=value_min,
+            value_max=value_max,
+            limit=limit,
+        )
         return search_health_records_logic(params)
     except Exception as e:
         return [{"error": f"Failed to search health records: {str(e)}"}]

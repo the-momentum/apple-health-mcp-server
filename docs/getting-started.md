@@ -79,7 +79,7 @@ You can run the MCP Server in your LLM Client in two ways:
             "type=bind,source=<project-path>/<parquet-file-name>,target=/root_project/applehealth.parquet", // optional
             "-e",
             "ES_HOST=host.docker.internal",
-            "mcp-server:latest"
+            "apple-health-mcp:latest"
          ]
        }
      }

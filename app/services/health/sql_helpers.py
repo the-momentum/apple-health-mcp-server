@@ -17,10 +17,23 @@ def value_aggregates(table: str) -> list[str]:
     return ["value"]
 
 
-def get_table(record_type: str | Any) -> str:
-    if record_type.startswith("HKWorkout"):
-        return "workouts"
-    return "records"
+def get_table(record_type: str | list[str] | Any) -> str:
+    types = record_type if isinstance(record_type, list) else [record_type]
+    is_workout = [bool(t) and t.startswith("HKWorkout") for t in types]
+    if any(is_workout) and not all(is_workout):
+        raise ValueError(
+            "record_type mixes HKWorkoutActivityType* with other types — these live in "
+            "separate tables (workouts vs records) and can't be queried together. "
+            "Split into separate calls per table.",
+        )
+    return "workouts" if any(is_workout) else "records"
+
+
+def type_filter(table: str, record_type: str | list[str]) -> str:
+    if isinstance(record_type, list):
+        quoted = ", ".join(f"'{t}'" for t in record_type)
+        return f"{table}.type IN ({quoted})"
+    return f"{table}.type = '{record_type}'"
 
 
 def get_value_type(table: str | None) -> str:
@@ -70,7 +83,7 @@ def fill_query(params: HealthRecordSearchParams) -> str:
     value_type = get_value_type(table)
 
     if params.record_type:
-        conditions.append(f" {table}.type = '{params.record_type}'")
+        conditions.append(f" {type_filter(table, params.record_type)}")
     if params.source_name:
         conditions.append(f" source_name = '{params.source_name}'")
     if params.date_from or params.date_to:
@@ -85,5 +98,12 @@ def fill_query(params: HealthRecordSearchParams) -> str:
     if conditions:
         query += " AND " + " AND ".join(conditions)
 
-    query += f"ORDER BY {table}.startDate DESC LIMIT {params.limit}"
+    if isinstance(params.record_type, list):
+        query += (
+            f" QUALIFY ROW_NUMBER() OVER ("
+            f"PARTITION BY {table}.type ORDER BY {table}.startDate DESC"
+            f") <= {params.limit} ORDER BY {table}.startDate DESC"
+        )
+    else:
+        query += f"ORDER BY {table}.startDate DESC LIMIT {params.limit}"
     return query

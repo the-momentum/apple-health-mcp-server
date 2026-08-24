@@ -31,11 +31,19 @@ class Settings(BaseSettings):
     CH_TABLE_NAME: str = "data"
 
     DUCKDB_FILENAME: str = "applehealth.duckdb"
+    DUCKDB_QUERY_CACHE_ENABLED: bool = True
+    DUCKDB_QUERY_CACHE_TTL_SECONDS: int = 1800
+    DUCKDB_QUERY_CACHE_MAXSIZE: int = 256
+
+    LOGS_DUCKDB_FILENAME: str = "manual_logs.duckdb"
 
     CHUNK_SIZE: int = 50_000
 
     RAW_XML_PATH: str = "raw.xml"
     XML_SAMPLE_SIZE: int = 1000
+
+    IMPORT_LOOKBACK_MONTHS: int | None = None
+    IMPORT_WORKERS: int | None = None
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="after")
     @classmethod
