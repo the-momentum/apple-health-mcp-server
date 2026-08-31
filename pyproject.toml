@@ -73,6 +73,8 @@ ignore = [
     "ANN003", # missing-type-kwargs
     "ANN204", # missing-return-type-special-method
     "ANN401", # any-type
+    "COM812", # missing-trailing-comma — handled by the formatter, conflicts with it
+    "COM819", # prohibited-trailing-comma — handled by the formatter, conflicts with it
 ]
 
 [project.scripts]

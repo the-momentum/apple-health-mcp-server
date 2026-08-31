@@ -22,8 +22,8 @@ repos:
       - id: end-of-file-fixer
 
 exclude: |
-    (?x)(
-        ^tests/
-        ^docs/
-        ^README.md/
+    (?x)^(
+        tests/
+      | docs/
+      | README\.md
     )

@@ -25,7 +25,9 @@ def _normalize(value: Any) -> Any:
 
 
 def _make_key(
-    func: Callable[..., Any], args: tuple[Any, ...], kwargs: dict[str, Any],
+    func: Callable[..., Any],
+    args: tuple[Any, ...],
+    kwargs: dict[str, Any],
 ) -> tuple[Any, ...]:
     bound = inspect.signature(func).bind(*args, **kwargs)
     bound.apply_defaults()

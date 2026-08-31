@@ -73,8 +73,12 @@ class XMLExporter:
         """
         sign = -1 if value[20] == "-" else 1
         return datetime(
-            int(value[0:4]), int(value[5:7]), int(value[8:10]),
-            int(value[11:13]), int(value[14:16]), int(value[17:19]),
+            int(value[0:4]),
+            int(value[5:7]),
+            int(value[8:10]),
+            int(value[11:13]),
+            int(value[14:16]),
+            int(value[17:19]),
             tzinfo=timezone(sign * timedelta(hours=int(value[21:23]), minutes=int(value[23:25]))),
         )
 

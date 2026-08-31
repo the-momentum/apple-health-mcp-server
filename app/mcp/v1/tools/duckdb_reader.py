@@ -79,8 +79,10 @@ def search_health_records_duckdb(
       get_health_summary_duckdb first — it lists every type (both namespaces)
       with a record count.
     - record_type also accepts a LIST of type strings to pull several metrics in one
-      call instead of one call per metric (e.g. record_type=["HKQuantityTypeIdentifierDietaryProtein",
-      "HKQuantityTypeIdentifierDietaryCarbohydrates", "HKQuantityTypeIdentifierDietaryFatTotal"]).
+      call instead of one call per metric (e.g. record_type=[
+      "HKQuantityTypeIdentifierDietaryProtein",
+      "HKQuantityTypeIdentifierDietaryCarbohydrates",
+      "HKQuantityTypeIdentifierDietaryFatTotal"]).
       `limit` then applies PER type, not to the combined total — so limit=10 with 3 types
       returns up to 10 rows of each, up to 30 total, not 10 total. All types in the list
       must be from the SAME namespace (all "HKQuantityTypeIdentifier*"/"HKCategoryTypeIdentifier*"

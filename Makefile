@@ -27,6 +27,17 @@ test:	## Run the tests.
 	export ENV=config/.env.test
 	$(UV) pytest -v --cov=app
 
+lint:  ## Check lint + format + types (run before pushing; mirrors CI)
+	$(UV) ruff check
+	$(UV) ruff format --check
+	$(UV) ty check
+
+format:  ## Auto-fix lint issues and reformat
+	$(UV) ruff check --fix
+	$(UV) ruff format
+
+check: lint  ## Alias for `make lint` (the full pre-push gate)
+
 migrate:  ## Apply all migrations
 	$(ALEMBIC_CMD) upgrade head
 
