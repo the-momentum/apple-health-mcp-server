@@ -70,3 +70,22 @@ def test_logged_at_defaults_to_now_when_not_given() -> None:
     row = manual_logs.log_fueling_event(product_name="Gel", category="gel")
 
     assert row["logged_at"] is not None
+
+
+def test_delete_fueling_event_removes_row() -> None:
+    logged = manual_logs.log_fueling_event(product_name="Wrong Gel", category="gel")
+    manual_logs.log_fueling_event(product_name="Correct Gel", category="gel")
+
+    deleted = manual_logs.delete_fueling_event(id=str(logged["id"]))
+
+    assert deleted["product_name"] == "Wrong Gel"
+    results = manual_logs.search_fueling_events()
+    assert len(results) == 1
+    assert results[0]["product_name"] == "Correct Gel"
+
+
+def test_delete_fueling_event_unknown_id_raises() -> None:
+    manual_logs.log_fueling_event(product_name="Gel", category="gel")
+
+    with pytest.raises(ValueError):
+        manual_logs.delete_fueling_event(id="00000000-0000-0000-0000-000000000000")

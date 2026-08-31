@@ -15,11 +15,8 @@ services:
         bind:
           create_host_path: false
       - type: bind
-        source: ./applehealth.duckdb
-        target: /root_project/applehealth.duckdb
-      - type: bind
-        source: ./manual_logs.duckdb
-        target: /root_project/manual_logs.duckdb
+        source: ./data
+        target: /root_project/data
     ports:
       - 8000:8000
     stdin_open: true

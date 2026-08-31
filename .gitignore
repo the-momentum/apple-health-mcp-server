@@ -163,6 +163,7 @@ volumes
 # DuckDB database files
 *.db
 *.duckdb
+*.duckdb.wal
 
 # Personal skills (not generic, not for upstream)
 skills/

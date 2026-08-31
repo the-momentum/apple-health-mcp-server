@@ -30,12 +30,12 @@ class Settings(BaseSettings):
     CH_DB_NAME: str = "applehealth"
     CH_TABLE_NAME: str = "data"
 
-    DUCKDB_FILENAME: str = "applehealth.duckdb"
+    DUCKDB_FILENAME: str = "data/applehealth.duckdb"
     DUCKDB_QUERY_CACHE_ENABLED: bool = True
     DUCKDB_QUERY_CACHE_TTL_SECONDS: int = 1800
     DUCKDB_QUERY_CACHE_MAXSIZE: int = 256
 
-    LOGS_DUCKDB_FILENAME: str = "manual_logs.duckdb"
+    LOGS_DUCKDB_FILENAME: str = "data/manual_logs.duckdb"
 
     CHUNK_SIZE: int = 50_000
 

@@ -67,5 +67,8 @@ chwin: ## Import Apple Health XML data into a docker volume for ClickHouse (for 
 duckdb: ## Import Apple Health XML data to a Parquet file for DuckDB
 	$(UV) scripts/duckdb_importer.py
 
+duckdb-reset: ## Delete the imported Apple Health DuckDB file (keeps manual_logs.duckdb)
+	$(UV) scripts/duckdb_importer.py --reset
+
 downgrade:  ## Revert the last migration
 	$(ALEMBIC_CMD) downgrade -1

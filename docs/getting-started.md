@@ -41,7 +41,15 @@ Follow these steps to set up Apple Health MCP Server in your environment.
    - Run `make duckdb` to create a parquet file with your exported XML data
    - If you want to connect to the file through http(s):
      - The only thing you need to do is change the .env path, e.g. `localhost:8080/applehealth.parquet`
-     - If you want an example on how to host the files locally, run `uv run tests/fileserver.py` 
+     - If you want an example on how to host the files locally, run `uv run tests/fileserver.py`
+   - **Re-importing / updating:** Apple Health exports contain your full history every
+     time. `make duckdb` rebuilds the database atomically (into a temp file, swapped in
+     on success), so it is always safe to re-run — it never creates duplicates, and a
+     failed or interrupted run leaves the existing database untouched. Restart the MCP
+     server afterwards (or wait out the query-cache TTL) to pick up the new data.
+     - `make duckdb` — rebuild from the current export.
+     - `make duckdb-reset` — delete `data/applehealth.duckdb` and its `-wal`/temp files.
+       `data/manual_logs.duckdb` (runtime logs) is never touched.
    
 
 ## Configuration Files

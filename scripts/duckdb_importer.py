@@ -1,7 +1,11 @@
+import contextlib
 import os
 import shutil
+import sys
 import time
+from collections.abc import Iterator
 from concurrent.futures import ProcessPoolExecutor
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 
@@ -50,6 +54,39 @@ STATS_SCHEMA = """
         unit VARCHAR
     )
 """
+
+
+def _db_sidecars(p: Path) -> list[Path]:
+    """The DuckDB file itself plus the two WAL spellings DuckDB may leave beside it."""
+    return [p, Path(f"{p}.wal"), Path(f"{p}-wal")]
+
+
+def _remove_db_files(p: Path) -> None:
+    for f in _db_sidecars(p):
+        with contextlib.suppress(FileNotFoundError):
+            f.unlink()
+
+
+def _tmp_target(live: Path) -> Path:
+    """Staging path in the same directory as `live` (same filesystem => atomic rename)."""
+    return live.parent / f"{live.name}.import-{os.getpid()}.tmp"
+
+
+def _sweep_orphans(live: Path) -> None:
+    """Delete leftover *.import-*.tmp[.wal|-wal] staging files from previously killed runs."""
+    for f in live.parent.glob(f"{live.name}.import-*.tmp*"):
+        with contextlib.suppress(FileNotFoundError):
+            f.unlink()
+
+
+def _assert_not_logs_db(target: Path) -> None:
+    """Guard: the importer must never write the separate, authoritative manual-logs DB."""
+    logs = Path(settings.LOGS_DUCKDB_FILENAME)
+    if target.resolve() == logs.resolve():
+        raise RuntimeError(
+            f"Refusing to import into the manual-logs DB ({logs}); "
+            f"the importer only writes {settings.DUCKDB_FILENAME}",
+        )
 
 
 def find_split_offsets(path: Path, n_splits: int) -> list[int]:
@@ -186,33 +223,66 @@ class ParquetImporter(XMLExporter, DuckDBClient):
 
     chunk_files = []
 
+    @contextmanager
+    def _staged_connection(self) -> Iterator[duckdb.DuckDBPyConnection]:
+        """
+        Yields a read/write connection to a fresh temp DuckDB file (schema already
+        applied). On a clean exit the temp file is CHECKPOINTed, closed, and
+        atomically renamed over the live file; on any error the temp file is
+        discarded and the live file is left untouched.
+
+        Apple Health exports are a full snapshot every time, so every import is a
+        clean rebuild -- this is what makes `make duckdb` safe to re-run without
+        duplicating rows. Building a separate file and swapping it in with
+        os.replace also means the import never contends with the read-only
+        connection a running MCP server holds on the live file (DuckDB allows many
+        readers OR one writer per file; a rename needs no DuckDB lock at all).
+        """
+        live = Path(self.path)
+        _assert_not_logs_db(live)
+        live.parent.mkdir(parents=True, exist_ok=True)
+        _sweep_orphans(live)
+        tmp = _tmp_target(live)
+        _remove_db_files(tmp)
+        con = None
+        try:
+            con = duckdb.connect(str(tmp))
+            con.sql(RECORDS_SCHEMA)
+            con.sql(WORKOUTS_SCHEMA)
+            con.sql(STATS_SCHEMA)
+            yield con
+            con.sql("CHECKPOINT")  # fold the WAL into the single main file
+            con.close()
+            con = None
+            os.replace(tmp, live)  # atomic publish
+        except BaseException:
+            if con is not None:
+                with contextlib.suppress(Exception):
+                    con.close()
+            _remove_db_files(tmp)
+            raise
+
     def export_xml(self) -> None:
         """
         Export xml data from Apple Health export file
-        to a .duckdb database with path specified by user
-        """
-        con = duckdb.connect(str(self.path))
-        con.sql(RECORDS_SCHEMA)
-        con.sql(WORKOUTS_SCHEMA)
-        con.sql(STATS_SCHEMA)
+        to a .duckdb database with path specified by user.
 
-        docs_count = 0
-        for i, docs in enumerate(self.parse_xml(), 1):
-            cols = set(docs.columns)
-            if cols == set(self.RECORD_COLUMNS):
-                con.sql("""
-                    INSERT INTO records SELECT * FROM docs;
-                """)
-            if cols == set(self.WORKOUT_COLUMNS):
-                con.sql("""
-                    INSERT INTO workouts SELECT * FROM docs;
-                """)
-            if cols == set(self.WORKOUT_STATS_COLUMNS):
-                con.sql("""
-                    INSERT INTO stats SELECT * FROM docs;
-                """)
-            print(f"processed {docs_count + len(docs)} docs")
-            docs_count += len(docs)
+        Rebuilds the database from scratch (see _staged_connection): safe to
+        re-run, never appends duplicate rows.
+        """
+        with self._staged_connection() as con:
+            docs_count = 0
+            for docs in self.parse_xml():
+                cols = set(docs.columns)
+                for table, expected in (
+                    ("records", set(self.RECORD_COLUMNS)),
+                    ("workouts", set(self.WORKOUT_COLUMNS)),
+                    ("stats", set(self.WORKOUT_STATS_COLUMNS)),
+                ):
+                    if cols == expected and not docs.empty:
+                        con.sql(f"INSERT INTO {table} SELECT * FROM docs")
+                docs_count += len(docs)
+                print(f"processed {docs_count} docs")
 
     def export_xml_parallel(self, workers: int | None = None) -> None:
         """
@@ -221,6 +291,9 @@ class ParquetImporter(XMLExporter, DuckDBClient):
         only way to use more than one core). Each worker writes its kept
         records/workouts/stats straight to Parquet; this process only opens
         the DuckDB file once, at the end, to bulk-load all of it.
+
+        Like export_xml, this rebuilds the database from scratch via
+        _staged_connection and is safe to re-run without duplicating rows.
         """
         workers = workers or settings.IMPORT_WORKERS or os.cpu_count() or 1
         offsets = find_split_offsets(self.xml_path, workers)
@@ -244,18 +317,13 @@ class ParquetImporter(XMLExporter, DuckDBClient):
                         f"in {result['seconds']:.1f}s",
                     )
 
-            con = duckdb.connect(str(self.path))
-            con.sql(RECORDS_SCHEMA)
-            con.sql(WORKOUTS_SCHEMA)
-            con.sql(STATS_SCHEMA)
-
-            for table in ("records", "workouts", "stats"):
-                if list(tmp_dir.glob(f"{table}_*.parquet")):
-                    con.sql(f"""
-                        INSERT INTO {table}
-                        SELECT * FROM read_parquet('{tmp_dir}/{table}_*.parquet')
-                    """)
-            con.close()
+            with self._staged_connection() as con:
+                for table in ("records", "workouts", "stats"):
+                    if list(tmp_dir.glob(f"{table}_*.parquet")):
+                        con.sql(f"""
+                            INSERT INTO {table}
+                            SELECT * FROM read_parquet('{tmp_dir.as_posix()}/{table}_*.parquet')
+                        """)
         finally:
             shutil.rmtree(tmp_dir, ignore_errors=True)
 
@@ -282,7 +350,10 @@ class ParquetImporter(XMLExporter, DuckDBClient):
         """
         Deprecated method for exporting to multiple parquet files
         corresponding to each table in the duckdb database
-        use export_xml instead
+        use export_xml instead.
+
+        NOTE: bypasses _staged_connection -- no atomic swap, no rebuild
+        semantics. Do not wire this to an entrypoint.
         """
 
         for i, docs in enumerate(self.parse_xml(), 1):
@@ -338,5 +409,13 @@ class ParquetImporter(XMLExporter, DuckDBClient):
 
 
 if __name__ == "__main__":
+    if "--reset" in sys.argv[1:]:
+        live = Path(settings.DUCKDB_FILENAME)
+        _assert_not_logs_db(live)
+        _remove_db_files(live)
+        _sweep_orphans(live)
+        print(f"Removed {live} and its sidecar/staging files (manual_logs.duckdb untouched)")
+        raise SystemExit(0)
+
     importer = ParquetImporter()
     importer.export_xml_parallel()

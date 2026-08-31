@@ -81,6 +81,19 @@ def log_fueling_event(
         return rows[0]
 
 
+def delete_fueling_event(id: str) -> dict[str, Any]:
+    with _lock:
+        con = _get_con()
+        result = con.execute(
+            "DELETE FROM fueling_events WHERE id = ?::UUID RETURNING *",
+            [id],
+        )
+        rows = result.df().to_dict(orient="records")
+    if not rows:
+        raise ValueError(f"No fueling event found with id={id}")
+    return rows[0]
+
+
 def search_fueling_events(
     date_from: str | None = None,
     date_to: str | None = None,

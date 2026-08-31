@@ -3,6 +3,7 @@ from typing import Any
 from fastmcp import FastMCP
 
 from app.schemas.manual_log import FuelingCategory
+from app.services.health.manual_logs import delete_fueling_event as _delete_fueling_event
 from app.services.health.manual_logs import log_fueling_event as _log_fueling_event
 from app.services.health.manual_logs import search_fueling_events as _search_fueling_events
 
@@ -65,6 +66,29 @@ def log_fueling_event(
         )
     except Exception as e:
         return {"error": f"Failed to log fueling event: {str(e)}"}
+
+
+@manual_log_router.tool
+def delete_fueling_event(id: str) -> dict[str, Any]:
+    """
+    Delete a previously logged fueling event by its id.
+
+    Parameters:
+    - id: The event's id (a UUID), from a prior log_fueling_event response or
+      from search_fueling_events results.
+
+    Notes for LLMs:
+    - Use this to correct mistakes — e.g. an entry logged with the wrong date/
+      time, wrong product, or a duplicate. If you don't already have the id,
+      call search_fueling_events first to find the entry and read its id.
+    - After deleting, re-log the corrected event with log_fueling_event.
+    - Returns the deleted event's fields on success, or an 'error' key if no
+      event with that id exists.
+    """
+    try:
+        return _delete_fueling_event(id=id)
+    except Exception as e:
+        return {"error": f"Failed to delete fueling event: {str(e)}"}
 
 
 @manual_log_router.tool
