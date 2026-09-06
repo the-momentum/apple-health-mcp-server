@@ -152,7 +152,10 @@ def test_refuses_to_target_logs_db(
     monkeypatch: pytest.MonkeyPatch,
     spelling: str,
 ) -> None:
-    assert settings.LOGS_DUCKDB_FILENAME == "data/manual_logs.duckdb"
+    # config anchors relative DB paths to the repo root, so the raw setting is
+    # now an absolute path ending in the expected filename.
+    assert Path(settings.LOGS_DUCKDB_FILENAME).is_absolute()
+    assert Path(settings.LOGS_DUCKDB_FILENAME).name == "manual_logs.duckdb"
     logs_db = Path(spelling)
     mtime_before = logs_db.stat().st_mtime_ns if logs_db.exists() else None
 

@@ -1,4 +1,9 @@
+import atexit
+import json
+import os
+import sys
 import threading
+from pathlib import Path
 from typing import Any
 
 import duckdb
@@ -36,6 +41,58 @@ def _get_con() -> duckdb.DuckDBPyConnection:
         _con = duckdb.connect(str(client.path))
         _con.sql(FUELING_EVENTS_SCHEMA)
     return _con
+
+
+def _json_mirror_path() -> Path:
+    """Sibling of the DB file, e.g. data/manual_logs.fueling_events.json."""
+    return Path(str(client.path)).with_name("manual_logs.fueling_events.json")
+
+
+def _write_json_mirror(con: duckdb.DuckDBPyConnection) -> None:
+    """
+    Dump the whole fueling_events table to a human-readable, diffable JSON file
+    next to the DB. Written atomically (tmp + os.replace). A failure here must
+    never fail the logging operation, so callers are shielded by try/except.
+    """
+    # Read rows directly (not via .df()): SQL NULL comes back as None, so the
+    # output is always strict, valid JSON. Going through pandas would turn NULL
+    # DOUBLEs into NaN and emit invalid `NaN` tokens.
+    cur = con.execute("SELECT * FROM fueling_events ORDER BY logged_at")
+    cols = [d[0] for d in cur.description]
+    rows = [dict(zip(cols, r, strict=True)) for r in cur.fetchall()]
+    path = _json_mirror_path()
+    tmp = path.with_suffix(".json.tmp")
+    tmp.write_text(json.dumps(rows, indent=2, default=str, allow_nan=False))
+    os.replace(tmp, path)
+
+
+def _persist(con: duckdb.DuckDBPyConnection) -> None:
+    """
+    Make the last write durable immediately: fold the WAL into the main .duckdb
+    file so the data survives the process being killed, then refresh the JSON
+    mirror. Manual-log volume is tiny and writes are rare, so the per-write
+    CHECKPOINT cost is negligible.
+    """
+    con.execute("CHECKPOINT")
+    try:
+        _write_json_mirror(con)
+    except Exception as e:  # noqa: BLE001 - mirror is best-effort
+        print(f"manual_logs: failed to write JSON mirror: {e}", file=sys.stderr)
+
+
+def close_con() -> None:
+    """Checkpoint and close the module connection (graceful shutdown / atexit)."""
+    global _con
+    with _lock:
+        if _con is not None:
+            try:
+                _con.execute("CHECKPOINT")
+            finally:
+                _con.close()
+                _con = None
+
+
+atexit.register(close_con)
 
 
 def log_fueling_event(
@@ -78,6 +135,7 @@ def log_fueling_event(
             ],
         )
         rows = result.df().to_dict(orient="records")
+        _persist(con)
         return rows[0]
 
 
@@ -89,8 +147,9 @@ def delete_fueling_event(id: str) -> dict[str, Any]:
             [id],
         )
         rows = result.df().to_dict(orient="records")
-    if not rows:
-        raise ValueError(f"No fueling event found with id={id}")
+        if not rows:
+            raise ValueError(f"No fueling event found with id={id}")
+        _persist(con)
     return rows[0]
 
 

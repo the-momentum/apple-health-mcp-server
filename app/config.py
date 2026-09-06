@@ -6,6 +6,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from app.utils.config_utils import EnvironmentType
 
+_PROJECT_ROOT = Path(__file__).parent.parent
+
+# Prefixes that mark a DuckDB location as remote (httpfs) rather than a local
+# file path — see DuckDBClient.__post_init__.
+_REMOTE_DB_PREFIXES = ("localhost", "http://", "https://")
+
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "MCP Server"
@@ -44,6 +50,24 @@ class Settings(BaseSettings):
 
     IMPORT_LOOKBACK_MONTHS: int | None = None
     IMPORT_WORKERS: int | None = None
+
+    @field_validator("DUCKDB_FILENAME", "LOGS_DUCKDB_FILENAME", mode="after")
+    @classmethod
+    def anchor_duckdb_path(cls, v: str) -> str:
+        """
+        Resolve a relative DuckDB file path against the repo root so it no longer
+        depends on the process working directory (a launch from a different CWD
+        would otherwise create a fresh, empty DB in the wrong place and silently
+        orphan the real data). Remote httpfs locations and already-absolute paths
+        are returned unchanged. Kept as a ``str`` because
+        DuckDBClient.__post_init__ calls ``.startswith`` on it.
+        """
+        if v.startswith(_REMOTE_DB_PREFIXES):
+            return v
+        path = Path(v)
+        if not path.is_absolute():
+            path = _PROJECT_ROOT / path
+        return str(path)
 
     @field_validator("BACKEND_CORS_ORIGINS", mode="after")
     @classmethod

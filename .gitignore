@@ -165,5 +165,9 @@ volumes
 *.duckdb
 *.duckdb.wal
 
+# Runtime data dir: imported health DB + manual logs (DuckDB) and their
+# plain-text JSON mirror. All personal data — never commit any of it.
+/data/
+
 # Personal skills (not generic, not for upstream)
 skills/
