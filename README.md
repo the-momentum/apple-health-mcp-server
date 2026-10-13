@@ -22,8 +22,9 @@ Connect your Apple Health export to any LLM client that supports MCP. You can as
    cp config/.env.example config/.env
    # in config/.env:
    RAW_XML_PATH="apple_health_export/export.xml"
-   # optional: only import the last N months
-   # IMPORT_LOOKBACK_MONTHS=6
+   # optional: only import the last N months (default: everything; the whole
+   # file is parsed either way, so a limit saves little time)
+   # IMPORT_LOOKBACK_MONTHS=12
    ```
 5. **Import** into DuckDB (runs in parallel; safe to re-run):
    ```sh
