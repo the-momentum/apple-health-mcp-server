@@ -22,8 +22,9 @@ Connect your Apple Health export to any LLM client that supports MCP. You can as
    cp config/.env.example config/.env
    # in config/.env:
    RAW_XML_PATH="apple_health_export/export.xml"
-   # optional: only import the last N months (default: everything; the whole
-   # file is parsed either way, so a limit saves little time)
+   # optional: only import the last N months, e.g. 12 (default: everything; the
+   # whole file is parsed either way, so a limit saves DB size and import memory,
+   # not time)
    # IMPORT_LOOKBACK_MONTHS=12
    ```
 5. **Import** into DuckDB (runs in parallel; safe to re-run):
@@ -77,7 +78,7 @@ uv run scripts/import_baselines_note.py data/baselines.html             # safe t
 
 - **Fueling log**: manual fueling events are stored in a separate writable DuckDB file (`LOGS_DUCKDB_FILENAME`). The importer never touches it, and every write is flushed to disk immediately.
 - **Report history**: weekly-report skills store per-period metrics and findings in a separate writable DuckDB file (`REPORTS_DUCKDB_FILENAME`) and read back compact history and week/month trends instead of re-parsing notes.
-- **Faster, safer import**: runs across multiple processes, rebuilds atomically (safe to repeat), `IMPORT_LOOKBACK_MONTHS` limits how far back it imports, and `make duckdb-reset` deletes the imported database.
+- **Faster, safer import**: runs across multiple processes, rebuilds atomically (safe to repeat), optional `IMPORT_LOOKBACK_MONTHS` limits how far back it imports (full history is the default and recommended), and `make duckdb-reset` deletes the imported database.
 - **Query cache**: an in-process TTL + LRU cache for DuckDB reads, configured with `DUCKDB_QUERY_CACHE_*` in `config/.env.example`.
 - **Better filtering**: stats and trend tools accept a list of types plus source and date filters. Source names match even with Apple's curly apostrophes and non-breaking spaces (e.g. `Apple Watch`).
 - **DuckDB only**: the upstream Elasticsearch, ClickHouse and XML direct-read backends are removed — one import pipeline, 16 tools, fewer dependencies.
